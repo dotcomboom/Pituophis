@@ -31,9 +31,8 @@ import socket, ssl
 # Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
 
+
 # Client stuff
-
-
 class Selector:
     def __init__(self):
         # NOT YET IMPLEMENTED
@@ -70,24 +69,7 @@ def get(host, port=70, path='/', query='', tls=False):
     return Response(s.makefile('rb'))
 
 
-def parseMenu(menu):
-    # NOT YET IMPLEMENTED
-    return menu
-
-def parseUrl(url):
-    # NOT YET IMPLEMENTED
-    parsed = {
-        'host': '',
-        'port': '70',
-        'type': '1',
-        'path': '',
-        'menu': True,
-        'tls': False
-    }
-    url = 'gopher://' + url
-
 # Server stuff
-
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     # NOTICE:
     # Relative links are *not* fixed with this function!
