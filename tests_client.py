@@ -6,7 +6,7 @@ print("""
 pituophis testing grounds
 would you like to...
 1. view a gopher menu over TLS, unparsed (not working right now)
-2. view a gopher menu, parsed
+2. view a gopher menu, parsed (not yet implemented)
 3. view a gopher menu, unparsed
 4. run a search for "test" with veronica 2
 5. download a file
@@ -59,7 +59,7 @@ if choice == '6':
         if input('menu? (y/n): ').trim() in yes:
             menu = True
 
-resource = get(host, port=port, path=path, query=query, binary=binary, menu=menu, tls=tls)
+response = get(host, port=port, path=path, query=query, tls=tls)
 if binary:
     print("""
     what to do with this binary?
@@ -71,7 +71,7 @@ if binary:
     while not choice in choices:
         choice = input('> ')
     if choice == '1':
-        print(resource.decode('utf-8'))
+        print(response.text())
     else:
         if choice == '2':
             suggested_filename = path.split('/')[len(path.split('/')) - 1]
@@ -79,6 +79,9 @@ if binary:
             if filename == '':
                 filename = suggested_filename
             with open(filename, "wb") as f:
-                f.write(resource)
+                f.write(response.binary())
 else:
-    print(resource)
+    if menu:
+        print(response.menu())
+    else:
+        print(response.text())

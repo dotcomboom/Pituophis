@@ -33,7 +33,30 @@ import socket, ssl
 
 # Client stuff
 
-def get(host, port=70, path='/', query='', binary=False, menu=False, tls=False):
+
+class Selector:
+    def __init__(self):
+        # NOT YET IMPLEMENTED
+        pass
+
+
+class Response:
+    def __init__(self, stream):
+        self.stream = stream
+
+    def binary(self):
+        return self.stream.read()
+
+    def text(self):
+        return self.stream.read().decode('utf-8')
+
+    def menu(self):
+        # NOT YET IMPLEMENTED
+        # Returns array of Selector class
+        return self.stream.read().decode('utf-8')
+
+
+def get(host, port=70, path='/', query='', tls=False):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if tls:
         context = ssl.create_default_context()
@@ -44,18 +67,7 @@ def get(host, port=70, path='/', query='', binary=False, menu=False, tls=False):
     query = '\t' + query
     msg = path + query + '\r\n'
     s.sendall(msg.encode('utf-8'))
-    if binary:
-        return s.makefile('rb').read()
-    else:
-        text = ''
-        data = True
-        while data:
-            data = s.recv(1024)
-            text = text + data.decode('utf-8')
-        if menu:
-            return parseMenu(text)
-        else:
-            return text
+    return Response(s.makefile('rb'))
 
 
 def parseMenu(menu):
@@ -120,6 +132,7 @@ class Request:
         self.host = host
         self.port = port
 
+
 def handle(request):
     gmap = [
         "Path: " + request.path,
@@ -130,6 +143,7 @@ def handle(request):
         "This is the default Pituophis handler."
     ]
     return parse_gophermap(gmap)
+
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
