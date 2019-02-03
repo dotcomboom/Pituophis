@@ -5,16 +5,16 @@ Pituophis can grab files and text from Gopher servers through the `get()` functi
 ### Examples
 Getting menus and files as plain text:
 ```python
-get(host='gopher.floodgap.com', port=70, path='/')
-get(host='gopher.floodgap.com', port=70, path='/gopher/proxy')
+get(host='gopher.floodgap.com', port=70, path='/').text()
+get(host='gopher.floodgap.com', port=70, path='/gopher/proxy').text()
 ```
 Using search services:
 ```python
-get(host='gopher.floodgap.com', port=70, path='/v2/vs', query='toast')
+get(host='gopher.floodgap.com', port=70, path='/v2/vs', query='toast').text()
 ```
 Downloading a binary:
 ```python
-get(host='gopher.floodgap.com', port=70, path='/gopher/clients/win/hgopher2_3.zip', binary=True)
+get(host='gopher.floodgap.com', port=70, path='/gopher/clients/win/hgopher2_3.zip').binary()
 ```
 ## Server
 Pituophis can be used with a custom handler to serve Gopher requests. Primitive Bucktooth-like gophermap parsing (excluding path resolution) is available.
@@ -22,6 +22,7 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 ![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
 ## Planned features/Wishlist
 Client:
+- URL parsing
 - Menu parsing
 
 Server:
