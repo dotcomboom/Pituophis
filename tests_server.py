@@ -1,5 +1,6 @@
 from pituophis import serve, parse_gophermap
 
+
 def handle(request):
     gmap = [
         "Path: " + request.path,
@@ -12,6 +13,3 @@ def handle(request):
 
 # serve with custom handler
 serve("127.0.0.1", 50500, customHandler=handle)
-
-
-

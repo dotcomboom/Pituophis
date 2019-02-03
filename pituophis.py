@@ -28,12 +28,12 @@
 
 import socket, ssl
 
-nonBinaryTypes = ['0', '1', '7']
-
-# quick note:
+# Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
 
-def get(host, port=70, path='/', query='', binary=False, menu=True, filterSelector=True, tls=False):
+# Client stuff
+
+def get(host, port=70, path='/', query='', binary=False, menu=False, tls=False):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if tls:
         context = ssl.create_default_context()
@@ -59,9 +59,11 @@ def get(host, port=70, path='/', query='', binary=False, menu=True, filterSelect
 
 
 def parseMenu(menu):
+    # NOT YET IMPLEMENTED
     return menu
 
 def parseUrl(url):
+    # NOT YET IMPLEMENTED
     parsed = {
         'host': '',
         'port': '70',
@@ -72,6 +74,43 @@ def parseUrl(url):
     }
     url = 'gopher://' + url
 
+# Server stuff
+
+def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
+    # NOTICE:
+    # Relative links are *not* fixed with this function!
+    # The path isn't ever touched, so this is more for convenience of making menus
+    # (filling in the blank fields, information selectors...)
+    if type(source) == str:
+        source = source.replace('\r\n', '\n').split('\n')
+    newMenu = []
+    for selector in source:
+        if '\t' in selector:
+            # this is not information
+            selector = selector.split('\t')
+            # 1Text    pictures/    host.host    port
+            #  ^           ^           ^           ^
+            itype = selector[0][0]
+            text = selector[0][1:]
+            path = '/' + selector[1] + '/'
+            host = defHost
+            port = defPort
+
+            if len(selector) > 1:
+                path = selector[1]
+            if len(selector) > 2:
+                host = selector[2]
+            if len(selector) > 3:
+                port = selector[3]
+
+            selector = [itype + text, path, host, port]
+            newMenu.append('\t'.join(selector))
+        else:
+            selector = 'i' + selector
+            newMenu.append(selector)
+    print(newMenu)
+    # return '\r\n'.join(newMenu)
+    return newMenu
 
 class Request:
     def __init__(self, path, query, host, port):
@@ -80,8 +119,17 @@ class Request:
         self.host = host
         self.port = port
 
+def handle(request):
+    gmap = [
+        "This"
+        "Path: " + request.path,
+        "Query: " + request.query,
+        "Host: " + request.host,
+        "Port: " + str(request.port)
+    ]
+    return parse_gophermap(gmap)
 
-def serve(host="127.0.0.1", port=70, mapFileName='gophermap', useGophermaps=True, customHandler=False, debug=True):
+def serve(host="127.0.0.1", port=70, customHandler=handle, debug=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
         s.listen(1)
@@ -110,44 +158,5 @@ def serve(host="127.0.0.1", port=70, mapFileName='gophermap', useGophermaps=True
                     conn.send(bytes(r, 'utf-8'))
                 conn.send(b'.')
                 conn.close()
-                print('Connection closed')
-
-
-def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
-    # NOTICE:
-    # Relative links are *not* fixed with this function!
-    # The path isn't ever touched, so this is more for convenience of making menus
-    # (filling in the blank fields, information selectors...)
-    if type(source) == str:
-        source = source.replace('\r\n', '\n').split('\n')
-    newMenu = []
-    for selector in source:
-        if '\t' in selector:
-            # this is not information
-            selector = selector.split('\t')
-            # 1Text    pictures/    host.host    port
-            #  ^           ^           ^           ^
-            itype = '3'
-            text = 'error'
-            path = '/'
-            host = defHost
-            port = defPort
-
-            itype = selector[0][0]
-            text = selector[0][1:]
-
-            if len(selector) > 1:
-                path = selector[1]
-            if len(selector) > 2:
-                host = selector[2]
-            if len(selector) > 3:
-                port = selector[3]
-
-            selector = [itype + text, path, host, port]
-            newMenu.append('\t'.join(selector))
-        else:
-            selector = 'i' + selector
-            newMenu.append(selector)
-    print(newMenu)
-    # return '\r\n'.join(newMenu)
-    return newMenu
+                if debug:
+                    print('Connection closed')
