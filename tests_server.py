@@ -12,4 +12,4 @@ def handle(request):
 
 
 # serve with custom handler
-serve("127.0.0.1", 50500, customHandler=handle)
+serve("127.0.0.1", 50500, handler=handle)

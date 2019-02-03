@@ -76,7 +76,7 @@ def parseUrl(url):
 
 # Server stuff
 
-def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
+def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     # NOTICE:
     # Relative links are *not* fixed with this function!
     # The path isn't ever touched, so this is more for convenience of making menus
@@ -108,7 +108,8 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
         else:
             selector = 'i' + selector
             newMenu.append(selector)
-    print(newMenu)
+    if debug:
+        print(newMenu)
     # return '\r\n'.join(newMenu)
     return newMenu
 
@@ -121,15 +122,16 @@ class Request:
 
 def handle(request):
     gmap = [
-        "This"
         "Path: " + request.path,
         "Query: " + request.query,
         "Host: " + request.host,
-        "Port: " + str(request.port)
+        "Port: " + str(request.port),
+        "",
+        "This is the default Pituophis handler."
     ]
     return parse_gophermap(gmap)
 
-def serve(host="127.0.0.1", port=70, customHandler=handle, debug=True):
+def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
         s.listen(1)
@@ -146,12 +148,7 @@ def serve(host="127.0.0.1", port=70, customHandler=handle, debug=True):
                     query = request[1].replace('\r\n', '')
                 if debug:
                     print('Client requests:', path, query)
-                if customHandler:
-                    resp = customHandler(Request(path, query, host, port))
-                else:
-                    resp = ['iHello! You asked for... ' + path + '\t/\terror.host\t0\r\n',
-                            'iQuery, if you asked: ' + query + '\t/\terror.host\t0\r\n',
-                            'iThere is no custom handler enabled.\t/\terror.host\t0\r\n']
+                resp = handler(Request(path, query, host, port))
                 for r in resp:
                     if not r.endswith('\r\n'):
                         r += '\r\n'
