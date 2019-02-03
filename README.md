@@ -21,14 +21,14 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 
 ![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
 ## Planned features/Wishlist
-Both:
-- SSL/TLS support ([S/Gopher](https://umbrellix.net/software:ugopherserver) on port 105)
-- Less bugs
-- ~~Prego~~
-
 Client:
-- Client menu parsing
+- Menu parsing
 
 Server:
 - Server default handler with proper gophermap and directory/file serving
 - Asynchronous connections? Right now everything is on one thread, one request at a time
+
+Both:
+- SSL/TLS support ([S/Gopher](https://umbrellix.net/software:ugopherserver) on port 105)
+- Less bugs
+- ~~Prego~~
