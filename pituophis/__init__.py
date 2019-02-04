@@ -131,7 +131,7 @@ class Selector:
 
 def parse_menu(source):
     """
-    *Client.* Parses a String as a Gopher menu. Returns an array of Selectors.
+    *Client.* Parses a String as a Gopher menu. Returns a List of Selectors.
     """
     parsed_menu = []
     menu = source.replace('\r\n', '\n').replace('\n', '\r\n').split('\r\n')
