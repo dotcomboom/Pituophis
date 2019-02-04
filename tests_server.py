@@ -6,7 +6,8 @@ def handle(request):
         "Path: " + request.path,
         "Query: " + request.query,
         "Host: " + request.host,
-        "Port: " + str(request.port)
+        "Port: " + str(request.port),
+        "Client: " + request.client
     ]
     return pituophis.parse_gophermap(gmap)
 

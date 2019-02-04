@@ -243,7 +243,7 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
 
 def handle(request):
     """
-    Default handler function for Gopher requests. Currently a stub.
+    Default handler function for Gopher requests while hosting a server. Currently a stub.
     """
     gmap = [
         "Path: " + request.path,
@@ -258,7 +258,7 @@ def handle(request):
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     """
-    Listens for Gopher requests. Allows for using a custom handler that will return an array of lines to send to the client. After sending them, the finishing "." is sent and the connection is closed.
+    Listens for Gopher requests. Allows for using a custom handler that will return an Array of lines to send to the client. After sending them, the finishing "." is sent and the connection is closed.
     """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
