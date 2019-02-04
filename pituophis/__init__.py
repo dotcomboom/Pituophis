@@ -119,6 +119,9 @@ class Selector:
     """
 
     def __init__(self, type='i', text='error', path='/', host='error.host', port=0):
+        """
+        Initializes a new Selector object.
+        """
         self.type = type
         self.text = text
         self.path = path
@@ -127,6 +130,9 @@ class Selector:
 
 
 def parse_menu(source):
+    """
+    *Client.* Parses a String as a Gopher menu. Returns an array of Selectors.
+    """
     parsed_menu = []
     menu = source.replace('\r\n', '\n').replace('\n', '\r\n').split('\r\n')
     for line in menu:

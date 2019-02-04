@@ -1245,6 +1245,9 @@ table {
                 class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
                 class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
                 class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Selector object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
@@ -1259,6 +1262,9 @@ table {
 
 <span class="k">def</span> <span class="nf">parse_menu</span><span class="p">(</span><span class="n">source</span><span
                 class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Parses a String as a Gopher menu. Returns an array of Selectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parsed_menu</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">menu</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span
                 class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
@@ -1719,6 +1725,8 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
           </div>
 
 
+          <div class="desc"><p><em>Client.</em> Parses a String as a Gopher menu. Returns an array of Selectors.</p>
+          </div>
           <div class="source_cont">
               <p class="source_link"><a href="javascript:void(0);"
                                         onclick="toggle('source-pituophis.parse_menu', this);">Show source &equiv;</a>
@@ -1727,6 +1735,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
                   <div class="codehilite"><pre><span></span><span class="k">def</span> <span
                           class="nf">parse_menu</span><span class="p">(</span><span class="n">source</span><span
                           class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Parses a String as a Gopher menu. Returns an array of Selectors.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">parsed_menu</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">menu</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span
                               class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
@@ -1861,7 +1872,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10f4987b8&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10377b840&gt;, debug=True)</p>
     </div>
 
 
@@ -2337,6 +2348,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
                 class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
                 class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
                 class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes a new Selector object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
@@ -2366,11 +2380,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
         <p>def <span class="ident">__init__</span>(</p>
         <p>self, type=&#39;i&#39;, text=&#39;error&#39;, path=&#39;/&#39;, host=&#39;error.host&#39;, port=0)</p>
     </div>
-    
 
-    
-  
-    <div class="desc"><p>Initialize self.  See help(type(self)) for accurate signature.</p></div>
+
+      <div class="desc"><p>Initializes a new Selector object.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Selector.__init__', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Selector.__init__" class="source">
@@ -2382,6 +2394,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
               class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">host</span><span
               class="o">=</span><span class="s1">&#39;error.host&#39;</span><span class="p">,</span> <span class="n">port</span><span
               class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Initializes a new Selector object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                   class="nb">type</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
