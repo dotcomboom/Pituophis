@@ -11,9 +11,10 @@ would you like to...
 4. run a search for "test" with veronica 2
 5. download a file
 6. try it yourself
+7. enter a host or URL
 """)
 
-choices = ['1', '2', '3', '4', '5', '6']
+choices = ['1', '2', '3', '4', '5', '6', '7']
 
 choice = ''
 while not choice in choices:
@@ -47,17 +48,21 @@ if choice == '6':
     host = input('host: ')
     port = int(input('port: '))
     tls = False
-    if input('tls? (y/n): ').trim() in yes:
+    if input('tls? (y/n): ') in yes:
         tls = True
     path = input('path: ')
     query = input('query: ')
     binary = False
-    if input('binary? (y/n): ').trim() in yes:
+    if input('binary? (y/n): ') in yes:
         binary = True
     menu = False
     if not binary:
-        if input('menu? (y/n): ').trim() in yes:
+        if input('menu? (y/n): ') in yes:
             menu = True
+if choice == '7':
+    if input('binary? (y/n): ') in yes:
+        binary = True
+    host = input('host/url: ')
 
 response = get(host, port=port, path=path, query=query, tls=tls)
 if binary:

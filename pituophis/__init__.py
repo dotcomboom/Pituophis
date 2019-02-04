@@ -1,6 +1,6 @@
 # BSD 2-Clause License
 #
-# Copyright (c) 2018, dotcomboom <dotcomboom@protonmail.com> and contributors
+# Copyright (c) 2019, dotcomboom <dotcomboom@protonmail.com> and contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
@@ -26,7 +26,7 @@
 
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
-import socket, ssl
+import socket, ssl, re
 
 # Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
@@ -56,6 +56,44 @@ class Response:
 
 
 def get(host, port=70, path='/', query='', tls=False):
+    # URL parsing
+    if '/' in host:
+        url = host
+        # condense multiple slashes to one
+        url = re.sub(r'/+', '/', url)
+        url = url.split('/')
+        # split into protocol, host & port, and then the following items for the selector/path
+        # gopher:
+        # gopher.floodgap.com:70
+        # gopher/
+        # detect tls and remove protocol
+        if url[0].endswith(':'):
+            if url[0] == 'gophers:':
+                tls = True
+            url.pop(0)
+        # set and remove host/port
+        if len(url[0].split(':')) > 1:
+            host = url[0].split(':')[0]
+            port = url[0].split(':')[1]
+        else:
+            host = url[0]
+        url.pop(0)
+        # remove selector if it is there
+        if len(url[0]) == 1:
+            url.pop(0)
+        # set url to path?query
+        url = '/' + '/'.join(url)
+        path = url
+        # split query if it is there
+        if '?' in url:
+            url = url.split('?')
+            path = url[0]
+            url.pop(0)
+            if query == '':
+                query = '?'.join(url)
+
+        print(host, port, path, query, tls)
+
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if tls:
         context = ssl.create_default_context()
@@ -67,7 +105,6 @@ def get(host, port=70, path='/', query='', tls=False):
     msg = path + query + '\r\n'
     s.sendall(msg.encode('utf-8'))
     return Response(s.makefile('rb'))
-
 
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
