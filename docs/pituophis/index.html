@@ -1048,6 +1048,7 @@ table {
     <li class="mono"><a href="#pituophis.get">get</a></li>
     <li class="mono"><a href="#pituophis.handle">handle</a></li>
     <li class="mono"><a href="#pituophis.parse_gophermap">parse_gophermap</a></li>
+      <li class="mono"><a href="#pituophis.parse_menu">parse_menu</a></li>
     <li class="mono"><a href="#pituophis.parse_url">parse_url</a></li>
     <li class="mono"><a href="#pituophis.serve">serve</a></li>
   </ul>
@@ -1162,11 +1163,12 @@ table {
 
     <span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="c1"># Returns List of Selector class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_menu</span><span class="p">(</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span
+                class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span
+                class="p">))</span>
 
 
 <span class="k">class</span> <span class="nc">Request</span><span class="p">:</span>
@@ -1227,12 +1229,83 @@ table {
 <span class="c1"># Client stuff</span>
 <span class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    **Not yet implemented.** *Client.* Represents a selector in a parsed Gopher menu.</span>
+<span class="sd">    *Client.* Represents a selector in a parsed Gopher menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">,</span> <span class="nb">type</span><span class="o">=</span><span
+                class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">text</span><span
+                class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span
+                class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
+                class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
+                class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
+                class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
+                class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
+                class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
+                class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                class="n">port</span>
+
+
+<span class="k">def</span> <span class="nf">parse_menu</span><span class="p">(</span><span class="n">source</span><span
+                class="p">):</span>
+    <span class="n">parsed_menu</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">menu</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span
+                class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
+                class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">menu</span><span
+                class="p">:</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">Selector</span><span
+                class="p">()</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span
+                class="n">startswith</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span
+                class="p">):</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="s1">&#39;i&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
+                class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
+                class="s1">&#39;/&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
+                class="s1">&#39;error.host&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span
+                class="o">.</span><span class="n">match</span><span class="p">(</span><span class="sa">r</span><span
+                class="s1">&#39;^(.)(.*)\t(.*)\t(.*)\t(.*)&#39;</span><span class="p">,</span> <span
+                class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">type</span> <span
+                class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">1</span><span
+                class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span
+                class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">2</span><span
+                class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span
+                class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">3</span><span
+                class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span
+                class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">4</span><span
+                class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">port</span> <span
+                class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">5</span><span
+                class="p">]</span>
+        <span class="n">parsed_menu</span><span class="o">.</span><span class="n">append</span><span
+                class="p">(</span><span class="n">selector</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parsed_menu</span>
 
 
 <span class="k">def</span> <span class="nf">parse_url</span><span class="p">(</span><span class="n">url</span><span class="p">):</span>
@@ -1619,15 +1692,92 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 </div>
 
   </div>
-  
-      
-  <div class="item">
+
+
+      <div class="item">
+          <div class="name def" id="pituophis.parse_menu">
+              <p>def <span class="ident">parse_menu</span>(</p>
+              <p>source)</p>
+          </div>
+
+
+          <div class="source_cont">
+              <p class="source_link"><a href="javascript:void(0);"
+                                        onclick="toggle('source-pituophis.parse_menu', this);">Show source &equiv;</a>
+              </p>
+              <div id="source-pituophis.parse_menu" class="source">
+                  <div class="codehilite"><pre><span></span><span class="k">def</span> <span
+                          class="nf">parse_menu</span><span class="p">(</span><span class="n">source</span><span
+                          class="p">):</span>
+    <span class="n">parsed_menu</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">menu</span> <span class="o">=</span> <span class="n">source</span><span class="o">.</span><span
+                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                              class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                              class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                              class="p">)</span><span class="o">.</span><span class="n">replace</span><span
+                              class="p">(</span><span class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                              class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                              class="s1">&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span
+                              class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span
+                              class="s1">&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">menu</span><span
+                              class="p">:</span>
+        <span class="n">selector</span> <span class="o">=</span> <span class="n">Selector</span><span
+                              class="p">()</span>
+        <span class="k">if</span> <span class="n">line</span><span class="o">.</span><span
+                              class="n">startswith</span><span class="p">(</span><span
+                              class="s1">&#39;i&#39;</span><span class="p">):</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                              class="s1">&#39;i&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
+                              class="n">line</span><span class="p">[</span><span class="mi">1</span><span
+                              class="p">:]</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
+                              class="s1">&#39;/&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
+                              class="s1">&#39;error.host&#39;</span>
+            <span class="n">selector</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                              class="mi">0</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">matches</span> <span class="o">=</span> <span class="n">re</span><span
+                              class="o">.</span><span class="n">match</span><span class="p">(</span><span
+                              class="sa">r</span><span class="s1">&#39;^(.)(.*)\t(.*)\t(.*)\t(.*)&#39;</span><span
+                              class="p">,</span> <span class="n">line</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">matches</span><span class="p">:</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">type</span> <span
+                              class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">1</span><span
+                              class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span
+                              class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">2</span><span
+                              class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span
+                              class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">3</span><span
+                              class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span
+                              class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">4</span><span
+                              class="p">]</span>
+                <span class="n">selector</span><span class="o">.</span><span class="n">port</span> <span
+                              class="o">=</span> <span class="n">matches</span><span class="p">[</span><span class="mi">5</span><span
+                              class="p">]</span>
+        <span class="n">parsed_menu</span><span class="o">.</span><span class="n">append</span><span
+                              class="p">(</span><span class="n">selector</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parsed_menu</span>
+</pre>
+                  </div>
+
+              </div>
+          </div>
+
+      </div>
+
+
+      <div class="item">
     <div class="name def" id="pituophis.parse_url">
     <p>def <span class="ident">parse_url</span>(</p><p>url)</p>
     </div>
 
 
-      <div class="desc"><p><em>Client.</em> Parses a Gopher URL and returns an equivalent Request.</p></div>
+          <div class="desc"><p><em>Client.</em> Parses a Gopher URL and returns an equivalent Request.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.parse_url', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.parse_url" class="source">
@@ -1681,7 +1831,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x1046ef6a8&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x106bc57b8&gt;, debug=True)</p>
     </div>
 
 
@@ -2016,11 +2166,12 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 
     <span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="c1"># Returns List of Selector class</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">parse_menu</span><span class="p">(</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span
+                class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span
+                class="p">))</span>
 </pre></div>
 
   </div>
@@ -2066,18 +2217,19 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
     </div>
 
 
-      <div class="desc"><p><strong>NOT YET IMPLEMENTED.</strong> Decodes the binary as text and parses it as a Gopher
-          menu. Returns a List of Gopher menu items parsed as the Selector type.</p></div>
+      <div class="desc"><p>Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu
+          items parsed as the Selector type.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Response.menu', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Response.menu" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">    Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="c1"># NOT YET IMPLEMENTED</span>
-    <span class="c1"># Returns List of Selector class</span>
-    <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">parse_menu</span><span class="p">(</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span
+                class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span
+                class="p">))</span>
 </pre></div>
 
   </div>
@@ -2126,20 +2278,35 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
       
       <div class="item">
       <p id="pituophis.Selector" class="name">class <span class="ident">Selector</span></p>
-      
-  
-    <div class="desc"><p><strong>Not yet implemented.</strong> <em>Client.</em> Represents a selector in a parsed Gopher menu.</p></div>
+
+
+          <div class="desc"><p><em>Client.</em> Represents a selector in a parsed Gopher menu.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Selector', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Selector" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    **Not yet implemented.** *Client.* Represents a selector in a parsed Gopher menu.</span>
+<span class="sd">    *Client.* Represents a selector in a parsed Gopher menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="k">pass</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">,</span> <span class="nb">type</span><span class="o">=</span><span
+                class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">text</span><span
+                class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span
+                class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
+                class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
+                class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
+                class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
+                class="n">text</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
+                class="n">path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
+                class="n">host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                class="n">port</span>
 </pre></div>
 
   </div>
@@ -2156,7 +2323,8 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
             
   <div class="item">
     <div class="name def" id="pituophis.Selector.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self)</p>
+        <p>def <span class="ident">__init__</span>(</p>
+        <p>self, type=&#39;i&#39;, text=&#39;error&#39;, path=&#39;/&#39;, host=&#39;error.host&#39;, port=0)</p>
     </div>
     
 
@@ -2166,16 +2334,72 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Selector.__init__', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Selector.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-    <span class="c1"># NOT YET IMPLEMENTED</span>
-    <span class="k">pass</span>
+      <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span
+              class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span
+              class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span
+              class="n">text</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span
+              class="p">,</span> <span class="n">path</span><span class="o">=</span><span
+              class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">host</span><span
+              class="o">=</span><span class="s1">&#39;error.host&#39;</span><span class="p">,</span> <span class="n">port</span><span
+              class="o">=</span><span class="mi">0</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                  class="nb">type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
+                  class="n">text</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
+                  class="n">path</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
+                  class="n">host</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                  class="n">port</span>
 </pre></div>
 
   </div>
 </div>
 
   </div>
-  
+
+          <h3>Instance variables</h3>
+          <div class="item">
+              <p id="pituophis.Selector.host" class="name">var <span class="ident">host</span></p>
+
+
+              <div class="source_cont">
+              </div>
+
+          </div>
+          <div class="item">
+              <p id="pituophis.Selector.path" class="name">var <span class="ident">path</span></p>
+
+
+              <div class="source_cont">
+              </div>
+
+          </div>
+          <div class="item">
+              <p id="pituophis.Selector.port" class="name">var <span class="ident">port</span></p>
+
+
+              <div class="source_cont">
+              </div>
+
+          </div>
+          <div class="item">
+              <p id="pituophis.Selector.text" class="name">var <span class="ident">text</span></p>
+
+
+              <div class="source_cont">
+              </div>
+
+          </div>
+          <div class="item">
+              <p id="pituophis.Selector.type" class="name">var <span class="ident">type</span></p>
+
+
+              <div class="source_cont">
+              </div>
+
+          </div>
       </div>
       </div>
 

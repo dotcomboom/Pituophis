@@ -54,11 +54,9 @@ class Response:
 
     def menu(self):
         """
-        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.
+        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.
         """
-        # NOT YET IMPLEMENTED
-        # Returns List of Selector class
-        return self.binary.decode('utf-8')
+        return parse_menu(self.binary.decode('utf-8'))
 
 
 class Request:
@@ -86,7 +84,7 @@ class Request:
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if self.tls:
-            context = ssl.create_default_context()
+            context = ssl.create_default_context()  # Not working yet
             s = context.wrap_socket(s, server_hostname=self.host)
         else:
             s.settimeout(10.0)
@@ -117,12 +115,38 @@ class Request:
 # Client stuff
 class Selector:
     """
-    **Not yet implemented.** *Client.* Represents a selector in a parsed Gopher menu.
+    *Client.* Represents a selector in a parsed Gopher menu.
     """
 
-    def __init__(self):
-        # NOT YET IMPLEMENTED
-        pass
+    def __init__(self, type='i', text='error', path='/', host='error.host', port=0):
+        self.type = type
+        self.text = text
+        self.path = path
+        self.host = host
+        self.port = port
+
+
+def parse_menu(source):
+    parsed_menu = []
+    menu = source.replace('\r\n', '\n').replace('\n', '\r\n').split('\r\n')
+    for line in menu:
+        selector = Selector()
+        if line.startswith('i'):
+            selector.type = 'i'
+            selector.text = line[1:]
+            selector.path = '/'
+            selector.host = 'error.host'
+            selector.port = 0
+        else:
+            matches = re.match(r'^(.)(.*)\t(.*)\t(.*)\t(.*)', line)
+            if matches:
+                selector.type = matches[1]
+                selector.text = matches[2]
+                selector.path = matches[3]
+                selector.host = matches[4]
+                selector.port = matches[5]
+        parsed_menu.append(selector)
+    return parsed_menu
 
 
 def parse_url(url):

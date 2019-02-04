@@ -4,7 +4,7 @@ Experimental Gopher client/server library for Python
 **NOTICE:** This is under active, *active* development and basically nothing is finalized. This whole thing can be turned on its head in the matter of two days, so I wouldn't use it for anything quite yet.
 
 ## Client
-Pituophis can grab files and text from Gopher servers through the `get()` function.
+Pituophis can grab files and text from Gopher servers through a the `Request.get()` and `get()` functions.
 ### Examples
 Getting menus and files as plain text:
 ```python
@@ -13,6 +13,16 @@ pituophis.get('gopher://gopher.floodgap.com/1/').text()
 pituophis.get('gopher://gopher.floodgap.com:70/0/gopher/proxy').text()
 pituophis.get(host='gopher.floodgap.com', port=70, path='/').text()
 pituophis.get(host='gopher.floodgap.com', port=70, path='/gopher/proxy').text()
+```
+Getting a menu, parsed:
+```python
+menu = pituophis.get('gopher.floodgap.com').menu()
+for selector in menu:
+    print(selector.type)
+    print(selector.text)
+    print(selector.path)
+    print(selector.host)
+    print(selector.port)
 ```
 Using search services:
 ```python
@@ -51,9 +61,6 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 
 ![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
 ## Planned features/Wishlist
-Client:
-- Menu parsing
-
 Server:
 - Server default handler with proper gophermap and directory/file serving
 - Asynchronous connections? Right now everything is on one thread, one request at a time

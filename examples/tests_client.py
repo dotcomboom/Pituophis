@@ -1,12 +1,14 @@
 import pituophis
 
+# this is an antique already!
+
 yes = ['y', 'yes', 'yeah', 'yep', 'yup', 'ye', 'sure']
 
 print("""
 pituophis testing grounds
 would you like to...
 1. view a gopher menu over TLS, unparsed (not working right now)
-2. view a gopher menu, parsed (not yet implemented)
+2. view a gopher menu, parsed
 3. view a gopher menu, unparsed
 4. run a search for "test" with veronica 2
 5. download a file
