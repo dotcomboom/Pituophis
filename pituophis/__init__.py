@@ -133,7 +133,7 @@ def parse_menu(source):
         selector = Selector()
         if line.startswith('i'):
             selector.type = 'i'
-            selector.text = line[1:]
+            selector.text = line[1:].split('\t')[0]
             selector.path = '/'
             selector.host = 'error.host'
             selector.port = 0
