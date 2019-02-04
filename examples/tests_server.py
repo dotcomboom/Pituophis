@@ -2,27 +2,25 @@ import pituophis
 from pituophis import Selector
 
 
-# TODO: Serve a binary
-
 def handle(request):
     if request.path == '/txt':
         text = """
 This is plain text.
-
 Nothing fancy.
         """
         return pituophis.encode(text)
-    elif request.path == '/bin':
-        return pituophis.encode('nyi')
+    elif request.path == '/server.png':
+        in_file = open("server.png", "rb")
+        data = in_file.read()
+        in_file.close()
+        return data
     else:
         menu = [
             Selector(text="Path: " + request.path),
             Selector(text="Query: " + request.query),
             Selector(text="Host: " + request.host),
             Selector(text="Port: " + str(request.port)),
-            Selector(text="Client: " + request.client),
-            Selector(),
-            Selector(text="This is the default Pituophis handler.")
+            Selector(text="Client: " + request.client)
         ]
         return pituophis.encode(menu)
 

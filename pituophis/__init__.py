@@ -277,7 +277,10 @@ def encode(str_or_lines):
                 out += line.source()
         return bytes(out, 'utf-8')
 
-    raise Exception("encode() accepts items of type String or List.")
+    if type(str_or_lines) == bytes:
+        return str_or_lines
+
+    raise Exception("encode() accepts items of type String, List, or Bytes.")
 
 
 def handle(request):
@@ -289,7 +292,9 @@ def handle(request):
         Selector(text="Query: " + request.query),
         Selector(text="Host: " + request.host),
         Selector(text="Port: " + str(request.port)),
-        Selector(text="Client: " + request.client)
+        Selector(text="Client: " + request.client),
+        Selector(),
+        Selector(text="This is the default Pituophis handler.")
     ]
     return encode(menu)
 

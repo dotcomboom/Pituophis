@@ -1085,6 +1085,7 @@ table {
           
   <ul>
     <li class="mono"><a href="#pituophis.Selector.__init__">__init__</a></li>
+      <li class="mono"><a href="#pituophis.Selector.source">source</a></li>
   </ul>
 
         </li>
@@ -1178,7 +1179,16 @@ table {
 <span class="sd">    The type property is not used when sending or receiving requests; it&#39;s purely for client-side usage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span
+                class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span
+                class="p">,</span> <span class="n">path</span><span class="o">=</span><span
+                class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">query</span><span
+                class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span
+                class="n">itype</span><span class="o">=</span><span class="s1">&#39;9&#39;</span><span
+                class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span
+                class="p">,</span> <span class="n">client</span><span class="o">=</span><span
+                class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a new Request object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1186,7 +1196,8 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="n">itype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>  <span class="c1"># only used in client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
@@ -1234,14 +1245,14 @@ table {
 <span class="c1"># Client stuff</span>
 <span class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Client.* Represents a selector in a parsed Gopher menu.</span>
+<span class="sd">    *Server/Client.* Represents a selector in a parsed Gopher menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
-                class="p">,</span> <span class="nb">type</span><span class="o">=</span><span
+                class="p">,</span> <span class="n">itype</span><span class="o">=</span><span
                 class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">text</span><span
-                class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span
-                class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
+                class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">path</span><span
+                class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
                 class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
                 class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
                 class="p">):</span>
@@ -1249,7 +1260,7 @@ table {
 <span class="sd">        Initializes a new Selector object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                class="nb">type</span>
+                class="n">itype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                 class="n">text</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
@@ -1258,6 +1269,24 @@ table {
                 class="n">host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="n">port</span>
+
+    <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span
+                class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span
+                class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">path</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">host</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span
+                class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span>
 
 
 <span class="k">def</span> <span class="nf">parse_menu</span><span class="p">(</span><span class="n">source</span><span
@@ -1330,6 +1359,11 @@ table {
 
     <span class="c1"># condense multiple slashes to one</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/+&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="c1"># add protocol if not there</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;:/&#39;</span> <span
+                class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;gopher:/&#39;</span> <span
+                class="o">+</span> <span class="n">url</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
     <span class="c1"># split into protocol, host &amp; port, and then the following items for the selector/path</span>
     <span class="c1"># gopher:</span>
@@ -1378,17 +1412,23 @@ table {
 <span class="sd">    *Client.* Quickly creates and sends a Request. Returns a Response object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="n">tls</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">host</span> <span
+                class="ow">or</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span
+                class="n">host</span><span class="p">:</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">parse_url</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">req</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 
 
 <span class="c1"># Server stuff</span>
-<span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span
+                class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span
+                class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span
+                class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
 <span class="sd">    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths</span>
-<span class="sd">    are not resolved. It does, however, fill in missing selector, host, or port fields.</span>
+<span class="sd">    are not resolved. It does, however, fill in missing selector, host, and port fields,</span>
+<span class="sd">    given that the correct host and port values are passed to it.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># NOTICE:</span>
     <span class="c1"># Relative links are *not* fixed with this function!</span>
@@ -1421,8 +1461,6 @@ table {
         <span class="k">else</span><span class="p">:</span>
             <span class="n">selector</span> <span class="o">=</span> <span class="s1">&#39;i&#39;</span> <span class="o">+</span> <span class="n">selector</span>
             <span class="n">newMenu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">newMenu</span><span class="p">)</span>
     <span class="c1"># return &#39;\r\n&#39;.join(newMenu)</span>
     <span class="k">return</span> <span class="n">newMenu</span>
 
@@ -1430,7 +1468,7 @@ table {
 <span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span
                 class="n">str_or_lines</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().</span>
+<span class="sd">    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
                 class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
@@ -1445,27 +1483,39 @@ table {
         <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
                 class="n">str_or_lines</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
-                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
-                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
+                class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                 class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
-                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
-                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
-                class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
-                class="s1">&#39;</span><span class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
                 class="o">.</span><span class="n">endswith</span><span class="p">(</span><span
                 class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
                 class="p">):</span>
-                <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
-                class="se">\r\n</span><span class="s1">&#39;</span>
-            <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+                    <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                class="s1">&#39;</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span
+                class="n">Selector</span><span class="p">:</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span
+                class="n">source</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
                 class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
                 class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String or List.&quot;</span><span
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">str_or_lines</span>
+
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String, List, or Bytes.&quot;</span><span
                 class="p">)</span>
 
 
@@ -1473,18 +1523,29 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gmap</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;Path: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-        <span class="s2">&quot;Query: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">query</span><span class="p">,</span>
-        <span class="s2">&quot;Host: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
-        <span class="s2">&quot;Port: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span class="p">),</span>
-        <span class="s2">&quot;Client: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">client</span><span class="p">),</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;This is the default Pituophis handler.&quot;</span>
+    <span class="n">menu</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Path: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">path</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Query: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">query</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Host: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">host</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Port: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span
+                class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span
+                class="p">)),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Client: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">client</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;This is the default Pituophis handler.&quot;</span><span class="p">)</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span
-                class="n">parse_gophermap</span><span class="p">(</span><span class="n">gmap</span><span
-                class="p">))</span>
+    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">menu</span><span
+                class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
@@ -1538,8 +1599,8 @@ table {
           </div>
 
 
-          <div class="desc"><p><em>Server.</em> Encode a List of lines, or a String, as bytes to be sent by serve().</p>
-          </div>
+          <div class="desc"><p><em>Server.</em> Encode a List of lines or Selector objects, or a String, as bytes to be
+              sent by serve().</p></div>
           <div class="source_cont">
               <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.encode', this);">Show
                   source &equiv;</a></p>
@@ -1548,7 +1609,7 @@ table {
                           class="nf">encode</span><span class="p">(</span><span class="n">str_or_lines</span><span
                           class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().</span>
+<span class="sd">    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
                               class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
@@ -1563,27 +1624,40 @@ table {
         <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
                               class="n">str_or_lines</span><span class="p">:</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
-                              class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                              class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
+                              class="p">:</span>
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
+                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                               class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
                               class="p">)</span>
-            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
-                              class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
+                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                               class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
                               class="p">)</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
                               class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
-                <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
-                              class="se">\r\n</span><span class="s1">&#39;</span>
-            <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+                    <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                              class="s1">&#39;</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                              class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="n">Selector</span><span
+                              class="p">:</span>
+                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span
+                              class="n">source</span><span class="p">()</span>
         <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
                               class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
                               class="p">)</span>
 
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String or List.&quot;</span><span
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                              class="nb">bytes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">str_or_lines</span>
+
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String, List, or Bytes.&quot;</span><span
                               class="p">)</span>
 </pre>
                   </div>
@@ -1610,7 +1684,9 @@ table {
 <span class="sd">    *Client.* Quickly creates and sends a Request. Returns a Response object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">req</span> <span class="o">=</span> <span class="n">Request</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="n">tls</span><span class="p">)</span>
-    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">host</span><span class="p">:</span>
+    <span class="k">if</span> <span class="s1">&#39;/&#39;</span> <span class="ow">in</span> <span class="n">host</span> <span
+                class="ow">or</span> <span class="s1">&#39;:&#39;</span> <span class="ow">in</span> <span
+                class="n">host</span><span class="p">:</span>
         <span class="n">req</span> <span class="o">=</span> <span class="n">parse_url</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">req</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
 </pre></div>
@@ -1636,18 +1712,29 @@ table {
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">gmap</span> <span class="o">=</span> <span class="p">[</span>
-        <span class="s2">&quot;Path: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">path</span><span class="p">,</span>
-        <span class="s2">&quot;Query: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">query</span><span class="p">,</span>
-        <span class="s2">&quot;Host: &quot;</span> <span class="o">+</span> <span class="n">request</span><span class="o">.</span><span class="n">host</span><span class="p">,</span>
-        <span class="s2">&quot;Port: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span class="p">),</span>
-        <span class="s2">&quot;Client: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">client</span><span class="p">),</span>
-        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;This is the default Pituophis handler.&quot;</span>
+    <span class="n">menu</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Path: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">path</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Query: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">query</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Host: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">host</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Port: &quot;</span> <span class="o">+</span> <span class="nb">str</span><span
+                class="p">(</span><span class="n">request</span><span class="o">.</span><span class="n">port</span><span
+                class="p">)),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;Client: &quot;</span> <span class="o">+</span> <span class="n">request</span><span
+                class="o">.</span><span class="n">client</span><span class="p">),</span>
+        <span class="n">Selector</span><span class="p">(),</span>
+        <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
+                class="s2">&quot;This is the default Pituophis handler.&quot;</span><span class="p">)</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span
-                class="n">parse_gophermap</span><span class="p">(</span><span class="n">gmap</span><span
-                class="p">))</span>
+    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">menu</span><span
+                class="p">)</span>
 </pre></div>
 
   </div>
@@ -1658,22 +1745,29 @@ table {
       
   <div class="item">
     <div class="name def" id="pituophis.parse_gophermap">
-    <p>def <span class="ident">parse_gophermap</span>(</p><p>source, defHost=&#39;127.0.0.1&#39;, defPort=&#39;70&#39;, debug=False)</p>
+        <p>def <span class="ident">parse_gophermap</span>(</p>
+        <p>source, defHost=&#39;127.0.0.1&#39;, defPort=&#39;70&#39;)</p>
     </div>
 
 
       <div class="desc"><p><em>Server.</em> Converts a Gophermap (as a String or List) into a Gopher menu. Returns a
           List of lines to send.
 This is <em>not</em> as feature-complete as the actual Bucktooth implementation; one example being how paths
-are not resolved. It does, however, fill in missing selector, host, or port fields.</p></div>
+          are not resolved. It does, however, fill in missing selector, host, and port fields,
+          given that the correct host and port values are passed to it.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.parse_gophermap', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.parse_gophermap" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+      <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">parse_gophermap</span><span
+              class="p">(</span><span class="n">source</span><span class="p">,</span> <span
+              class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span
+              class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span
+              class="s1">&#39;70&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
 <span class="sd">    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths</span>
-<span class="sd">    are not resolved. It does, however, fill in missing selector, host, or port fields.</span>
+<span class="sd">    are not resolved. It does, however, fill in missing selector, host, and port fields,</span>
+<span class="sd">    given that the correct host and port values are passed to it.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># NOTICE:</span>
     <span class="c1"># Relative links are *not* fixed with this function!</span>
@@ -1706,8 +1800,6 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
         <span class="k">else</span><span class="p">:</span>
             <span class="n">selector</span> <span class="o">=</span> <span class="s1">&#39;i&#39;</span> <span class="o">+</span> <span class="n">selector</span>
             <span class="n">newMenu</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="n">newMenu</span><span class="p">)</span>
     <span class="c1"># return &#39;\r\n&#39;.join(newMenu)</span>
     <span class="k">return</span> <span class="n">newMenu</span>
 </pre></div>
@@ -1819,6 +1911,11 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 
     <span class="c1"># condense multiple slashes to one</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/+&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
+    <span class="c1"># add protocol if not there</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;:/&#39;</span> <span
+                class="ow">in</span> <span class="n">url</span><span class="p">:</span>
+        <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;gopher:/&#39;</span> <span
+                class="o">+</span> <span class="n">url</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">url</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
     <span class="c1"># split into protocol, host &amp; port, and then the following items for the selector/path</span>
     <span class="c1"># gopher:</span>
@@ -1871,7 +1968,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10deff840&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10ea01840&gt;, debug=True)</p>
     </div>
 
 
@@ -1941,7 +2038,16 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 <span class="sd">    The type property is not used when sending or receiving requests; it&#39;s purely for client-side usage.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span
+                class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span
+                class="p">,</span> <span class="n">path</span><span class="o">=</span><span
+                class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">query</span><span
+                class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span
+                class="n">itype</span><span class="o">=</span><span class="s1">&#39;9&#39;</span><span
+                class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span
+                class="p">,</span> <span class="n">client</span><span class="o">=</span><span
+                class="s1">&#39;&#39;</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Initializes a new Request object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
@@ -1949,7 +2055,8 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="n">itype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>  <span class="c1"># only used in client</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
@@ -2008,7 +2115,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
             
   <div class="item">
     <div class="name def" id="pituophis.Request.__init__">
-    <p>def <span class="ident">__init__</span>(</p><p>self, host=&#39;127.0.0.1&#39;, port=70, path=&#39;/&#39;, query=&#39;&#39;, type=&#39;9&#39;, tls=False, client=&#39;&#39;)</p>
+        <p>def <span class="ident">__init__</span>(</p>
+        <p>self, host=&#39;127.0.0.1&#39;, port=70, path=&#39;/&#39;, query=&#39;&#39;, itype=&#39;9&#39;, tls=False,
+            client=&#39;&#39;)</p>
     </div>
     
 
@@ -2018,7 +2127,16 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Request.__init__', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Request.__init__" class="source">
-    <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">query</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span class="n">client</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+      <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span
+              class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">host</span><span
+              class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span
+              class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span
+              class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span
+              class="p">,</span> <span class="n">query</span><span class="o">=</span><span
+              class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">itype</span><span
+              class="o">=</span><span class="s1">&#39;9&#39;</span><span class="p">,</span> <span
+              class="n">tls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span
+              class="n">client</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Initializes a new Request object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -2026,11 +2144,12 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
     <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">port</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">path</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span class="n">query</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="nb">type</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                  class="n">itype</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
-                class="n">tls</span>  <span class="c1"># only used in client</span>
+                  class="n">tls</span>  <span class="c1"># only used in client</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
-                class="n">client</span>  <span class="c1"># only used in server</span>
+                  class="n">client</span>  <span class="c1"># only used in server</span>
 </pre></div>
 
   </div>
@@ -2330,20 +2449,20 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
       <p id="pituophis.Selector" class="name">class <span class="ident">Selector</span></p>
 
 
-          <div class="desc"><p><em>Client.</em> Represents a selector in a parsed Gopher menu.</p></div>
+          <div class="desc"><p><em>Server/Client.</em> Represents a selector in a parsed Gopher menu.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Selector', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Selector" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Client.* Represents a selector in a parsed Gopher menu.</span>
+<span class="sd">    *Server/Client.* Represents a selector in a parsed Gopher menu.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
-                class="p">,</span> <span class="nb">type</span><span class="o">=</span><span
+                class="p">,</span> <span class="n">itype</span><span class="o">=</span><span
                 class="s1">&#39;i&#39;</span><span class="p">,</span> <span class="n">text</span><span
-                class="o">=</span><span class="s1">&#39;error&#39;</span><span class="p">,</span> <span
-                class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
+                class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">path</span><span
+                class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
                 class="n">host</span><span class="o">=</span><span class="s1">&#39;error.host&#39;</span><span
                 class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">0</span><span
                 class="p">):</span>
@@ -2351,7 +2470,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 <span class="sd">        Initializes a new Selector object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                class="nb">type</span>
+                class="n">itype</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                 class="n">text</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
@@ -2360,6 +2479,24 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
                 class="n">host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="n">port</span>
+
+    <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
+                class="p">):</span>
+        <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">type</span><span class="p">)</span> <span
+                class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span
+                class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">path</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">host</span><span class="p">)</span> <span class="o">+</span> <span
+                class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                class="nb">str</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span
+                class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span>
 </pre></div>
 
   </div>
@@ -2377,7 +2514,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.Selector.__init__">
         <p>def <span class="ident">__init__</span>(</p>
-        <p>self, type=&#39;i&#39;, text=&#39;error&#39;, path=&#39;/&#39;, host=&#39;error.host&#39;, port=0)</p>
+        <p>self, itype=&#39;i&#39;, text=&#39;&#39;, path=&#39;/&#39;, host=&#39;error.host&#39;, port=0)</p>
     </div>
 
 
@@ -2386,9 +2523,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Selector.__init__', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Selector.__init__" class="source">
       <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="fm">__init__</span><span
-              class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">type</span><span
+              class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">itype</span><span
               class="o">=</span><span class="s1">&#39;i&#39;</span><span class="p">,</span> <span
-              class="n">text</span><span class="o">=</span><span class="s1">&#39;error&#39;</span><span
+              class="n">text</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span
               class="p">,</span> <span class="n">path</span><span class="o">=</span><span
               class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">host</span><span
               class="o">=</span><span class="s1">&#39;error.host&#39;</span><span class="p">,</span> <span class="n">port</span><span
@@ -2397,7 +2534,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 <span class="sd">    Initializes a new Selector object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                  class="nb">type</span>
+                  class="n">itype</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                   class="n">text</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
@@ -2406,6 +2543,46 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
                   class="n">host</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                   class="n">port</span>
+</pre>
+      </div>
+
+  </div>
+  </div>
+
+  </div>
+
+
+          <div class="item">
+              <div class="name def" id="pituophis.Selector.source">
+                  <p>def <span class="ident">source</span>(</p>
+                  <p>self)</p>
+              </div>
+
+
+              <div class="source_cont">
+                  <p class="source_link"><a href="javascript:void(0);"
+                                            onclick="toggle('source-pituophis.Selector.source', this);">Show source
+                      &equiv;</a></p>
+                  <div id="source-pituophis.Selector.source" class="source">
+                      <div class="codehilite"><pre><span></span><span class="k">def</span> <span
+                              class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
+                              class="p">):</span>
+    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="bp">self</span><span
+                                  class="o">.</span><span class="n">type</span><span class="p">)</span> <span class="o">+</span> <span
+                                  class="nb">str</span><span class="p">(</span><span class="bp">self</span><span
+                                  class="o">.</span><span class="n">text</span><span class="p">)</span> <span class="o">+</span> <span
+                                  class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span
+                                  class="o">+</span> <span class="nb">str</span><span class="p">(</span><span
+                                  class="bp">self</span><span class="o">.</span><span class="n">path</span><span
+                                  class="p">)</span> <span class="o">+</span> <span class="s1">&#39;</span><span
+                                  class="se">\t</span><span class="s1">&#39;</span> <span class="o">+</span> <span
+                                  class="nb">str</span><span class="p">(</span><span class="bp">self</span><span
+                                  class="o">.</span><span class="n">host</span><span class="p">)</span> <span class="o">+</span> <span
+                                  class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span> <span
+                                  class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span> <span
+                                  class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                                  class="s1">&#39;</span>
 </pre></div>
 
   </div>
