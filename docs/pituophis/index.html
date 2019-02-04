@@ -1557,19 +1557,41 @@ table {
         <span class="n">s</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
         <span class="n">s</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-            <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Connected by&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-                <span class="n">request</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Client requests:&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
-                <span class="n">resp</span> <span class="o">=</span> <span class="n">handler</span><span
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span
+                class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Connected by&#39;</span><span class="p">,</span> <span class="n">addr</span><span
+                class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span
+                class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span
+                class="p">)</span>
+                    <span class="n">request</span> <span class="o">=</span> <span class="n">data</span><span
+                class="o">.</span><span class="n">decode</span><span class="p">(</span><span
+                class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span
+                class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span
+                class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span
+                class="n">request</span><span class="p">)</span> <span class="o">&gt;</span> <span
+                class="mi">1</span><span class="p">:</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span
+                class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Client requests:&#39;</span><span class="p">,</span> <span class="n">path</span><span
+                class="p">,</span> <span class="n">query</span><span class="p">)</span>
+                    <span class="n">resp</span> <span class="o">=</span> <span class="n">handler</span><span
                 class="p">(</span><span class="n">Request</span><span class="p">(</span><span class="n">path</span><span
                 class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">query</span><span
                 class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">host</span><span
@@ -1577,11 +1599,19 @@ table {
                 class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">client</span><span
                 class="o">=</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span
                 class="p">]))</span>
-                <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
+                    <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
                 class="p">(</span><span class="n">resp</span><span class="p">)</span>
-                <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span
+                class="p">()</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Connection closed&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span
+                class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Connection closed&#39;</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span
+                class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="s1">&#39;; restarting&#39;</span><span
+                class="p">)</span>
 </pre></div>
 
   </div>
@@ -1968,7 +1998,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x1010b8840&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x104299840&gt;, debug=True)</p>
     </div>
 
 
@@ -1987,19 +2017,41 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
         <span class="n">s</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
         <span class="n">s</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
-            <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
-            <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Connected by&#39;</span><span class="p">,</span> <span class="n">addr</span><span class="p">)</span>
-                <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span class="p">)</span>
-                <span class="n">request</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
-                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">request</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
-                    <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Client requests:&#39;</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">query</span><span class="p">)</span>
-                <span class="n">resp</span> <span class="o">=</span> <span class="n">handler</span><span
+            <span class="k">try</span><span class="p">:</span>
+                <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span
+                class="n">s</span><span class="o">.</span><span class="n">accept</span><span class="p">()</span>
+                <span class="k">with</span> <span class="n">conn</span><span class="p">:</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Connected by&#39;</span><span class="p">,</span> <span class="n">addr</span><span
+                class="p">)</span>
+                    <span class="n">data</span> <span class="o">=</span> <span class="n">conn</span><span
+                class="o">.</span><span class="n">recv</span><span class="p">(</span><span class="mi">1024</span><span
+                class="p">)</span>
+                    <span class="n">request</span> <span class="o">=</span> <span class="n">data</span><span
+                class="o">.</span><span class="n">decode</span><span class="p">(</span><span
+                class="s1">&#39;utf-8&#39;</span><span class="p">)</span><span class="o">.</span><span
+                class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\t</span><span class="s1">&#39;</span><span class="p">)</span>
+                    <span class="n">path</span> <span class="o">=</span> <span class="n">request</span><span
+                class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="n">query</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span>
+                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span
+                class="n">request</span><span class="p">)</span> <span class="o">&gt;</span> <span
+                class="mi">1</span><span class="p">:</span>
+                        <span class="n">query</span> <span class="o">=</span> <span class="n">request</span><span
+                class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span
+                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;&#39;</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Client requests:&#39;</span><span class="p">,</span> <span class="n">path</span><span
+                class="p">,</span> <span class="n">query</span><span class="p">)</span>
+                    <span class="n">resp</span> <span class="o">=</span> <span class="n">handler</span><span
                 class="p">(</span><span class="n">Request</span><span class="p">(</span><span class="n">path</span><span
                 class="o">=</span><span class="n">path</span><span class="p">,</span> <span class="n">query</span><span
                 class="o">=</span><span class="n">query</span><span class="p">,</span> <span class="n">host</span><span
@@ -2007,11 +2059,19 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                 class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">client</span><span
                 class="o">=</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span
                 class="p">]))</span>
-                <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
+                    <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
                 class="p">(</span><span class="n">resp</span><span class="p">)</span>
-                <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+                    <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span
+                class="p">()</span>
+                    <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
+                        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Connection closed&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span
+                class="n">e</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
-                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Connection closed&#39;</span><span class="p">)</span>
+                    <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Error:&#39;</span><span
+                class="p">,</span> <span class="n">e</span><span class="p">,</span> <span class="s1">&#39;; restarting&#39;</span><span
+                class="p">)</span>
 </pre></div>
 
   </div>

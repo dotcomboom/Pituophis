@@ -308,20 +308,24 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
         s.bind((host, port))
         s.listen(1)
         while True:
-            conn, addr = s.accept()
-            with conn:
+            try:
+                conn, addr = s.accept()
+                with conn:
+                    if debug:
+                        print('Connected by', addr)
+                    data = conn.recv(1024)
+                    request = data.decode('utf-8').split('\t')
+                    path = request[0].replace('\r\n', '')
+                    query = ''
+                    if len(request) > 1:
+                        query = request[1].replace('\r\n', '')
+                    if debug:
+                        print('Client requests:', path, query)
+                    resp = handler(Request(path=path, query=query, host=host, port=port, client=addr[0]))
+                    conn.send(resp)
+                    conn.close()
+                    if debug:
+                        print('Connection closed')
+            except Exception as e:
                 if debug:
-                    print('Connected by', addr)
-                data = conn.recv(1024)
-                request = data.decode('utf-8').split('\t')
-                path = request[0].replace('\r\n', '')
-                query = ''
-                if len(request) > 1:
-                    query = request[1].replace('\r\n', '')
-                if debug:
-                    print('Client requests:', path, query)
-                resp = handler(Request(path=path, query=query, host=host, port=port, client=addr[0]))
-                conn.send(resp)
-                conn.close()
-                if debug:
-                    print('Connection closed')
+                    print('Error:', e, '; restarting')
