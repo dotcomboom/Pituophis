@@ -26,9 +26,10 @@
 #
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
+import re
 import socket
 import ssl
-import re
+
 
 # Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
@@ -38,6 +39,7 @@ class Response:
     """
     *Client.* Returned by Request.get() and get(). Represents a received binary object from a gopher server.
     """
+
     def __init__(self, stream):
         """
         Reads a BufferedReader to the object's binary property and initializes a new Response object.
@@ -65,6 +67,7 @@ class Request:
 
     The type property is not used when sending or receiving requests; it's purely for client-side usage.
     """
+
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
         """
         Initializes a new Request object.
@@ -74,8 +77,8 @@ class Request:
         self.path = path
         self.query = query
         self.type = type
-        self.tls = tls # only used in client
-        self.client = client # only used in server
+        self.tls = tls  # only used in client
+        self.client = client  # only used in server
 
     def get(self):
         """
@@ -143,6 +146,7 @@ class Selector:
     """
     **Not yet implemented.** *Client.* Represents a selector in a parsed Gopher menu.
     """
+
     def __init__(self):
         # NOT YET IMPLEMENTED
         pass
