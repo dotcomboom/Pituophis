@@ -1044,8 +1044,7 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-      <li class="mono"><a href="#pituophis.encode_lines">encode_lines</a></li>
-      <li class="mono"><a href="#pituophis.encode_text">encode_text</a></li>
+      <li class="mono"><a href="#pituophis.encode">encode</a></li>
     <li class="mono"><a href="#pituophis.get">get</a></li>
     <li class="mono"><a href="#pituophis.handle">handle</a></li>
     <li class="mono"><a href="#pituophis.parse_gophermap">parse_gophermap</a></li>
@@ -1119,10 +1118,10 @@ table {
 <span class="c1"># modification, are permitted provided that the following conditions are met:</span>
 <span class="c1">#</span>
 <span class="c1"># * Redistributions of source code must retain the above copyright notice, this</span>
-<span class="c1">#   list of conditions and the following disclaimer.</span>
+<span class="c1">#   List of conditions and the following disclaimer.</span>
 <span class="c1">#</span>
 <span class="c1"># * Redistributions in binary form must reproduce the above copyright notice,</span>
-<span class="c1">#   this list of conditions and the following disclaimer in the documentation</span>
+<span class="c1">#   this List of conditions and the following disclaimer in the documentation</span>
 <span class="c1">#   and/or other materials provided with the distribution.</span>
 <span class="c1">#</span>
 <span class="c1"># THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS &quot;AS IS&quot;</span>
@@ -1166,10 +1165,10 @@ table {
 
     <span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="c1"># Returns array of Selector class</span>
+        <span class="c1"># Returns List of Selector class</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 
 
@@ -1320,7 +1319,7 @@ table {
 <span class="c1"># Server stuff</span>
 <span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.</span>
+<span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
 <span class="sd">    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths</span>
 <span class="sd">    are not resolved. It does, however, fill in missing selector, host, or port fields.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1361,39 +1360,46 @@ table {
     <span class="k">return</span> <span class="n">newMenu</span>
 
 
-<span class="k">def</span> <span class="nf">encode_text</span><span class="p">(</span><span class="n">text</span><span
-                class="p">):</span>
+<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span
+                class="n">str_or_lines</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode text as bytes to be sent by serve().</span>
+<span class="sd">    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">text</span><span
-                class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-
-
-<span class="k">def</span> <span class="nf">encode_lines</span><span class="p">(</span><span class="n">lines</span><span
-                class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode an array of lines as bytes to be sent by serve().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span
-                class="p">:</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
+                class="n">str_or_lines</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
+                class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                class="nb">list</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
+                class="n">str_or_lines</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                 class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
-                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
-                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
-            <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">endswith</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
+                class="p">):</span>
+                <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
                 class="se">\r\n</span><span class="s1">&#39;</span>
-        <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
-    <span class="k">return</span> <span class="n">encode_text</span><span class="p">(</span><span
-                class="n">out</span><span class="p">)</span>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
+                class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
+                class="p">)</span>
+
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String or List.&quot;</span><span
+                class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
@@ -1409,8 +1415,9 @@ table {
         <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;This is the default Pituophis handler.&quot;</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode_lines</span><span class="p">(</span><span class="n">parse_gophermap</span><span
-                class="p">(</span><span class="n">gmap</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span
+                class="n">parse_gophermap</span><span class="p">(</span><span class="n">gmap</span><span
+                class="p">))</span>
 
 <span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">handler</span><span class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1457,75 +1464,59 @@ table {
     <h2 class="section-title" id="header-functions">Functions</h2>
 
       <div class="item">
-          <div class="name def" id="pituophis.encode_lines">
-              <p>def <span class="ident">encode_lines</span>(</p>
-              <p>lines)</p>
+          <div class="name def" id="pituophis.encode">
+              <p>def <span class="ident">encode</span>(</p>
+              <p>str_or_lines)</p>
           </div>
 
 
-          <div class="desc"><p><em>Server.</em> Encode an array of lines as bytes to be sent by serve().</p></div>
+          <div class="desc"><p><em>Server.</em> Encode a List of lines, or a String, as bytes to be sent by serve().</p>
+          </div>
           <div class="source_cont">
-              <p class="source_link"><a href="javascript:void(0);"
-                                        onclick="toggle('source-pituophis.encode_lines', this);">Show source &equiv;</a>
-              </p>
-              <div id="source-pituophis.encode_lines" class="source">
+              <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.encode', this);">Show
+                  source &equiv;</a></p>
+              <div id="source-pituophis.encode" class="source">
                   <div class="codehilite"><pre><span></span><span class="k">def</span> <span
-                          class="nf">encode_lines</span><span class="p">(</span><span class="n">lines</span><span
+                          class="nf">encode</span><span class="p">(</span><span class="n">str_or_lines</span><span
                           class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode an array of lines as bytes to be sent by serve().</span>
+<span class="sd">    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span class="n">lines</span><span
-                              class="p">:</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                              class="nb">str</span><span class="p">:</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
+                              class="n">str_or_lines</span><span class="p">,</span> <span
+                              class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    
+    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
+                              class="nb">list</span><span class="p">:</span>
+        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
+                              class="n">str_or_lines</span><span class="p">:</span>
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                              class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                               class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
                               class="p">)</span>
-        <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
+            <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                              class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
                               class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
                               class="p">)</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                              class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
                               class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
-            <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
+                <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span
                               class="se">\r\n</span><span class="s1">&#39;</span>
-        <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
-    <span class="k">return</span> <span class="n">encode_text</span><span class="p">(</span><span
-                              class="n">out</span><span class="p">)</span>
-</pre>
-                  </div>
+            <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
+                              class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
+                              class="p">)</span>
 
-              </div>
-          </div>
-
-      </div>
-
-
-      <div class="item">
-          <div class="name def" id="pituophis.encode_text">
-              <p>def <span class="ident">encode_text</span>(</p>
-              <p>text)</p>
-          </div>
-
-
-          <div class="desc"><p><em>Server.</em> Encode text as bytes to be sent by serve().</p></div>
-          <div class="source_cont">
-              <p class="source_link"><a href="javascript:void(0);"
-                                        onclick="toggle('source-pituophis.encode_text', this);">Show source &equiv;</a>
-              </p>
-              <div id="source-pituophis.encode_text" class="source">
-                  <div class="codehilite"><pre><span></span><span class="k">def</span> <span
-                          class="nf">encode_text</span><span class="p">(</span><span class="n">text</span><span
-                          class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode text as bytes to be sent by serve().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span class="n">text</span><span
-                              class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String or List.&quot;</span><span
+                              class="p">)</span>
 </pre>
                   </div>
 
@@ -1586,8 +1577,9 @@ table {
         <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="s2">&quot;This is the default Pituophis handler.&quot;</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode_lines</span><span class="p">(</span><span class="n">parse_gophermap</span><span
-                class="p">(</span><span class="n">gmap</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span
+                class="n">parse_gophermap</span><span class="p">(</span><span class="n">gmap</span><span
+                class="p">))</span>
 </pre></div>
 
   </div>
@@ -1602,8 +1594,8 @@ table {
     </div>
 
 
-      <div class="desc"><p><em>Server.</em> Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an
-          Array of lines to send.
+      <div class="desc"><p><em>Server.</em> Converts a Gophermap (as a String or List) into a Gopher menu. Returns a
+          List of lines to send.
 This is <em>not</em> as feature-complete as the actual Bucktooth implementation; one example being how paths
 are not resolved. It does, however, fill in missing selector, host, or port fields.</p></div>
   <div class="source_cont">
@@ -1611,7 +1603,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div id="source-pituophis.parse_gophermap" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.</span>
+<span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
 <span class="sd">    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths</span>
 <span class="sd">    are not resolved. It does, however, fill in missing selector, host, or port fields.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
@@ -1718,7 +1710,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x110d408c8&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10253c840&gt;, debug=True)</p>
     </div>
 
 
@@ -2164,10 +2156,10 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 
     <span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># NOT YET IMPLEMENTED</span>
-        <span class="c1"># Returns array of Selector class</span>
+        <span class="c1"># Returns List of Selector class</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </pre></div>
 
@@ -2212,20 +2204,19 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
     <div class="name def" id="pituophis.Response.menu">
     <p>def <span class="ident">menu</span>(</p><p>self)</p>
     </div>
-    
 
-    
-  
-    <div class="desc"><p><strong>NOT YET IMPLEMENTED.</strong> Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.</p></div>
+
+      <div class="desc"><p><strong>NOT YET IMPLEMENTED.</strong> Decodes the binary as text and parses it as a Gopher
+          menu. Returns a List of Gopher menu items parsed as the Selector type.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Response.menu', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Response.menu" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.</span>
+<span class="sd">    **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># NOT YET IMPLEMENTED</span>
-    <span class="c1"># Returns array of Selector class</span>
+    <span class="c1"># Returns List of Selector class</span>
     <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
 </pre></div>
 

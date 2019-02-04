@@ -7,10 +7,10 @@
 # modification, are permitted provided that the following conditions are met:
 #
 # * Redistributions of source code must retain the above copyright notice, this
-#   list of conditions and the following disclaimer.
+#   List of conditions and the following disclaimer.
 #
 # * Redistributions in binary form must reproduce the above copyright notice,
-#   this list of conditions and the following disclaimer in the documentation
+#   this List of conditions and the following disclaimer in the documentation
 #   and/or other materials provided with the distribution.
 #
 # THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
@@ -54,10 +54,10 @@ class Response:
 
     def menu(self):
         """
-        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.
+        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.
         """
         # NOT YET IMPLEMENTED
-        # Returns array of Selector class
+        # Returns List of Selector class
         return self.binary.decode('utf-8')
 
 
@@ -206,7 +206,7 @@ def get(host, port=70, path='/', query='', tls=False):
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     """
-    *Server.* Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.
+    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
     This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
     are not resolved. It does, however, fill in missing selector, host, or port fields.
     """
@@ -247,25 +247,24 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     return newMenu
 
 
-def encode_text(text):
+def encode(str_or_lines):
     """
-    *Server.* Encode text as bytes to be sent by serve().
+    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().
     """
-    return bytes(text, 'utf-8')
+    if type(str_or_lines) == str:
+        return bytes(str_or_lines, 'utf-8')
 
+    if type(str_or_lines) == list:
+        out = ""
+        for line in str_or_lines:
+            line = line.replace('\r\n', '\n')
+            line = line.replace('\n', '\r\n')
+            if not line.endswith('\r\n'):
+                line += '\r\n'
+            out += line
+        return bytes(out, 'utf-8')
 
-def encode_lines(lines):
-    """
-    *Server.* Encode an array of lines as bytes to be sent by serve().
-    """
-    out = ""
-    for line in lines:
-        line = line.replace('\r\n', '\n')
-        line = line.replace('\n', '\r\n')
-        if not line.endswith('\r\n'):
-            line += '\r\n'
-        out += line
-    return encode_text(out)
+    raise Exception("encode() accepts items of type String or List.")
 
 
 def handle(request):
@@ -281,7 +280,7 @@ def handle(request):
         "",
         "This is the default Pituophis handler."
     ]
-    return encode_lines(parse_gophermap(gmap))
+    return encode(parse_gophermap(gmap))
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     """

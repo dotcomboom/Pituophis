@@ -9,7 +9,7 @@ def handle(request):
         "Port: " + str(request.port),
         "Client: " + request.client
     ]
-    return pituophis.encode_lines(pituophis.parse_gophermap(gmap))
+    return pituophis.encode(pituophis.parse_gophermap(gmap))
 
 
 # serve with custom handler
