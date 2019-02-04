@@ -36,13 +36,14 @@ import re
 
 # Both client & server
 class Request:
-    def __init__(self, host='', port=70, path='/', query='', type='3', tls=False):
+    def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
         self.host = host
         self.port = port
         self.path = path
         self.query = query
         self.type = type
         self.tls = tls # only used in client
+        self.client = '' # only used in server
 
     def get(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -53,11 +54,23 @@ class Request:
             s.settimeout(10.0)
         s.connect((self.host, self.port))
         if self.query == '':
-            msg = self.path + '\t' + self.query + '\r\n'
-        else:
             msg = self.path + '\r\n'
+        else:
+            msg = self.path + '\t' + self.query + '\r\n'
         s.sendall(msg.encode('utf-8'))
         return Response(s.makefile('rb'))
+
+    def url(self):
+        protocol = 'gopher'
+        if self.tls:
+            protocol = 'gophers'
+        path = self.path
+        if not (path.startswith('/')):
+            path = '/' + path
+        query = ''
+        if not (self.query == ''):
+            query = '?' + self.query
+        return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
 
 # Client stuff
@@ -193,7 +206,7 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
                     query = request[1].replace('\r\n', '')
                 if debug:
                     print('Client requests:', path, query)
-                resp = handler(Request(path=path, query=query, host=host, port=port))
+                resp = handler(Request(path=path, query=query, host=host, port=port, client=addr))
                 for r in resp:
                     if not r.endswith('\r\n'):
                         r += '\r\n'

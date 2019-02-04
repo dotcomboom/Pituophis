@@ -1,4 +1,4 @@
-from pituophis import get
+import pituophis
 
 yes = ['y', 'yes', 'yeah', 'yep', 'yup', 'ye', 'sure']
 
@@ -64,7 +64,7 @@ if choice == '7':
         binary = True
     host = input('host/url: ')
 
-response = get(host, port=port, path=path, query=query, tls=tls)
+response = pituophis.get(host, port=port, path=path, query=query, tls=tls)
 if binary:
     print("""
     what to do with this binary?
