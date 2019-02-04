@@ -35,6 +35,14 @@ print('Getting', req.url())
 rsp = req.get()
 print(rsp.text())
 ```
+They can also be created from a URL:
+```python
+import pituophis
+req = pituophis.parse_url('gopher://gopher.floodgap.com/7/v2/vs?food')
+print('Getting', req.url())
+rsp = req.get()
+print(rsp.text())
+```
 ## Server
 Pituophis can be used with a custom handler to serve Gopher requests. Primitive Bucktooth-like gophermap parsing (excluding path resolution) is available.
 

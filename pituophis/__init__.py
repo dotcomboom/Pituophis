@@ -72,6 +72,29 @@ class Request:
             query = '?' + self.query
         return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
+    def is_text(self):
+        if self.type in ['0', '1', '7']:
+            return True
+        else:
+            return False
+
+    def is_menu(self):
+        if self.type in ['1', '7']:
+            return True
+        else:
+            return False
+
+    def is_search(self):
+        if self.type == '7':
+            return True
+        else:
+            return False
+
+    def is_binary(self):
+        if self.type in ['0', '1']:
+            return False
+        else:
+            return True
 
 # Client stuff
 class Selector:
