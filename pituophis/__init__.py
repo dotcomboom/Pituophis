@@ -88,7 +88,7 @@ class Request:
             s = context.wrap_socket(s, server_hostname=self.host)
         else:
             s.settimeout(10.0)
-        s.connect((self.host, self.port))
+        s.connect((self.host, int(self.port)))
         if self.query == '':
             msg = self.path + '\r\n'
         else:
