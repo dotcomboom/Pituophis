@@ -307,6 +307,7 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
         s.listen(1)
+        print('Server is now running.')
         while True:
             try:
                 conn, addr = s.accept()

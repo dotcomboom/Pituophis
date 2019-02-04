@@ -1556,6 +1556,8 @@ table {
     <span class="k">with</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
         <span class="n">s</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Server is now running.&#39;</span><span class="p">)</span>
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span
@@ -1998,7 +2000,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x104299840&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x104fb9840&gt;, debug=True)</p>
     </div>
 
 
@@ -2016,6 +2018,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <span class="k">with</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span> <span class="k">as</span> <span class="n">s</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">bind</span><span class="p">((</span><span class="n">host</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
         <span class="n">s</span><span class="o">.</span><span class="n">listen</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">print</span><span class="p">(</span><span
+                class="s1">&#39;Server is now running.&#39;</span><span class="p">)</span>
         <span class="k">while</span> <span class="bp">True</span><span class="p">:</span>
             <span class="k">try</span><span class="p">:</span>
                 <span class="n">conn</span><span class="p">,</span> <span class="n">addr</span> <span class="o">=</span> <span
