@@ -1198,11 +1198,16 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-            <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
+                class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>  <span
+                class="c1"># Not working yet</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span
+                class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">port</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -1275,7 +1280,10 @@ table {
             <span class="n">selector</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="s1">&#39;i&#39;</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
-                class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+                class="n">line</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span
+                class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;</span><span
+                class="se">\t</span><span class="s1">&#39;</span><span class="p">)[</span><span class="mi">0</span><span
+                class="p">]</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                 class="s1">&#39;/&#39;</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
@@ -1329,14 +1337,24 @@ table {
     <span class="c1"># set and remove host/port</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">req</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                class="nb">int</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span
+                class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span
+                class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span
+                class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">req</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c1"># remove selector if it is there</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span
+                class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span
+                class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span
+                class="mi">1</span><span class="p">:</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span
+                class="mi">0</span><span class="p">)</span>
     <span class="c1"># set url to path?query</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">url</span>
@@ -1731,7 +1749,9 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
                               class="s1">&#39;i&#39;</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                               class="n">line</span><span class="p">[</span><span class="mi">1</span><span
-                              class="p">:]</span>
+                              class="p">:]</span><span class="o">.</span><span class="n">split</span><span
+                              class="p">(</span><span class="s1">&#39;</span><span class="se">\t</span><span class="s1">&#39;</span><span
+                              class="p">)[</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                               class="s1">&#39;/&#39;</span>
             <span class="n">selector</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
@@ -1802,14 +1822,24 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
     <span class="c1"># set and remove host/port</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">))</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
         <span class="n">req</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
+        <span class="n">req</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
+                class="nb">int</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span
+                class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span
+                class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[</span><span
+                class="mi">1</span><span class="p">])</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">req</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
     <span class="c1"># remove selector if it is there</span>
-    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">req</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-        <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span
+                class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">url</span><span
+                class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">==</span> <span
+                class="mi">1</span><span class="p">:</span>
+            <span class="n">req</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="n">url</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+            <span class="n">url</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span
+                class="mi">0</span><span class="p">)</span>
     <span class="c1"># set url to path?query</span>
     <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
     <span class="n">req</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span class="n">url</span>
@@ -1831,7 +1861,7 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x106bc57b8&gt;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10f4987b8&gt;, debug=True)</p>
     </div>
 
 
@@ -1921,11 +1951,16 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-            <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
+            <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
+                class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>  <span
+                class="c1"># Not working yet</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">s</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
-        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span
+                class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">port</span><span class="p">)))</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
         <span class="k">else</span><span class="p">:</span>
@@ -2012,11 +2047,16 @@ are not resolved. It does, however, fill in missing selector, host, or port fiel
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-        <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
+        <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span
+                class="n">create_default_context</span><span class="p">()</span>  <span
+                class="c1"># Not working yet</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">s</span><span class="o">.</span><span class="n">settimeout</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
-    <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+    <span class="n">s</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span
+                class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span
+                class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
+                class="n">port</span><span class="p">)))</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span><span class="p">:</span>
         <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">+</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
     <span class="k">else</span><span class="p">:</span>
