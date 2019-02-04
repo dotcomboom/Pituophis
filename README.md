@@ -1,7 +1,12 @@
 # Pituophis
-Experimental Gopher client/server library for Python
+Python 3 library for building Gopher clients and servers
 
 **NOTICE:** This is under active, *active* development and basically nothing is finalized. This whole thing can be turned on its head in the matter of two days, so I wouldn't use it for anything quite yet.
+
+Pituophis, at the moment, only requires three modules: re, socket, and ssl; all three of which are standard in most Python 3 installations. Pituophis can simply be loaded as a module like this:
+```python
+import pituophis
+```
 
 ## Client
 Pituophis can grab files and text from Gopher servers through a the `Request.get()` and `get()` functions.
@@ -43,7 +48,7 @@ req.port = 70
 req.type = '7'
 req.path = '/v2/vs'
 req.query = 'food'
-req.tls = False
+req.tls = False  # TLS/SSL is not functional yet.
 print('Getting', req.url())
 rsp = req.get()
 print(rsp.text())
