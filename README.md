@@ -1,5 +1,8 @@
 # Pituophis
 Experimental Gopher client/server library for Python
+
+**NOTICE:** This is under active, *active* development and basically nothing is finalized. This whole thing can be turned on its head in the matter of two days, so I wouldn't use it for anything quite yet.
+
 ## Client
 Pituophis can grab files and text from Gopher servers through the `get()` function.
 ### Examples
