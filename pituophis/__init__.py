@@ -170,7 +170,7 @@ def parse_url(url):
     # set and remove host/port
     if len(url[0].split(':')) > 1:
         req.host = url[0].split(':')[0]
-        req.port = url[0].split(':')[1]
+        req.port = int(url[0].split(':')[1])
     else:
         req.host = url[0]
     url.pop(0)
