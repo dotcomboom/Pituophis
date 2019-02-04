@@ -37,7 +37,7 @@ import ssl
 
 class Response:
     """
-    *Client.* Returned by Request.get() and get(). Represents a received binary object from a gopher server.
+    *Client.* Returned by Request.get() and get(). Represents a received binary object from a Gopher server.
     """
 
     def __init__(self, stream):
@@ -154,7 +154,7 @@ class Selector:
 
 def parse_url(url):
     """
-    Parses a Gopher URL and returns an equivalent Request.
+    *Client.* Parses a Gopher URL and returns an equivalent Request.
     """
     req = Request(host='', port=70, path='/', query='', tls=False)
 
@@ -195,7 +195,7 @@ def parse_url(url):
 
 def get(host, port=70, path='/', query='', tls=False):
     """
-    Quickly creates and sends a Request. Returns a Response object.
+    *Client.* Quickly creates and sends a Request. Returns a Response object.
     """
     req = Request(host=host, port=port, path=path, query=query, tls=tls)
     if '/' in host:
@@ -206,7 +206,7 @@ def get(host, port=70, path='/', query='', tls=False):
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     """
-    Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.
+    *Server.* Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.
     This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
     are not resolved. It does, however, fill in missing selector, host, or port fields.
     """
@@ -247,9 +247,30 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     return newMenu
 
 
+def encode_text(text):
+    """
+    *Server.* Encode text as bytes to be sent by serve().
+    """
+    return bytes(text, 'utf-8')
+
+
+def encode_lines(lines):
+    """
+    *Server.* Encode an array of lines as bytes to be sent by serve().
+    """
+    out = ""
+    for line in lines:
+        line = line.replace('\r\n', '\n')
+        line = line.replace('\n', '\r\n')
+        if not line.endswith('\r\n'):
+            line += '\r\n'
+        out += line
+    return encode_text(out)
+
+
 def handle(request):
     """
-    Default handler function for Gopher requests while hosting a server. Currently a stub.
+    *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.
     """
     gmap = [
         "Path: " + request.path,
@@ -260,13 +281,12 @@ def handle(request):
         "",
         "This is the default Pituophis handler."
     ]
-    return parse_gophermap(gmap)
-
+    return encode_lines(parse_gophermap(gmap))
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     """
-    Listens for Gopher requests. Allows for using a custom handler that will return an Array of lines to send
-    to the client. After sending them, the finishing "." is sent and the connection is closed.
+    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object
+    to send to the client. After sending them, the finishing "." is sent and the connection is closed.
     """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
@@ -284,12 +304,8 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
                     query = request[1].replace('\r\n', '')
                 if debug:
                     print('Client requests:', path, query)
-                resp = handler(Request(path=path, query=query, host=host, port=port, client=addr))
-                for r in resp:
-                    if not r.endswith('\r\n'):
-                        r += '\r\n'
-                    conn.send(bytes(r, 'utf-8'))
-                conn.send(b'.')
+                resp = handler(Request(path=path, query=query, host=host, port=port, client=addr[0]))
+                conn.send(resp)
                 conn.close()
                 if debug:
                     print('Connection closed')

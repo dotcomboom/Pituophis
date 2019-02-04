@@ -9,8 +9,8 @@ def handle(request):
         "Port: " + str(request.port),
         "Client: " + request.client
     ]
-    return pituophis.parse_gophermap(gmap)
+    return pituophis.encode_lines(pituophis.parse_gophermap(gmap))
 
 
 # serve with custom handler
-pituophis.serve("127.0.0.1", 50500, handler=handle)
+pituophis.serve("127.0.0.1", 50400, handler=handle)
