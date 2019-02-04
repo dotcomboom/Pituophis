@@ -175,9 +175,10 @@ def parse_url(url):
         req.host = url[0]
     url.pop(0)
     # remove selector if it is there
-    if len(url[0]) == 1:
-        req.type = url[0]
-        url.pop(0)
+    if len(url) > 0:
+        if len(url[0]) == 1:
+            req.type = url[0]
+            url.pop(0)
     # set url to path?query
     url = '/' + '/'.join(url)
     req.path = url
