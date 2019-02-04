@@ -23,13 +23,41 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
+#
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
-import socket, ssl, re
+import socket
+import ssl
+import re
 
 # Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
+
+
+# Both client & server
+class Request:
+    def __init__(self, host='', port=70, path='/', query='', type='3', tls=False):
+        self.host = host
+        self.port = port
+        self.path = path
+        self.query = query
+        self.type = type
+        self.tls = tls # only used in client
+
+    def get(self):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if self.tls:
+            context = ssl.create_default_context()
+            s = context.wrap_socket(s, server_hostname=self.host)
+        else:
+            s.settimeout(10.0)
+        s.connect((self.host, self.port))
+        if self.query == '':
+            msg = self.path + '\t' + self.query + '\r\n'
+        else:
+            msg = self.path + '\r\n'
+        s.sendall(msg.encode('utf-8'))
+        return Response(s.makefile('rb'))
 
 
 # Client stuff
@@ -55,56 +83,50 @@ class Response:
         return self.stream.read().decode('utf-8')
 
 
-def get(host, port=70, path='/', query='', tls=False):
-    # URL parsing
-    if '/' in host:
-        url = host
-        # condense multiple slashes to one
-        url = re.sub(r'/+', '/', url)
-        url = url.split('/')
-        # split into protocol, host & port, and then the following items for the selector/path
-        # gopher:
-        # gopher.floodgap.com:70
-        # gopher/
-        # detect tls and remove protocol
-        if url[0].endswith(':'):
-            if url[0] == 'gophers:':
-                tls = True
-            url.pop(0)
-        # set and remove host/port
-        if len(url[0].split(':')) > 1:
-            host = url[0].split(':')[0]
-            port = url[0].split(':')[1]
-        else:
-            host = url[0]
+def parse_url(url):
+    req = Request(host='', port=70, path='/', query='', tls=False)
+
+    # condense multiple slashes to one
+    url = re.sub(r'/+', '/', url)
+    url = url.split('/')
+    # split into protocol, host & port, and then the following items for the selector/path
+    # gopher:
+    # gopher.floodgap.com:70
+    # gopher/
+    # detect tls and remove protocol
+    if url[0].endswith(':'):
+        if url[0] == 'gophers:':
+            req.tls = True
         url.pop(0)
-        # remove selector if it is there
-        if len(url[0]) == 1:
-            url.pop(0)
-        # set url to path?query
-        url = '/' + '/'.join(url)
-        path = url
-        # split query if it is there
-        if '?' in url:
-            url = url.split('?')
-            path = url[0]
-            url.pop(0)
-            if query == '':
-                query = '?'.join(url)
-
-        print(host, port, path, query, tls)
-
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    if tls:
-        context = ssl.create_default_context()
-        s = context.wrap_socket(s, server_hostname=host)
+    # set and remove host/port
+    if len(url[0].split(':')) > 1:
+        req.host = url[0].split(':')[0]
+        req.port = url[0].split(':')[1]
     else:
-        s.settimeout(10.0)
-    s.connect((host, port))
-    query = '\t' + query
-    msg = path + query + '\r\n'
-    s.sendall(msg.encode('utf-8'))
-    return Response(s.makefile('rb'))
+        req.host = url[0]
+    url.pop(0)
+    # remove selector if it is there
+    if len(url[0]) == 1:
+        req.type = url[0]
+        url.pop(0)
+    # set url to path?query
+    url = '/' + '/'.join(url)
+    req.path = url
+    # split query if it is there
+    if '?' in url:
+        url = url.split('?')
+        req.path = url[0]
+        url.pop(0)
+        req.query = '?'.join(url)
+    return req
+
+
+def get(host, port=70, path='/', query='', tls=False):
+    req = Request(host=host, port=port, path=path, query=query, tls=tls)
+    if '/' in host:
+        req = parse_url(host)
+    return req.get()
+
 
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
@@ -144,13 +166,6 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     # return '\r\n'.join(newMenu)
     return newMenu
 
-class Request:
-    def __init__(self, path, query, host, port):
-        self.path = path
-        self.query = query
-        self.host = host
-        self.port = port
-
 
 def handle(request):
     gmap = [
@@ -181,7 +196,7 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
                     query = request[1].replace('\r\n', '')
                 if debug:
                     print('Client requests:', path, query)
-                resp = handler(Request(path, query, host, port))
+                resp = handler(Request(path=path, query=query, host=host, port=port))
                 for r in resp:
                     if not r.endswith('\r\n'):
                         r += '\r\n'
