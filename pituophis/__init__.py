@@ -113,33 +113,6 @@ class Request:
             query = '?' + self.query
         return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
-    def is_text(self):
-        """
-        Returns a boolean for whether the Request's type property is text (0, 1, 7) or not.
-        """
-        if self.type in ['0', '1', '7']:
-            return True
-        else:
-            return False
-
-    def is_menu(self):
-        """
-        Returns a boolean for whether the Request's type property is a menu (1, 7) or not.
-        """
-        if self.type in ['1', '7']:
-            return True
-        else:
-            return False
-
-    def is_search(self):
-        """
-        Returns a boolean for whether the Request's type property is a search menu (7) or not.
-        """
-        if self.type == '7':
-            return True
-        else:
-            return False
-
 
 # Client stuff
 class Selector:
@@ -281,6 +254,7 @@ def handle(request):
         "This is the default Pituophis handler."
     ]
     return encode(parse_gophermap(gmap))
+
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     """
