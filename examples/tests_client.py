@@ -31,7 +31,6 @@ menu = False
 tls = False
 
 if choice == '1':
-    menu = True
     host = 'khaze.net'
     port = 105
     tls = True
