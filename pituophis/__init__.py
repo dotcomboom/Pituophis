@@ -34,7 +34,19 @@ import re
 # selectors and item types are actually *not* sent to the server, just the path of the resource
 
 
-# Both client & server
+class Response:
+    def __init__(self, stream):
+        self.binary = stream.read()
+
+    def text(self):
+        return self.binary.decode('utf-8')
+
+    def menu(self):
+        # NOT YET IMPLEMENTED
+        # Returns array of Selector class
+        return self.binary.decode('utf-8')
+
+
 class Request:
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
         self.host = host
@@ -96,24 +108,12 @@ class Request:
         else:
             return True
 
+
 # Client stuff
 class Selector:
     def __init__(self):
         # NOT YET IMPLEMENTED
         pass
-
-
-class Response:
-    def __init__(self, stream):
-        self.binary = stream.read()
-
-    def text(self):
-        return self.binary.decode('utf-8')
-
-    def menu(self):
-        # NOT YET IMPLEMENTED
-        # Returns array of Selector class
-        return self.binary.decode('utf-8')
 
 
 def parse_url(url):
