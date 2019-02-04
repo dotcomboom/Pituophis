@@ -35,27 +35,45 @@ import re
 
 
 class Response:
+    """
+    Returned by Request.get() and get(). Represents a received binary object from a gopher server.
+    """
     def __init__(self, stream):
+        """
+        Reads a BufferedReader to the object's binary property and initializes a new Response object.
+        """
         self.binary = stream.read()
 
     def text(self):
+        """
+        Returns the binary decoded as UTF-8 text. (String)
+        """
         return self.binary.decode('utf-8')
 
     def menu(self):
+        """
+        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an array of Gopher menu items parsed as the Selector type. (Array)
+        """
         # NOT YET IMPLEMENTED
         # Returns array of Selector class
         return self.binary.decode('utf-8')
 
 
 class Request:
+    """
+    Represents a request to be sent to a Gopher server, or was sent from a Gopher client if a server is being hosted.
+    """
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
+        """
+        Initializes a new Request object.
+        """
         self.host = host
         self.port = port
         self.path = path
         self.query = query
         self.type = type
         self.tls = tls # only used in client
-        self.client = '' # only used in server
+        self.client = client # only used in server
 
     def get(self):
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
