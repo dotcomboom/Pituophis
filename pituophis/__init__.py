@@ -66,7 +66,7 @@ class Request:
     The type property is not used when sending or receiving requests; it's purely for client-side usage.
     """
 
-    def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
+    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, client=''):
         """
         Initializes a new Request object.
         """
@@ -74,7 +74,7 @@ class Request:
         self.port = port
         self.path = path
         self.query = query
-        self.type = type
+        self.type = itype
         self.tls = tls  # only used in client
         self.client = client  # only used in server
 
@@ -115,18 +115,22 @@ class Request:
 # Client stuff
 class Selector:
     """
-    *Client.* Represents a selector in a parsed Gopher menu.
+    *Server/Client.* Represents a selector in a parsed Gopher menu.
     """
 
-    def __init__(self, type='i', text='error', path='/', host='error.host', port=0):
+    def __init__(self, itype='i', text='', path='/', host='error.host', port=0):
         """
         Initializes a new Selector object.
         """
-        self.type = type
+        self.type = itype
         self.text = text
         self.path = path
         self.host = host
         self.port = port
+
+    def source(self):
+        return str(self.type) + str(self.text) + '\t' + str(self.path) + '\t' + str(self.host) + '\t' + str(
+            self.port) + '\r\n'
 
 
 def parse_menu(source):
@@ -163,6 +167,9 @@ def parse_url(url):
 
     # condense multiple slashes to one
     url = re.sub(r'/+', '/', url)
+    # add protocol if not there
+    if not ':/' in url:
+        url = 'gopher:/' + url
     url = url.split('/')
     # split into protocol, host & port, and then the following items for the selector/path
     # gopher:
@@ -202,17 +209,18 @@ def get(host, port=70, path='/', query='', tls=False):
     *Client.* Quickly creates and sends a Request. Returns a Response object.
     """
     req = Request(host=host, port=port, path=path, query=query, tls=tls)
-    if '/' in host:
+    if '/' in host or ':' in host:
         req = parse_url(host)
     return req.get()
 
 
 # Server stuff
-def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
+def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
     """
     *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
     This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
-    are not resolved. It does, however, fill in missing selector, host, or port fields.
+    are not resolved. It does, however, fill in missing selector, host, and port fields,
+    given that the correct host and port values are passed to it.
     """
     # NOTICE:
     # Relative links are *not* fixed with this function!
@@ -245,15 +253,13 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
         else:
             selector = 'i' + selector
             newMenu.append(selector)
-    if debug:
-        print(newMenu)
     # return '\r\n'.join(newMenu)
     return newMenu
 
 
 def encode(str_or_lines):
     """
-    *Server.* Encode a List of lines, or a String, as bytes to be sent by serve().
+    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().
     """
     if type(str_or_lines) == str:
         return bytes(str_or_lines, 'utf-8')
@@ -261,11 +267,14 @@ def encode(str_or_lines):
     if type(str_or_lines) == list:
         out = ""
         for line in str_or_lines:
-            line = line.replace('\r\n', '\n')
-            line = line.replace('\n', '\r\n')
-            if not line.endswith('\r\n'):
-                line += '\r\n'
-            out += line
+            if type(line) == str:
+                line = line.replace('\r\n', '\n')
+                line = line.replace('\n', '\r\n')
+                if not line.endswith('\r\n'):
+                    line += '\r\n'
+                out += line
+            if type(line) == Selector:
+                out += line.source()
         return bytes(out, 'utf-8')
 
     raise Exception("encode() accepts items of type String or List.")
@@ -275,16 +284,14 @@ def handle(request):
     """
     *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.
     """
-    gmap = [
-        "Path: " + request.path,
-        "Query: " + request.query,
-        "Host: " + request.host,
-        "Port: " + str(request.port),
-        "Client: " + str(request.client),
-        "",
-        "This is the default Pituophis handler."
+    menu = [
+        Selector(text="Path: " + request.path),
+        Selector(text="Query: " + request.query),
+        Selector(text="Host: " + request.host),
+        Selector(text="Port: " + str(request.port)),
+        Selector(text="Client: " + request.client)
     ]
-    return encode(parse_gophermap(gmap))
+    return encode(menu)
 
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
