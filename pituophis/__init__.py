@@ -69,18 +69,15 @@ class Selector:
 
 class Response:
     def __init__(self, stream):
-        self.stream = stream
-
-    def binary(self):
-        return self.stream.read()
+        self.binary = stream.read()
 
     def text(self):
-        return self.stream.read().decode('utf-8')
+        return self.binary.decode('utf-8')
 
     def menu(self):
         # NOT YET IMPLEMENTED
         # Returns array of Selector class
-        return self.stream.read().decode('utf-8')
+        return self.binary.decode('utf-8')
 
 
 def parse_url(url):

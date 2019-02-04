@@ -84,7 +84,7 @@ if binary:
             if filename == '':
                 filename = suggested_filename
             with open(filename, "wb") as f:
-                f.write(response.binary())
+                f.write(response.binary)
 else:
     if menu:
         print(response.menu())

@@ -18,8 +18,8 @@ get(host='gopher.floodgap.com', port=70, path='/v2/vs', query='toast').text()
 ```
 Downloading a binary:
 ```python
-get('gopher://gopher.floodgap.com:70/9/gopher/clients/win/hgopher2_3.zip').binary()
-get(host='gopher.floodgap.com', port=70, path='/gopher/clients/win/hgopher2_3.zip').binary()
+get('gopher://gopher.floodgap.com:70/9/gopher/clients/win/hgopher2_3.zip').binary
+get(host='gopher.floodgap.com', port=70, path='/gopher/clients/win/hgopher2_3.zip').binary
 ```
 ## Server
 Pituophis can be used with a custom handler to serve Gopher requests. Primitive Bucktooth-like gophermap parsing (excluding path resolution) is available.
