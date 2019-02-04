@@ -46,13 +46,13 @@ class Response:
 
     def text(self):
         """
-        Returns the binary decoded as UTF-8 text. (String)
+        Returns the binary decoded as a UTF-8 String.
         """
         return self.binary.decode('utf-8')
 
     def menu(self):
         """
-        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an array of Gopher menu items parsed as the Selector type. (Array)
+        **NOT YET IMPLEMENTED.** Decodes the binary as text and parses it as a Gopher menu. Returns an Array of Gopher menu items parsed as the Selector type.
         """
         # NOT YET IMPLEMENTED
         # Returns array of Selector class
@@ -62,6 +62,8 @@ class Response:
 class Request:
     """
     Represents a request to be sent to a Gopher server, or was sent from a Gopher client if a server is being hosted.
+
+    The type is not used when sending (or receiving in the case of a server) requests.
     """
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
         """
@@ -76,6 +78,9 @@ class Request:
         self.client = client # only used in server
 
     def get(self):
+        """
+        Sends the Request and returns a Response object.
+        """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if self.tls:
             context = ssl.create_default_context()
@@ -91,6 +96,9 @@ class Request:
         return Response(s.makefile('rb'))
 
     def url(self):
+        """
+        Returns a URL equivalent to the Request's properties.
+        """
         protocol = 'gopher'
         if self.tls:
             protocol = 'gophers'
@@ -103,38 +111,47 @@ class Request:
         return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
     def is_text(self):
+        """
+        Returns True or False based on whether the Request's type property is text (0, 1, 7) or not.
+        """
         if self.type in ['0', '1', '7']:
             return True
         else:
             return False
 
     def is_menu(self):
+        """
+        Returns True or False based on whether the Request's type property is a menu (1, 7) or not.
+        """
         if self.type in ['1', '7']:
             return True
         else:
             return False
 
     def is_search(self):
+        """
+        Returns True or False based on whether the Request's type property is a search menu (7) or not.
+        """
         if self.type == '7':
             return True
         else:
             return False
 
-    def is_binary(self):
-        if self.type in ['0', '1']:
-            return False
-        else:
-            return True
-
 
 # Client stuff
 class Selector:
+    """
+    **Not yet implemented.** Represents a selector in a parsed Gopher menu.
+    """
     def __init__(self):
         # NOT YET IMPLEMENTED
         pass
 
 
 def parse_url(url):
+    """
+    Parses a Gopher URL and returns an equivalent Request.
+    """
     req = Request(host='', port=70, path='/', query='', tls=False)
 
     # condense multiple slashes to one
@@ -173,6 +190,9 @@ def parse_url(url):
 
 
 def get(host, port=70, path='/', query='', tls=False):
+    """
+    Quickly creates and sends a Request. Returns a Response object.
+    """
     req = Request(host=host, port=port, path=path, query=query, tls=tls)
     if '/' in host:
         req = parse_url(host)
@@ -181,6 +201,9 @@ def get(host, port=70, path='/', query='', tls=False):
 
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
+    """
+    Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send as Strings.
+    """
     # NOTICE:
     # Relative links are *not* fixed with this function!
     # The path isn't ever touched, so this is more for convenience of making menus
@@ -219,6 +242,9 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
 
 
 def handle(request):
+    """
+    Default handler function for Gopher requests. Currently a stub.
+    """
     gmap = [
         "Path: " + request.path,
         "Query: " + request.query,
@@ -231,6 +257,9 @@ def handle(request):
 
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
+    """
+    Listens for Gopher requests. Allows for using a custom handler that will return an array of lines to send to the client. After sending them, the finishing "." is sent and the connection is closed.
+    """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
         s.listen(1)
