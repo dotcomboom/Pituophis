@@ -36,7 +36,7 @@ import re
 
 class Response:
     """
-    Returned by Request.get() and get(). Represents a received binary object from a gopher server.
+    *Client.* Returned by Request.get() and get(). Represents a received binary object from a gopher server.
     """
     def __init__(self, stream):
         """
@@ -61,9 +61,9 @@ class Response:
 
 class Request:
     """
-    Represents a request to be sent to a Gopher server, or was sent from a Gopher client if a server is being hosted.
+    *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.
 
-    The type is not used when sending (or receiving in the case of a server) requests.
+    The type property is not used when sending or receiving requests; it's purely for client-side usage.
     """
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', type='9', tls=False, client=''):
         """
@@ -112,7 +112,7 @@ class Request:
 
     def is_text(self):
         """
-        Returns True or False based on whether the Request's type property is text (0, 1, 7) or not.
+        Returns a boolean for whether the Request's type property is text (0, 1, 7) or not.
         """
         if self.type in ['0', '1', '7']:
             return True
@@ -121,7 +121,7 @@ class Request:
 
     def is_menu(self):
         """
-        Returns True or False based on whether the Request's type property is a menu (1, 7) or not.
+        Returns a boolean for whether the Request's type property is a menu (1, 7) or not.
         """
         if self.type in ['1', '7']:
             return True
@@ -130,7 +130,7 @@ class Request:
 
     def is_search(self):
         """
-        Returns True or False based on whether the Request's type property is a search menu (7) or not.
+        Returns a boolean for whether the Request's type property is a search menu (7) or not.
         """
         if self.type == '7':
             return True
@@ -141,7 +141,7 @@ class Request:
 # Client stuff
 class Selector:
     """
-    **Not yet implemented.** Represents a selector in a parsed Gopher menu.
+    **Not yet implemented.** *Client.* Represents a selector in a parsed Gopher menu.
     """
     def __init__(self):
         # NOT YET IMPLEMENTED
@@ -202,7 +202,9 @@ def get(host, port=70, path='/', query='', tls=False):
 # Server stuff
 def parse_gophermap(source, defHost='127.0.0.1', defPort='70', debug=False):
     """
-    Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send as Strings.
+    Converts a Gophermap (as a String or Array) into a Gopher menu. Returns an Array of lines to send.
+    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
+    are not resolved. It does, however, fill in missing selector, host, or port fields.
     """
     # NOTICE:
     # Relative links are *not* fixed with this function!
@@ -250,6 +252,7 @@ def handle(request):
         "Query: " + request.query,
         "Host: " + request.host,
         "Port: " + str(request.port),
+        "Client: " + str(request.client),
         "",
         "This is the default Pituophis handler."
     ]
@@ -258,7 +261,8 @@ def handle(request):
 
 def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
     """
-    Listens for Gopher requests. Allows for using a custom handler that will return an Array of lines to send to the client. After sending them, the finishing "." is sent and the connection is closed.
+    Listens for Gopher requests. Allows for using a custom handler that will return an Array of lines to send
+    to the client. After sending them, the finishing "." is sent and the connection is closed.
     """
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.bind((host, port))
