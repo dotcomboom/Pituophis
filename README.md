@@ -18,6 +18,9 @@ pituophis.get('gopher://gopher.floodgap.com/1/').text()
 pituophis.get('gopher://gopher.floodgap.com:70/0/gopher/proxy').text()
 pituophis.get(host='gopher.floodgap.com', port=70, path='/').text()
 pituophis.get(host='gopher.floodgap.com', port=70, path='/gopher/proxy').text()
+pituophis.get(host='khzae.net', port=105, path='/', tls=True).text() # TLS!
+pituophis.get('gophers://khzae.net:105/1/').text() # gophers:// URLs!
+
 ```
 Getting a menu, parsed:
 ```python
