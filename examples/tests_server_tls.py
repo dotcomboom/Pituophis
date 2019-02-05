@@ -26,4 +26,5 @@ Nothing fancy.
 
 
 # serve with custom handler
-pituophis.serve("127.0.0.1", 50400, handler=handle, tls=True)  # typical S/Gopher port is 105
+pituophis.serve("127.0.0.1", 50400, handler=handle, tls=True,
+                tlscertchainpath='cacert.pem', tlsprivatekeypath='privkey.pem')  # typical S/Gopher port is 105

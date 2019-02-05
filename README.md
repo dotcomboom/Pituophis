@@ -71,10 +71,10 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 ## Planned features/Wishlist
 Server:
 - Server default handler with proper gophermap and directory/file serving
-- SSL/TLS support ([S/Gopher](https://umbrellix.net/software:ugopherserver), typically on port 105)
 - Asynchronous connections? Right now everything is on one thread, one request at a time
 
 Both:
 - Less bugs
 - Documentation, oh, documentation...
+- Probably other stuff I haven't written down yet
 - ~~Prego~~
