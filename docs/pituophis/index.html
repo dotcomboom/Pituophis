@@ -1136,10 +1136,10 @@ table {
 <span class="c1">#</span>
 <span class="c1"># Portions copyright solderpunk &amp; VF-1 contributors, licensed under the BSD 2-Clause License above.</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">import</span> <span class="nn">ssl</span>
-<span class="kn">import</span> <span class="nn">os</span>
 
 
 <span class="c1"># Quick note:</span>
@@ -1156,6 +1156,9 @@ table {
 <span class="sd">        Reads a BufferedReader to the object&#39;s binary property and initializes a new Response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The data received from the server as a Bytes binary object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1197,21 +1200,51 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* The hostname of the server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* The port of the server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">        and for S/Gopher servers it is typically 105.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
-                class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* Path on the target server to request, or being requested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
+                class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* Search query for the server to process. Omitted when blank.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
+                class="n">tls</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether the request is to be sent to an S/Gopher server over TLS.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls_verify</span> <span
                 class="o">=</span> <span class="n">tls_verify</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Currently broken.***</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">client</span><span
                 class="p">)</span>  <span class="c1"># only used in server</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Server.* The IP address of the connected client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1219,12 +1252,10 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span
-                class="o">.</span><span class="n">tls_verify</span><span class="p">)</span>
             <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
                 class="o">.</span><span class="n">_create_unverified_context</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span
-                class="n">tls_verify</span><span class="p">:</span>
+                class="n">tls_verify</span><span class="p">:</span>  <span class="c1"># TODO: for some reason this is always true when using the get() shorthand</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
                 class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
@@ -1276,19 +1307,40 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="n">itype</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The type of item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                 class="n">text</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The name, or text that is displayed when the item is in a menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                 class="n">path</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Where the item links to on the target server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                 class="n">host</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The hostname of the target server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="n">port</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The port of the target server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">        and for S/Gopher servers it is typically 105.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
-
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the selector leads to an S/Gopher server with TLS enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
                 class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a representation of what the selector looks like in a Gopher menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                 class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">port</span> <span class="o">&lt;</span> <span
@@ -1611,8 +1663,8 @@ table {
                 class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">tls</span><span
                 class="o">=</span><span class="bp">False</span><span class="p">,</span> <span
                 class="n">tlscertchainpath</span><span class="o">=</span><span
-                class="s1">&#39;cacert.pem&#39;</span><span class="p">,</span> <span
-                class="n">tlsprivatekeypath</span><span class="o">=</span><span
+                class="s1">&#39;cacert.pem&#39;</span><span class="p">,</span>
+          <span class="n">tlsprivatekeypath</span><span class="o">=</span><span
                 class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
                 class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1646,7 +1698,8 @@ table {
                 class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Run this command to generate a self-signed certificate and private key:&#39;</span><span
                 class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
+            <span class="k">print</span><span class="p">(</span>
+                <span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
                 class="o">+</span> <span class="n">tlsprivatekeypath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
                 class="o">+</span> <span class="n">tlscertchainpath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
                 class="p">)</span>
@@ -2139,7 +2192,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10e4cc8c8&gt;, tls=False,
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x10cdb48c8&gt;, tls=False,
             tlscertchainpath=&#39;cacert.pem&#39;, tlsprivatekeypath=&#39;privkey.pem&#39;, debug=True)</p>
     </div>
 
@@ -2156,9 +2209,10 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               class="n">handler</span><span class="o">=</span><span class="n">handle</span><span
               class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span
               class="p">,</span> <span class="n">tlscertchainpath</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
-              class="p">,</span> <span class="n">tlsprivatekeypath</span><span class="o">=</span><span class="s1">&#39;privkey.pem&#39;</span><span
-              class="p">,</span> <span class="n">debug</span><span class="o">=</span><span class="bp">True</span><span
-              class="p">):</span>
+              class="p">,</span>
+          <span class="n">tlsprivatekeypath</span><span class="o">=</span><span
+                  class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
+                  class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object</span>
 <span class="sd">    to send to the client. After sending them, the finishing &quot;.&quot; is sent and the connection is closed.</span>
@@ -2189,7 +2243,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                   class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Run this command to generate a self-signed certificate and private key:&#39;</span><span
                   class="p">)</span>
-            <span class="k">print</span><span class="p">(</span><span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
+            <span class="k">print</span><span class="p">(</span>
+                <span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
                   class="o">+</span> <span class="n">tlsprivatekeypath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
                   class="o">+</span> <span class="n">tlscertchainpath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
                   class="p">)</span>
@@ -2312,21 +2367,51 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* The hostname of the server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* The port of the server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">        and for S/Gopher servers it is typically 105.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
-                class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* Path on the target server to request, or being requested.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
+                class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client/Server.* Search query for the server to process. Omitted when blank.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
+                class="n">tls</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether the request is to be sent to an S/Gopher server over TLS.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls_verify</span> <span
                 class="o">=</span> <span class="n">tls_verify</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Currently broken.***</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">client</span><span
                 class="p">)</span>  <span class="c1"># only used in server</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        *Server.* The IP address of the connected client.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2334,12 +2419,10 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-            <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span
-                class="o">.</span><span class="n">tls_verify</span><span class="p">)</span>
             <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
                 class="o">.</span><span class="n">_create_unverified_context</span><span class="p">()</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span
-                class="n">tls_verify</span><span class="p">:</span>
+                class="n">tls_verify</span><span class="p">:</span>  <span class="c1"># TODO: for some reason this is always true when using the get() shorthand</span>
                 <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
                 class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
@@ -2415,21 +2498,51 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">host</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client/Server.* The hostname of the server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                   class="nb">int</span><span class="p">(</span><span class="n">port</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client/Server.* The port of the server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">    and for S/Gopher servers it is typically 105.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
-                  class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
-                  class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client/Server.* Path on the target server to request, or being requested.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                   class="n">tls</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
+                  class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client/Server.* Search query for the server to process. Omitted when blank.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
+                  class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
+                  class="n">tls</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Whether the request is to be sent to an S/Gopher server over TLS.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tls_verify</span> <span class="o">=</span> <span
                   class="n">tls_verify</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Currently broken.***</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">client</span><span
                   class="p">)</span>  <span class="c1"># only used in server</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    *Server.* The IP address of the connected client.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 
   </div>
@@ -2456,12 +2569,10 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
-        <span class="k">print</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span
-                class="n">tls_verify</span><span class="p">)</span>
         <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span class="o">.</span><span
                 class="n">_create_unverified_context</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span
-                class="n">tls_verify</span><span class="p">:</span>
+                class="n">tls_verify</span><span class="p">:</span>  <span class="c1"># TODO: for some reason this is always true when using the get() shorthand</span>
             <span class="n">context</span> <span class="o">=</span> <span class="n">ssl</span><span
                 class="o">.</span><span class="n">create_default_context</span><span class="p">()</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">server_hostname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
@@ -2521,50 +2632,49 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
           <h3>Instance variables</h3>
             <div class="item">
             <p id="pituophis.Request.client" class="name">var <span class="ident">client</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Server.</em> The IP address of the connected client.</p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
             <p id="pituophis.Request.host" class="name">var <span class="ident">host</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Client/Server.</em> The hostname of the server.</p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
             <p id="pituophis.Request.path" class="name">var <span class="ident">path</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Client/Server.</em> Path on the target server to request, or being requested.
+                </p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
             <p id="pituophis.Request.port" class="name">var <span class="ident">port</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Client/Server.</em> The port of the server. For regular Gopher servers, this is
+                    most commonly 70,
+                    and for S/Gopher servers it is typically 105.</p></div>
   <div class="source_cont">
 </div>
 
             </div>
             <div class="item">
             <p id="pituophis.Request.query" class="name">var <span class="ident">query</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Client/Server.</em> Search query for the server to process. Omitted when blank.
+                </p></div>
   <div class="source_cont">
 </div>
 
@@ -2573,6 +2683,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
             <p id="pituophis.Request.tls" class="name">var <span class="ident">tls</span></p>
 
 
+                <div class="desc"><p><em>Client.</em> Whether the request is to be sent to an S/Gopher server over TLS.
+                </p></div>
                 <div class="source_cont">
                 </div>
 
@@ -2581,16 +2693,17 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Request.tls_verify" class="name">var <span class="ident">tls_verify</span></p>
 
 
+              <div class="desc"><p><em>Client.</em> Whether to verify the certificate sent from the server, rejecting
+                  self-signed and invalid certificates. <strong><em>Currently broken.</em></strong></p></div>
               <div class="source_cont">
 </div>
 
           </div>
             <div class="item">
             <p id="pituophis.Request.type" class="name">var <span class="ident">type</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p><em>Client.</em> Item type of the request. Purely for client-side usage.</p></div>
   <div class="source_cont">
 </div>
 
@@ -2617,6 +2730,9 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">        Reads a BufferedReader to the object&#39;s binary property and initializes a new Response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The data received from the server as a Bytes binary object.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2663,6 +2779,9 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">    Reads a BufferedReader to the object&#39;s binary property and initializes a new Response object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">binary</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">read</span><span class="p">()</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The data received from the server as a Bytes binary object.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </pre></div>
 
   </div>
@@ -2725,10 +2844,9 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
           <h3>Instance variables</h3>
             <div class="item">
             <p id="pituophis.Response.binary" class="name">var <span class="ident">binary</span></p>
-            
 
-            
-  
+
+                <div class="desc"><p>The data received from the server as a Bytes binary object.</p></div>
   <div class="source_cont">
 </div>
 
@@ -2763,19 +2881,40 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="n">itype</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The type of item.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                 class="n">text</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The name, or text that is displayed when the item is in a menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                 class="n">path</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Where the item links to on the target server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                 class="n">host</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The hostname of the target server.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                 class="n">port</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        The port of the target server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">        and for S/Gopher servers it is typically 105.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
-
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        True if the selector leads to an S/Gopher server with TLS enabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
     <span class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
                 class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Returns a representation of what the selector looks like in a Gopher menu.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                 class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">port</span> <span class="o">&lt;</span> <span
@@ -2845,16 +2984,35 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                   class="n">itype</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The type of item.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">text</span> <span class="o">=</span> <span
                   class="n">text</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The name, or text that is displayed when the item is in a menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">=</span> <span
                   class="n">path</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Where the item links to on the target server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">host</span> <span class="o">=</span> <span
                   class="n">host</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The hostname of the target server.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">port</span> <span class="o">=</span> <span
                   class="n">port</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    The port of the target server. For regular Gopher servers, this is most commonly 70, </span>
+<span class="sd">    and for S/Gopher servers it is typically 105.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                   class="n">tls</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    True if the selector leads to an S/Gopher server with TLS enabled.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
 </pre>
       </div>
 
@@ -2871,6 +3029,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               </div>
 
 
+              <div class="desc"><p>Returns a representation of what the selector looks like in a Gopher menu.</p></div>
               <div class="source_cont">
                   <p class="source_link"><a href="javascript:void(0);"
                                             onclick="toggle('source-pituophis.Selector.source', this);">Show source
@@ -2879,6 +3038,9 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                       <div class="codehilite"><pre><span></span><span class="k">def</span> <span
                               class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
                               class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Returns a representation of what the selector looks like in a Gopher menu.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                                   class="bp">self</span><span class="o">.</span><span class="n">port</span><span
                                   class="p">)</span>
@@ -2923,6 +3085,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.host" class="name">var <span class="ident">host</span></p>
 
 
+              <div class="desc"><p>The hostname of the target server.</p></div>
               <div class="source_cont">
               </div>
 
@@ -2931,6 +3094,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.path" class="name">var <span class="ident">path</span></p>
 
 
+              <div class="desc"><p>Where the item links to on the target server.</p></div>
               <div class="source_cont">
               </div>
 
@@ -2939,6 +3103,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.port" class="name">var <span class="ident">port</span></p>
 
 
+              <div class="desc"><p>The port of the target server. For regular Gopher servers, this is most commonly 70,
+                  and for S/Gopher servers it is typically 105.</p></div>
               <div class="source_cont">
               </div>
 
@@ -2947,6 +3113,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.text" class="name">var <span class="ident">text</span></p>
 
 
+              <div class="desc"><p>The name, or text that is displayed when the item is in a menu.</p></div>
               <div class="source_cont">
               </div>
 
@@ -2955,6 +3122,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.tls" class="name">var <span class="ident">tls</span></p>
 
 
+              <div class="desc"><p>True if the selector leads to an S/Gopher server with TLS enabled.</p></div>
               <div class="source_cont">
               </div>
 
@@ -2963,6 +3131,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               <p id="pituophis.Selector.type" class="name">var <span class="ident">type</span></p>
 
 
+              <div class="desc"><p>The type of item.</p></div>
               <div class="source_cont">
               </div>
 

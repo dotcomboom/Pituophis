@@ -46,6 +46,9 @@ class Response:
         Reads a BufferedReader to the object's binary property and initializes a new Response object.
         """
         self.binary = stream.read()
+        """
+        The data received from the server as a Bytes binary object.
+        """
 
     def text(self):
         """
@@ -73,13 +76,42 @@ class Request:
         Initializes a new Request object.
         """
         self.host = str(host)
+        """
+        *Client/Server.* The hostname of the server.
+        """
         self.port = int(port)
+        """
+        *Client/Server.* The port of the server. For regular Gopher servers, this is most commonly 70, 
+        and for S/Gopher servers it is typically 105.
+        """
         self.path = str(path)
-        self.query = str(query)
-        self.type = str(itype)
+        """
+        *Client/Server.* Path on the target server to request, or being requested.
+        """
         self.tls = tls
+        """
+        *Client.* Whether the target server is an S/Gopher server with TLS enabled.
+        """
+        self.query = str(query)
+        """
+        *Client/Server.* Search query for the server to process. Omitted when blank.
+        """
+        self.type = str(itype)
+        """
+        *Client.* Item type of the request. Purely for client-side usage.
+        """
+        self.tls = tls
+        """
+        *Client.* Whether the request is to be sent to an S/Gopher server over TLS.
+        """
         self.tls_verify = tls_verify
+        """
+        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Currently broken.***
+        """
         self.client = str(client)  # only used in server
+        """
+        *Server.* The IP address of the connected client.
+        """
 
     def get(self):
         """
@@ -127,13 +159,34 @@ class Selector:
         Initializes a new Selector object.
         """
         self.type = itype
+        """
+        The type of item.
+        """
         self.text = text
+        """
+        The name, or text that is displayed when the item is in a menu.
+        """
         self.path = path
+        """
+        Where the item links to on the target server.
+        """
         self.host = host
+        """
+        The hostname of the target server.
+        """
         self.port = port
+        """
+        The port of the target server. For regular Gopher servers, this is most commonly 70, 
+        and for S/Gopher servers it is typically 105.
+        """
         self.tls = tls
-
+        """
+        True if the selector leads to an S/Gopher server with TLS enabled.
+        """
     def source(self):
+        """
+        Returns a representation of what the selector looks like in a Gopher menu.
+        """
         port = int(self.port)
         if port < 65535:
             # Add digits to display that this is a TLS selector

@@ -68,6 +68,7 @@ print(rsp.text())
 Pituophis can be used with a custom handler to serve Gopher requests. Primitive Bucktooth-like gophermap parsing (excluding path resolution) is available.
 
 ![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
+
 ## Planned features/Wishlist
 Server:
 - Server default handler with proper gophermap and directory/file serving
