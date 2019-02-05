@@ -112,13 +112,12 @@ class Request:
         return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
 
-# Client stuff
 class Selector:
     """
     *Server/Client.* Represents a selector in a parsed Gopher menu.
     """
 
-    def __init__(self, itype='i', text='', path='/', host='error.host', port=0):
+    def __init__(self, itype='i', text='', path='/', host='error.host', port=0, tls=False):
         """
         Initializes a new Selector object.
         """
@@ -127,10 +126,18 @@ class Selector:
         self.path = path
         self.host = host
         self.port = port
+        self.tls = tls
 
     def source(self):
+        port = int(self.port)
+        if port < 65535:
+            # Add digits to display that this is a TLS selector
+            while len(str(port)) < 5:
+                port = '0' + str(port)
+            port = '1' + str(port)
+            port = int(port)
         return str(self.type) + str(self.text) + '\t' + str(self.path) + '\t' + str(self.host) + '\t' + str(
-            self.port) + '\r\n'
+            port) + '\r\n'
 
 
 def parse_menu(source):
@@ -155,6 +162,12 @@ def parse_menu(source):
                 selector.path = matches[3]
                 selector.host = matches[4]
                 selector.port = matches[5]
+                # detect TLS
+                if int(selector.port) > 65535:
+                    selector.tls = True
+                    # typically the port is sent as 100105
+                    # remove first number to get at 5 digits
+                    selector.port = int(str(selector.port)[1:])
         parsed_menu.append(selector)
     return parsed_menu
 

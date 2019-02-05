@@ -1,7 +1,7 @@
 import pituophis
 
 req = pituophis.Request()
-req.host = 'khaze.net'
+req.host = input()
 req.port = 105
 req.tls = True
 
@@ -14,5 +14,15 @@ print('   TLS:', req.tls)
 
 resp = req.get()
 
-print()
-print(resp.text())
+menu = resp.menu()
+
+for selector in menu:
+    print('--')
+    print(selector.type)
+    print(selector.text)
+    print(selector.path)
+    print(selector.host)
+    print(selector.port)
+    print(selector.tls)
+
+print('--')

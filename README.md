@@ -9,7 +9,7 @@ import pituophis
 ```
 
 ## Client
-Pituophis can grab files and text from Gopher servers through a the `Request.get()` and `get()` functions.
+Pituophis can grab files and text from Gopher servers (both S/Gopher TLS and regular Gopher) through the `Request.get()` and `get()` functions.
 ### Examples
 Getting menus and files as plain text:
 ```python
@@ -43,12 +43,12 @@ Requests can also be created and worked with directly:
 ```python
 import pituophis
 req = pituophis.Request()
-req.host = 'gopher.floodgap.com'
-req.port = 70
-req.type = '7'
-req.path = '/v2/vs'
-req.query = 'food'
-req.tls = False  # TLS/SSL is not functional yet.
+req.host = 'gopher.floodgap.com'  # set to 127.0.0.1 by default
+req.port = 70  # set to 70 as default, as per tradition
+req.type = '7'  # set to 9 by default, purely for client usage
+req.path = '/v2/vs'  # set to '/' by default
+req.query = 'food'  # set to '' (nothing) by default
+req.tls = False  # set to False by default
 print('Getting', req.url())
 rsp = req.get()
 print(rsp.text())
@@ -68,10 +68,10 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 ## Planned features/Wishlist
 Server:
 - Server default handler with proper gophermap and directory/file serving
+- SSL/TLS support ([S/Gopher](https://umbrellix.net/software:ugopherserver), typically on port 105)
 - Asynchronous connections? Right now everything is on one thread, one request at a time
 
 Both:
-- SSL/TLS support ([S/Gopher](https://umbrellix.net/software:ugopherserver) on port 105)
 - Less bugs
 - Documentation, oh, documentation...
 - ~~Prego~~
