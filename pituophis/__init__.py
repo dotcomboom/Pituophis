@@ -26,6 +26,7 @@
 #
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
+import os
 import re
 import socket
 import ssl
@@ -64,9 +65,10 @@ class Request:
     *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.
 
     The type property is not used when sending or receiving requests; it's purely for client-side usage.
+    The tls_verify property determines if the client will trust a self-signed certificate when using TLS.
     """
 
-    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, client=''):
+    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client=''):
         """
         Initializes a new Request object.
         """
@@ -75,7 +77,8 @@ class Request:
         self.path = str(path)
         self.query = str(query)
         self.type = str(itype)
-        self.tls = bool(tls)
+        self.tls = tls
+        self.tls_verify = tls_verify
         self.client = str(client)  # only used in server
 
     def get(self):
@@ -84,7 +87,9 @@ class Request:
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if self.tls:
-            context = ssl.create_default_context()  # Not working yet
+            context = ssl._create_unverified_context()
+            if self.tls_verify:  # TODO: for some reason this is always true when using the get() shorthand
+                context = ssl.create_default_context()
             s = context.wrap_socket(s, server_hostname=self.host)
         else:
             s.settimeout(10.0)
@@ -217,11 +222,11 @@ def parse_url(url):
     return req
 
 
-def get(host, port=70, path='/', query='', tls=False):
+def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
     """
     *Client.* Quickly creates and sends a Request. Returns a Response object.
     """
-    req = Request(host=host, port=port, path=path, query=query, tls=tls)
+    req = Request(host=host, port=port, path=path, query=query, tls=tls, tls_verify=tls_verify)
     if '/' in host or ':' in host:
         req = parse_url(host)
     return req.get()
@@ -312,15 +317,35 @@ def handle(request):
     return encode(menu)
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
+def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tlscertchainpath='cacert.pem',
+          tlsprivatekeypath='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object
     to send to the client. After sending them, the finishing "." is sent and the connection is closed.
     """
-    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    if tls:
+        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
+
+        if os.path.exists(tlscertchainpath) and os.path.exists(tlsprivatekeypath):
+            context.load_cert_chain(tlscertchainpath, tlsprivatekeypath)
+            s = context.wrap_socket(s, server_side=True)
+        else:
+            print('TLS certificate and/or private key is missing. TLS has been disabled for this session.')
+            print('Run this command to generate a self-signed certificate and private key:')
+            print(
+                '  openssl req -x509 -newkey rsa:4096 -keyout "' + tlsprivatekeypath + '" -out "' + tlscertchainpath + '" -days 365')
+            print('Note that clients might refuse to connect to a self-signed certificate.')
+            print()
+            tls = False
+
+    with s:
         s.bind((host, port))
         s.listen(1)
-        print('Server is now running.')
+        if tls:
+            print('S/Gopher server is now running on', host + ':' + str(port) + '.')
+        else:
+            print('Gopher server is now running on', host + ':' + str(port) + '.')
         while True:
             try:
                 conn, addr = s.accept()
@@ -342,4 +367,4 @@ def serve(host="127.0.0.1", port=70, handler=handle, debug=True):
                         print('Connection closed')
             except Exception as e:
                 if debug:
-                    print('Error:', e, '; restarting')
+                    print('Error:', e)
