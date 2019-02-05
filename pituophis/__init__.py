@@ -70,13 +70,13 @@ class Request:
         """
         Initializes a new Request object.
         """
-        self.host = host
-        self.port = port
-        self.path = path
-        self.query = query
-        self.type = itype
-        self.tls = tls  # only used in client
-        self.client = client  # only used in server
+        self.host = str(host)
+        self.port = int(port)
+        self.path = str(path)
+        self.query = str(query)
+        self.type = str(itype)
+        self.tls = bool(tls)
+        self.client = str(client)  # only used in server
 
     def get(self):
         """
