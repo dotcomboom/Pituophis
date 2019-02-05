@@ -106,7 +106,7 @@ class Request:
         """
         self.tls_verify = tls_verify
         """
-        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Currently broken.***
+        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates. ***Stuck on True in some functions.***
         """
         self.client = str(client)  # only used in server
         """
