@@ -337,7 +337,7 @@ def handle(request):
     return menu
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='cacert.pem',
+def serve(host="127.0.0.1", port=70, handler=handle, add_period=True, tls=False, tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
@@ -399,7 +399,8 @@ def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='
                         resp = bytes(out, 'utf-8')
 
                     conn.send(resp)
-                    conn.send(b'.')
+                    if add_period:
+                        conn.send(b'.')
 
                     conn.close()
                     if debug:
