@@ -181,7 +181,7 @@ class Selector:
         Returns a representation of what the selector looks like in a Gopher menu.
         """
         port = int(self.port)
-        if port < 65535:
+        if port > 65535:
             # Add digits to display that this is a TLS selector
             while len(str(port)) < 5:
                 port = '0' + str(port)
@@ -340,8 +340,9 @@ def handle(request):
 def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
-    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object
-    to send to the client. After sending them, the finishing "." is sent and the connection is closed.
+    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
+     object (which can contain either Strings or Selectors) to send to the client.
+     After sending them, the finishing "." is sent and the connection is closed.
     """
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if tls:
@@ -398,6 +399,8 @@ def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='
                         resp = bytes(out, 'utf-8')
 
                     conn.send(resp)
+                    conn.send(b'.')
+
                     conn.close()
                     if debug:
                         print('Connection closed')
