@@ -1,3 +1,4 @@
+
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
         "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 
@@ -74,7 +75,7 @@
 
 
 <div class="viewcode-block" id="Response"><a class="viewcode-back"
-                                             href="../pituophis.html#pituophis.Response">[docs]</a><span
+                                             href="../index.html#pituophis.Response">[docs]</a><span
         class="k">class</span> <span class="nc">Response</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client.* Returned by Request.get() and get(). Represents a received binary object from a Gopher server.</span>
@@ -91,8 +92,7 @@
 <span class="sd">        The data received from the server as a Bytes binary object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Response.text"><a class="viewcode-back"
-                                                  href="../pituophis.html#pituophis.Response.text">[docs]</a>    <span
+<div class="viewcode-block" id="Response.text"><a class="viewcode-back" href="../index.html#pituophis.Response.text">[docs]</a>    <span
         class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span
         class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -102,8 +102,7 @@
             class="n">binary</span><span class="o">.</span><span class="n">decode</span><span class="p">(</span><span
             class="s1">&#39;utf-8&#39;</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Response.menu"><a class="viewcode-back"
-                                                  href="../pituophis.html#pituophis.Response.menu">[docs]</a>    <span
+<div class="viewcode-block" id="Response.menu"><a class="viewcode-back" href="../index.html#pituophis.Response.menu">[docs]</a>    <span
         class="k">def</span> <span class="nf">menu</span><span class="p">(</span><span class="bp">self</span><span
         class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -115,8 +114,7 @@
             class="p">))</span></div></div>
 
 
-<div class="viewcode-block" id="Request"><a class="viewcode-back"
-                                            href="../pituophis.html#pituophis.Request">[docs]</a><span
+<div class="viewcode-block" id="Request"><a class="viewcode-back" href="../index.html#pituophis.Request">[docs]</a><span
         class="k">class</span> <span class="nc">Request</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.</span>
@@ -189,7 +187,8 @@
 <span class="sd">        *Server.* The IP address of the connected client.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Request.get"><a class="viewcode-back" href="../pituophis.html#pituophis.Request.get">[docs]</a>    <span
+<div class="viewcode-block" id="Request.get"><a class="viewcode-back"
+                                                href="../index.html#pituophis.Request.get">[docs]</a>    <span
         class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span
         class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -236,7 +235,8 @@
             class="n">s</span><span class="o">.</span><span class="n">makefile</span><span class="p">(</span><span
             class="s1">&#39;rb&#39;</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="Request.url"><a class="viewcode-back" href="../pituophis.html#pituophis.Request.url">[docs]</a>    <span
+<div class="viewcode-block" id="Request.url"><a class="viewcode-back"
+                                                href="../index.html#pituophis.Request.url">[docs]</a>    <span
         class="k">def</span> <span class="nf">url</span><span class="p">(</span><span class="bp">self</span><span
         class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -273,7 +273,7 @@
 
 
 <div class="viewcode-block" id="Selector"><a class="viewcode-back"
-                                             href="../pituophis.html#pituophis.Selector">[docs]</a><span
+                                             href="../index.html#pituophis.Selector">[docs]</a><span
         class="k">class</span> <span class="nc">Selector</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server/Client.* Represents a selector in a parsed Gopher menu.</span>
@@ -323,7 +323,7 @@
 <span class="sd">        True if the selector leads to an S/Gopher server with TLS enabled.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
 <div class="viewcode-block" id="Selector.source"><a class="viewcode-back"
-                                                    href="../pituophis.html#pituophis.Selector.source">[docs]</a>    <span
+                                                    href="../index.html#pituophis.Selector.source">[docs]</a>    <span
         class="k">def</span> <span class="nf">source</span><span class="p">(</span><span class="bp">self</span><span
         class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -361,7 +361,8 @@
             class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span></div></div>
 
 
-<div class="viewcode-block" id="parse_menu"><a class="viewcode-back" href="../pituophis.html#pituophis.parse_menu">[docs]</a><span
+<div class="viewcode-block" id="parse_menu"><a class="viewcode-back"
+                                               href="../index.html#pituophis.parse_menu">[docs]</a><span
         class="k">def</span> <span class="nf">parse_menu</span><span class="p">(</span><span
         class="n">source</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -436,7 +437,7 @@
 
 
 <div class="viewcode-block" id="parse_url"><a class="viewcode-back"
-                                              href="../pituophis.html#pituophis.parse_url">[docs]</a><span
+                                              href="../index.html#pituophis.parse_url">[docs]</a><span
         class="k">def</span> <span class="nf">parse_url</span><span class="p">(</span><span class="n">url</span><span
         class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -527,7 +528,7 @@
     <span class="k">return</span> <span class="n">req</span></div>
 
 
-<div class="viewcode-block" id="get"><a class="viewcode-back" href="../pituophis.html#pituophis.get">[docs]</a><span
+<div class="viewcode-block" id="get"><a class="viewcode-back" href="../index.html#pituophis.get">[docs]</a><span
         class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="n">host</span><span
         class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span
         class="n">path</span><span class="o">=</span><span class="s1">&#39;/&#39;</span><span class="p">,</span> <span
@@ -555,7 +556,7 @@
 
 <span class="c1"># Server stuff</span>
 <div class="viewcode-block" id="parse_gophermap"><a class="viewcode-back"
-                                                    href="../pituophis.html#pituophis.parse_gophermap">[docs]</a><span
+                                                    href="../index.html#pituophis.parse_gophermap">[docs]</a><span
         class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span
         class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span class="o">=</span><span
         class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span
@@ -630,8 +631,7 @@
     <span class="k">return</span> <span class="n">newMenu</span></div>
 
 
-<div class="viewcode-block" id="encode"><a class="viewcode-back"
-                                           href="../pituophis.html#pituophis.encode">[docs]</a><span
+<div class="viewcode-block" id="encode"><a class="viewcode-back" href="../index.html#pituophis.encode">[docs]</a><span
         class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span
         class="n">str_or_lines</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -684,8 +684,7 @@
             class="p">)</span></div>
 
 
-<div class="viewcode-block" id="handle"><a class="viewcode-back"
-                                           href="../pituophis.html#pituophis.handle">[docs]</a><span
+<div class="viewcode-block" id="handle"><a class="viewcode-back" href="../index.html#pituophis.handle">[docs]</a><span
         class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="n">request</span><span
         class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -716,7 +715,7 @@
             class="p">)</span></div>
 
 
-<div class="viewcode-block" id="serve"><a class="viewcode-back" href="../pituophis.html#pituophis.serve">[docs]</a><span
+<div class="viewcode-block" id="serve"><a class="viewcode-back" href="../index.html#pituophis.serve">[docs]</a><span
         class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">host</span><span
         class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span
         class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">handler</span><span
