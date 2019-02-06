@@ -85,10 +85,6 @@ class Request:
         """
         *Client/Server.* Path on the target server to request, or being requested.
         """
-        self.tls = tls
-        """
-        *Client.* Whether the target server is an S/Gopher server with TLS enabled.
-        """
         self.query = str(query)
         """
         *Client/Server.* Search query for the server to process. Omitted when blank.
@@ -104,7 +100,6 @@ class Request:
         self.tls_verify = tls_verify
         """
         *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates.
-        ***Currently stuck on True in some functions.***
         """
         self.client = str(client)  # only used in server
         """
@@ -237,7 +232,7 @@ def parse_url(url):
     # condense multiple slashes to one
     url = re.sub(r'/+', '/', url)
     # add protocol if not there
-    if not ':/' in url:
+    if ':/' not in url:
         url = 'gopher:/' + url
     url = url.split('/')
     # split into protocol, host & port, and then the following items for the selector/path
@@ -284,7 +279,7 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
 
 
 # Server stuff
-def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
+def parse_gophermap(source, def_host='127.0.0.1', def_port='70'):
     """
     *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
     This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
@@ -307,8 +302,8 @@ def parse_gophermap(source, defHost='127.0.0.1', defPort='70'):
             itype = selector[0][0]
             text = selector[0][1:]
             path = '/' + selector[1] + '/'
-            host = defHost
-            port = defPort
+            host = def_host
+            port = def_port
 
             if len(selector) > 1:
                 path = selector[1]
@@ -368,8 +363,8 @@ def handle(request):
     return encode(menu)
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tlscertchainpath='cacert.pem',
-          tlsprivatekeypath='privkey.pem', debug=True):
+def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='cacert.pem',
+          tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object
     to send to the client. After sending them, the finishing "." is sent and the connection is closed.
@@ -378,14 +373,14 @@ def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tlscertchainpath
     if tls:
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 
-        if os.path.exists(tlscertchainpath) and os.path.exists(tlsprivatekeypath):
-            context.load_cert_chain(tlscertchainpath, tlsprivatekeypath)
+        if os.path.exists(tls_cert_chain) and os.path.exists(tls_private_key):
+            context.load_cert_chain(tls_cert_chain, tls_private_key)
             s = context.wrap_socket(s, server_side=True)
         else:
             print('TLS certificate and/or private key is missing. TLS has been disabled for this session.')
             print('Run this command to generate a self-signed certificate and private key:')
             print(
-                '  openssl req -x509 -newkey rsa:4096 -keyout "' + tlsprivatekeypath + '" -out "' + tlscertchainpath + '" -days 365')
+                '  openssl req -x509 -newkey rsa:4096 -keyout "' + tls_private_key + '" -out "' + tls_cert_chain + '" -days 365')
             print('Note that clients might refuse to connect to a self-signed certificate.')
             print()
             tls = False

@@ -1211,11 +1211,6 @@ table {
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        *Client/Server.* Path on the target server to request, or being requested.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
-                class="n">tls</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -1235,7 +1230,6 @@ table {
                 class="o">=</span> <span class="n">tls_verify</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates.</span>
-<span class="sd">        ***Currently stuck on True in some functions.***</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">client</span><span
@@ -1454,7 +1448,7 @@ table {
     <span class="c1"># condense multiple slashes to one</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/+&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
     <span class="c1"># add protocol if not there</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;:/&#39;</span> <span
+    <span class="k">if</span> <span class="s1">&#39;:/&#39;</span> <span class="ow">not</span> <span
                 class="ow">in</span> <span class="n">url</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;gopher:/&#39;</span> <span
                 class="o">+</span> <span class="n">url</span>
@@ -1528,8 +1522,8 @@ table {
 
 <span class="c1"># Server stuff</span>
 <span class="k">def</span> <span class="nf">parse_gophermap</span><span class="p">(</span><span
-                class="n">source</span><span class="p">,</span> <span class="n">defHost</span><span
-                class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">defPort</span><span
+                class="n">source</span><span class="p">,</span> <span class="n">def_host</span><span
+                class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span class="p">,</span> <span class="n">def_port</span><span
                 class="o">=</span><span class="s1">&#39;70&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
@@ -1553,8 +1547,8 @@ table {
             <span class="n">itype</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">selector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
-            <span class="n">host</span> <span class="o">=</span> <span class="n">defHost</span>
-            <span class="n">port</span> <span class="o">=</span> <span class="n">defPort</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="n">def_host</span>
+            <span class="n">port</span> <span class="o">=</span> <span class="n">def_port</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">path</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -1660,9 +1654,9 @@ table {
                 class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">handler</span><span
                 class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">tls</span><span
                 class="o">=</span><span class="bp">False</span><span class="p">,</span> <span
-                class="n">tlscertchainpath</span><span class="o">=</span><span
-                class="s1">&#39;cacert.pem&#39;</span><span class="p">,</span>
-          <span class="n">tlsprivatekeypath</span><span class="o">=</span><span
+                class="n">tls_cert_chain</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
+                class="p">,</span>
+          <span class="n">tls_private_key</span><span class="o">=</span><span
                 class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
                 class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -1681,11 +1675,12 @@ table {
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span
                 class="o">.</span><span class="n">exists</span><span class="p">(</span><span
-                class="n">tlscertchainpath</span><span class="p">)</span> <span class="ow">and</span> <span
+                class="n">tls_cert_chain</span><span class="p">)</span> <span class="ow">and</span> <span
                 class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span
-                class="n">exists</span><span class="p">(</span><span class="n">tlsprivatekeypath</span><span class="p">):</span>
+                class="n">exists</span><span class="p">(</span><span class="n">tls_private_key</span><span
+                class="p">):</span>
             <span class="n">context</span><span class="o">.</span><span class="n">load_cert_chain</span><span class="p">(</span><span
-                class="n">tlscertchainpath</span><span class="p">,</span> <span class="n">tlsprivatekeypath</span><span
+                class="n">tls_cert_chain</span><span class="p">,</span> <span class="n">tls_private_key</span><span
                 class="p">)</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span
                 class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span
@@ -1698,8 +1693,8 @@ table {
                 class="p">)</span>
             <span class="k">print</span><span class="p">(</span>
                 <span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
-                class="o">+</span> <span class="n">tlsprivatekeypath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
-                class="o">+</span> <span class="n">tlscertchainpath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
+                class="o">+</span> <span class="n">tls_private_key</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
+                class="o">+</span> <span class="n">tls_cert_chain</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
                 class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Note that clients might refuse to connect to a self-signed certificate.&#39;</span><span
                 class="p">)</span>
@@ -1954,7 +1949,7 @@ table {
   <div class="item">
     <div class="name def" id="pituophis.parse_gophermap">
         <p>def <span class="ident">parse_gophermap</span>(</p>
-        <p>source, defHost=&#39;127.0.0.1&#39;, defPort=&#39;70&#39;)</p>
+        <p>source, def_host=&#39;127.0.0.1&#39;, def_port=&#39;70&#39;)</p>
     </div>
 
 
@@ -1968,8 +1963,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div id="source-pituophis.parse_gophermap" class="source">
       <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">parse_gophermap</span><span
               class="p">(</span><span class="n">source</span><span class="p">,</span> <span
-              class="n">defHost</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span
-              class="p">,</span> <span class="n">defPort</span><span class="o">=</span><span
+              class="n">def_host</span><span class="o">=</span><span class="s1">&#39;127.0.0.1&#39;</span><span
+              class="p">,</span> <span class="n">def_port</span><span class="o">=</span><span
               class="s1">&#39;70&#39;</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.</span>
@@ -1993,8 +1988,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
             <span class="n">itype</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
             <span class="n">text</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">:]</span>
             <span class="n">path</span> <span class="o">=</span> <span class="s1">&#39;/&#39;</span> <span class="o">+</span> <span class="n">selector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">+</span> <span class="s1">&#39;/&#39;</span>
-            <span class="n">host</span> <span class="o">=</span> <span class="n">defHost</span>
-            <span class="n">port</span> <span class="o">=</span> <span class="n">defPort</span>
+            <span class="n">host</span> <span class="o">=</span> <span class="n">def_host</span>
+            <span class="n">port</span> <span class="o">=</span> <span class="n">def_port</span>
 
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">selector</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
                 <span class="n">path</span> <span class="o">=</span> <span class="n">selector</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
@@ -2134,7 +2129,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <span class="c1"># condense multiple slashes to one</span>
     <span class="n">url</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="sa">r</span><span class="s1">&#39;/+&#39;</span><span class="p">,</span> <span class="s1">&#39;/&#39;</span><span class="p">,</span> <span class="n">url</span><span class="p">)</span>
     <span class="c1"># add protocol if not there</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="s1">&#39;:/&#39;</span> <span
+    <span class="k">if</span> <span class="s1">&#39;:/&#39;</span> <span class="ow">not</span> <span
                 class="ow">in</span> <span class="n">url</span><span class="p">:</span>
         <span class="n">url</span> <span class="o">=</span> <span class="s1">&#39;gopher:/&#39;</span> <span
                 class="o">+</span> <span class="n">url</span>
@@ -2190,8 +2185,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x102026840&gt;, tls=False,
-            tlscertchainpath=&#39;cacert.pem&#39;, tlsprivatekeypath=&#39;privkey.pem&#39;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x1104b4840&gt;, tls=False, tls_cert_chain=&#39;cacert.pem&#39;,
+            tls_private_key=&#39;privkey.pem&#39;, debug=True)</p>
     </div>
 
 
@@ -2206,9 +2201,9 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span
               class="n">handler</span><span class="o">=</span><span class="n">handle</span><span
               class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span
-              class="p">,</span> <span class="n">tlscertchainpath</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
+              class="p">,</span> <span class="n">tls_cert_chain</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
               class="p">,</span>
-          <span class="n">tlsprivatekeypath</span><span class="o">=</span><span
+          <span class="n">tls_private_key</span><span class="o">=</span><span
                   class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
                   class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -2225,13 +2220,13 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                   class="o">.</span><span class="n">PROTOCOL_TLS_SERVER</span><span class="p">)</span>
 
         <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span
-                  class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">tlscertchainpath</span><span
-                  class="p">)</span> <span class="ow">and</span> <span class="n">os</span><span class="o">.</span><span
-                  class="n">path</span><span class="o">.</span><span class="n">exists</span><span
-                  class="p">(</span><span class="n">tlsprivatekeypath</span><span class="p">):</span>
+                  class="o">.</span><span class="n">exists</span><span class="p">(</span><span
+                  class="n">tls_cert_chain</span><span class="p">)</span> <span class="ow">and</span> <span
+                  class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span
+                  class="n">exists</span><span class="p">(</span><span class="n">tls_private_key</span><span class="p">):</span>
             <span class="n">context</span><span class="o">.</span><span class="n">load_cert_chain</span><span class="p">(</span><span
-                  class="n">tlscertchainpath</span><span class="p">,</span> <span
-                  class="n">tlsprivatekeypath</span><span class="p">)</span>
+                  class="n">tls_cert_chain</span><span class="p">,</span> <span class="n">tls_private_key</span><span
+                  class="p">)</span>
             <span class="n">s</span> <span class="o">=</span> <span class="n">context</span><span
                   class="o">.</span><span class="n">wrap_socket</span><span class="p">(</span><span
                   class="n">s</span><span class="p">,</span> <span class="n">server_side</span><span
@@ -2243,8 +2238,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                   class="p">)</span>
             <span class="k">print</span><span class="p">(</span>
                 <span class="s1">&#39;  openssl req -x509 -newkey rsa:4096 -keyout &quot;&#39;</span> <span
-                  class="o">+</span> <span class="n">tlsprivatekeypath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
-                  class="o">+</span> <span class="n">tlscertchainpath</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
+                  class="o">+</span> <span class="n">tls_private_key</span> <span class="o">+</span> <span class="s1">&#39;&quot; -out &quot;&#39;</span> <span
+                  class="o">+</span> <span class="n">tls_cert_chain</span> <span class="o">+</span> <span class="s1">&#39;&quot; -days 365&#39;</span><span
                   class="p">)</span>
             <span class="k">print</span><span class="p">(</span><span class="s1">&#39;Note that clients might refuse to connect to a self-signed certificate.&#39;</span><span
                   class="p">)</span>
@@ -2374,11 +2369,6 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        *Client/Server.* Path on the target server to request, or being requested.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
-                class="n">tls</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
-<span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -2398,7 +2388,6 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                 class="o">=</span> <span class="n">tls_verify</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates.</span>
-<span class="sd">        ***Currently stuck on True in some functions.***</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">client</span><span
@@ -2506,11 +2495,6 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client/Server.* Path on the target server to request, or being requested.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
-                  class="n">tls</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Client.* Whether the target server is an S/Gopher server with TLS enabled.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">query</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -2530,7 +2514,6 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                   class="n">tls_verify</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates.</span>
-<span class="sd">    ***Currently stuck on True in some functions.***</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">client</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">client</span><span
@@ -2687,8 +2670,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 
 
               <div class="desc"><p><em>Client.</em> Whether to verify the certificate sent from the server, rejecting
-                  self-signed and invalid certificates.
-                  <strong><em>Currently stuck on True in some functions.</em></strong></p></div>
+                  self-signed and invalid certificates.</p></div>
               <div class="source_cont">
 </div>
 

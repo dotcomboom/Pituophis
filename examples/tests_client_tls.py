@@ -8,9 +8,10 @@ import pituophis
 # ~~~~~~~~~~
 
 req = pituophis.Request()
-req.host = input()
-req.port = 105
+req.host = input('Host: ')
+req.port = int(input('Port: '))  # usually 105
 req.tls = True
+req.tls_verify = False
 
 print('Sending request:')
 print('   Host:', req.host)
@@ -18,6 +19,7 @@ print('   Port:', req.port)
 print('   Path:', req.path)
 print('   Query:', req.query)
 print('   TLS:', req.tls)
+print('   Verify TLS:', req.tls_verify)
 
 resp = req.get()
 

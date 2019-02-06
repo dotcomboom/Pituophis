@@ -203,8 +203,7 @@
                                                 class="headerlink" href="#pituophis.Request.tls_verify"
                                                 title="Permalink to this definition">¶</a></dt>
                                         <dd><p><em>Client.</em> Whether to verify the certificate sent from the server,
-                                            rejecting self-signed and invalid certificates.
-                                            <strong>*Currently stuck on True in some functions.*</strong></p>
+                                            rejecting self-signed and invalid certificates.</p>
                                         </dd>
                                     </dl>
 
@@ -402,7 +401,7 @@
                                 <dt id="pituophis.parse_gophermap">
                                     <code class="descclassname">pituophis.</code><code
                                         class="descname">parse_gophermap</code><span class="sig-paren">(</span><em>source</em>,
-                                    <em>defHost='127.0.0.1'</em>, <em>defPort='70'</em><span
+                                    <em>def_host='127.0.0.1'</em>, <em>def_port='70'</em><span
                                         class="sig-paren">)</span><a class="headerlink"
                                                                      href="#pituophis.parse_gophermap"
                                                                      title="Permalink to this definition">¶</a></dt>
@@ -441,8 +440,8 @@
                                 <dt id="pituophis.serve">
                                     <code class="descclassname">pituophis.</code><code
                                         class="descname">serve</code><span class="sig-paren">(</span><em>host='127.0.0.1'</em>,
-                                    <em>port=70</em>, <em>handler=&lt;function handle&gt;</em>, <em>tls=False</em>, <em>tlscertchainpath='cacert.pem'</em>,
-                                    <em>tlsprivatekeypath='privkey.pem'</em>, <em>debug=True</em><span
+                                    <em>port=70</em>, <em>handler=&lt;function handle&gt;</em>, <em>tls=False</em>, <em>tls_cert_chain='cacert.pem'</em>,
+                                    <em>tls_private_key='privkey.pem'</em>, <em>debug=True</em><span
                                         class="sig-paren">)</span><a class="headerlink" href="#pituophis.serve"
                                                                      title="Permalink to this definition">¶</a></dt>
                                 <dd><p><em>Server.</em> Listens for Gopher requests. Allows for using a custom handler
