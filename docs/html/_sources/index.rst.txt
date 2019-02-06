@@ -9,3 +9,5 @@ Pituophis API
     :members:
     :undoc-members:
     :show-inheritance:
+
+* :ref:`genindex`
