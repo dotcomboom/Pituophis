@@ -1179,9 +1179,6 @@ table {
 <span class="k">class</span> <span class="nc">Request</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.</span>
-
-<span class="sd">    The type property is not used when sending or receiving requests; it&#39;s purely for client-side usage.</span>
-<span class="sd">    The tls_verify property determines if the client will trust a self-signed certificate when using TLS.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
@@ -1227,7 +1224,7 @@ table {
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">        *Client.* Item type of the request. Purely for client-side usage, not used when sending or receiving requests.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
@@ -1249,7 +1246,7 @@ table {
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sends the Request and returns a Response object.</span>
+<span class="sd">        *Client.* Sends the Request and returns a Response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
@@ -2193,7 +2190,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x104c6d840&gt;, tls=False,
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x102026840&gt;, tls=False,
             tlscertchainpath=&#39;cacert.pem&#39;, tlsprivatekeypath=&#39;privkey.pem&#39;, debug=True)</p>
     </div>
 
@@ -2335,21 +2332,16 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
       
       <div class="item">
       <p id="pituophis.Request" class="name">class <span class="ident">Request</span></p>
-      
-  
-    <div class="desc"><p><em>Client/Server.</em> Represents a request to be sent to a Gopher server, or received from a client.</p>
-        <p>The type property is not used when sending or receiving requests; it's purely for client-side usage.
-            The tls_verify property determines if the client will trust a self-signed certificate when using TLS.</p>
-    </div>
+
+
+          <div class="desc"><p><em>Client/Server.</em> Represents a request to be sent to a Gopher server, or received
+              from a client.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Request', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Request" class="source">
     <div class="codehilite"><pre><span></span><span class="k">class</span> <span class="nc">Request</span><span class="p">:</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.</span>
-
-<span class="sd">    The type property is not used when sending or receiving requests; it&#39;s purely for client-side usage.</span>
-<span class="sd">    The tls_verify property determines if the client will trust a self-signed certificate when using TLS.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span
@@ -2395,7 +2387,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
         <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                 class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">        *Client.* Item type of the request. Purely for client-side usage, not used when sending or receiving requests.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                 class="n">tls</span>
@@ -2417,7 +2409,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 
     <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Sends the Request and returns a Response object.</span>
+<span class="sd">        *Client.* Sends the Request and returns a Response object.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
@@ -2527,7 +2519,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <span class="bp">self</span><span class="o">.</span><span class="n">type</span> <span class="o">=</span> <span
                   class="nb">str</span><span class="p">(</span><span class="n">itype</span><span class="p">)</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Client.* Item type of the request. Purely for client-side usage.</span>
+<span class="sd">    *Client.* Item type of the request. Purely for client-side usage, not used when sending or receiving requests.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">tls</span> <span class="o">=</span> <span
                   class="n">tls</span>
@@ -2558,17 +2550,15 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <div class="name def" id="pituophis.Request.get">
     <p>def <span class="ident">get</span>(</p><p>self)</p>
     </div>
-    
 
-    
-  
-    <div class="desc"><p>Sends the Request and returns a Response object.</p></div>
+
+      <div class="desc"><p><em>Client.</em> Sends the Request and returns a Response object.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.Request.get', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.Request.get" class="source">
     <div class="codehilite"><pre><span></span><span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Sends the Request and returns a Response object.</span>
+<span class="sd">    *Client.* Sends the Request and returns a Response object.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_STREAM</span><span class="p">)</span>
     <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">tls</span><span class="p">:</span>
@@ -2707,7 +2697,8 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
             <p id="pituophis.Request.type" class="name">var <span class="ident">type</span></p>
 
 
-                <div class="desc"><p><em>Client.</em> Item type of the request. Purely for client-side usage.</p></div>
+                <div class="desc"><p><em>Client.</em> Item type of the request. Purely for client-side usage, not used
+                    when sending or receiving requests.</p></div>
   <div class="source_cont">
 </div>
 

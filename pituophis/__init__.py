@@ -66,9 +66,6 @@ class Response:
 class Request:
     """
     *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.
-
-    The type property is not used when sending or receiving requests; it's purely for client-side usage.
-    The tls_verify property determines if the client will trust a self-signed certificate when using TLS.
     """
 
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client=''):
@@ -98,7 +95,7 @@ class Request:
         """
         self.type = str(itype)
         """
-        *Client.* Item type of the request. Purely for client-side usage.
+        *Client.* Item type of the request. Purely for client-side usage, not used when sending or receiving requests.
         """
         self.tls = tls
         """
@@ -116,7 +113,7 @@ class Request:
 
     def get(self):
         """
-        Sends the Request and returns a Response object.
+        *Client.* Sends the Request and returns a Response object.
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if self.tls:

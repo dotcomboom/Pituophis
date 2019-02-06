@@ -1,6 +1,8 @@
 Pituophis API
 =================
 
+* :ref:`genindex`
+
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -9,5 +11,3 @@ Pituophis API
     :members:
     :undoc-members:
     :show-inheritance:
-
-* :ref:`genindex`
