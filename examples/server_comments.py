@@ -21,7 +21,7 @@ def handle(request):
         menu.append(Selector(text="There are no messages yet.. be the first!"))
     for entry in comments:
         menu.append(Selector(text=str(entry)))
-    return pituophis.encode(menu)
+    return menu
 
 
 # serve with custom handler

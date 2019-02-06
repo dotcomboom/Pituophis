@@ -8,7 +8,7 @@ def handle(request):
 This is plain text.
 Nothing fancy.
         """
-        return pituophis.encode(text)
+        return text
     elif request.path == '/server.png':
         in_file = open("server.png", "rb")
         data = in_file.read()
@@ -22,7 +22,7 @@ Nothing fancy.
             Selector(text="Port: " + str(request.port)),
             Selector(text="Client: " + request.client)
         ]
-        return pituophis.encode(menu)
+        return menu
 
 
 # serve with custom handler

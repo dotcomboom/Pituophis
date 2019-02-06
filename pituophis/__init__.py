@@ -321,32 +321,6 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70'):
     return newMenu
 
 
-def encode(str_or_lines):
-    """
-    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().
-    """
-    if type(str_or_lines) == str:
-        return bytes(str_or_lines, 'utf-8')
-
-    if type(str_or_lines) == list:
-        out = ""
-        for line in str_or_lines:
-            if type(line) == str:
-                line = line.replace('\r\n', '\n')
-                line = line.replace('\n', '\r\n')
-                if not line.endswith('\r\n'):
-                    line += '\r\n'
-                out += line
-            if type(line) == Selector:
-                out += line.source()
-        return bytes(out, 'utf-8')
-
-    if type(str_or_lines) == bytes:
-        return str_or_lines
-
-    raise Exception("encode() accepts items of type String, List, or Bytes.")
-
-
 def handle(request):
     """
     *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.
@@ -360,7 +334,7 @@ def handle(request):
         Selector(),
         Selector(text="This is the default Pituophis handler.")
     ]
-    return encode(menu)
+    return menu
 
 
 def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='cacert.pem',
@@ -407,6 +381,22 @@ def serve(host="127.0.0.1", port=70, handler=handle, tls=False, tls_cert_chain='
                     if debug:
                         print('Client requests:', path, query)
                     resp = handler(Request(path=path, query=query, host=host, port=port, client=addr[0]))
+
+                    if type(resp) == str:
+                        resp = bytes(resp, 'utf-8')
+                    elif type(resp) == list:
+                        out = ""
+                        for line in resp:
+                            if type(line) == str:
+                                line = line.replace('\r\n', '\n')
+                                line = line.replace('\n', '\r\n')
+                                if not line.endswith('\r\n'):
+                                    line += '\r\n'
+                                out += line
+                            if type(line) == Selector:
+                                out += line.source()
+                        resp = bytes(out, 'utf-8')
+
                     conn.send(resp)
                     conn.close()
                     if debug:

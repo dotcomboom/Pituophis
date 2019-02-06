@@ -8,7 +8,7 @@ def handle(request):
 This is plain text.
 Nothing fancy.
         """
-        return pituophis.encode(text)
+        return text
     elif request.path == '/server.png':
         in_file = open("server.png", "rb")
         data = in_file.read()
@@ -22,9 +22,9 @@ Nothing fancy.
             Selector(text="Port: " + str(request.port)),
             Selector(text="Client: " + request.client)
         ]
-        return pituophis.encode(menu)
+        return menu
 
 
 # serve with custom handler
 pituophis.serve("127.0.0.1", 50400, handler=handle, tls=True,
-                tlscertchainpath='cacert.pem', tlsprivatekeypath='privkey.pem')  # typical S/Gopher port is 105
+                tls_cert_chain='cacert.pem', tls_private_key='privkey.pem')  # typical S/Gopher port is 105
