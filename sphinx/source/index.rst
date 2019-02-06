@@ -1,4 +1,4 @@
-Pituophis package
+Pituophis API
 =================
 
 .. toctree::

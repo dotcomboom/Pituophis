@@ -1,465 +1,546 @@
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-        "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml">
+<!DOCTYPE html>
+<!--[if IE 8]>
+<html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!-->
+<html class="no-js" lang="en"> <!--<![endif]-->
 <head>
-    <meta content="IE=Edge" http-equiv="X-UA-Compatible"/>
-    <meta content="text/html; charset=utf-8" http-equiv="Content-Type"/>
-    <title>Pituophis package &#8212; Pituophis documentation</title>
-    <link href="_static/alabaster.css" rel="stylesheet" type="text/css"/>
+    <meta charset="utf-8">
+
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+
+    <title>Pituophis API &mdash; Pituophis documentation</title>
+
+
+    <link href="_static/css/theme.css" rel="stylesheet" type="text/css"/>
     <link href="_static/pygments.css" rel="stylesheet" type="text/css"/>
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"
-            type="text/javascript"></script>
-    <script src="_static/jquery.js" type="text/javascript"></script>
-    <script src="_static/underscore.js" type="text/javascript"></script>
-    <script src="_static/doctools.js" type="text/javascript"></script>
-    <script src="_static/language_data.js" type="text/javascript"></script>
     <link href="genindex.html" rel="index" title="Index"/>
     <link href="search.html" rel="search" title="Search"/>
 
-    <link href="_static/custom.css" rel="stylesheet" type="text/css"/>
 
-
-    <meta content="width=device-width, initial-scale=0.9, maximum-scale=0.9" name="viewport"/>
+    <script src="_static/js/modernizr.min.js"></script>
 
 </head>
-<body>
+
+<body class="wy-body-for-nav">
 
 
-<div class="document">
-    <div class="documentwrapper">
-        <div class="bodywrapper">
+<div class="wy-grid-for-nav">
 
 
-            <div class="body" role="main">
-
-                <div class="section" id="pituophis-package">
-                    <h1>Pituophis package<a class="headerlink" href="#pituophis-package"
-                                            title="Permalink to this headline">¶</a></h1>
-                    <div class="toctree-wrapper compound">
-                    </div>
-                    <span class="target" id="module-pituophis"></span>
-                    <dl class="class">
-                        <dt id="pituophis.Request">
-                            <em class="property">class </em><code class="descclassname">pituophis.</code><code
-                                class="descname">Request</code><span class="sig-paren">(</span><em>host='127.0.0.1'</em>,
-                            <em>port=70</em>, <em>path='/'</em>, <em>query=''</em>, <em>itype='9'</em>,
-                            <em>tls=False</em>, <em>tls_verify=True</em>, <em>client=''</em><span
-                                class="sig-paren">)</span><a class="reference internal"
-                                                             href="_modules/pituophis.html#Request"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink" href="#pituophis.Request"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>
-                        </p>
-                            <p><em>Client/Server.</em> Represents a request to be sent to a Gopher server, or received
-                                from a client.</p>
-                            <p>The type property is not used when sending or receiving requests; it’s purely for
-                                client-side usage.
-                                The tls_verify property determines if the client will trust a self-signed certificate
-                                when using TLS.</p>
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.client">
-                                    <code class="descname">client</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.client"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Server.</em> The IP address of the connected client.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="method">
-                                <dt id="pituophis.Request.get">
-                                    <code class="descname">get</code><span class="sig-paren">(</span><span
-                                        class="sig-paren">)</span><a class="reference internal"
-                                                                     href="_modules/pituophis.html#Request.get"><span
-                                        class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                                    href="#pituophis.Request.get"
-                                                                                    title="Permalink to this definition">¶</a>
-                                </dt>
-                                <dd><p>Sends the Request and returns a Response object.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.host">
-                                    <code class="descname">host</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.host"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client/Server.</em> The hostname of the server.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.path">
-                                    <code class="descname">path</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.path"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client/Server.</em> Path on the target server to request, or being requested.
-                                </p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.port">
-                                    <code class="descname">port</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.port"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client/Server.</em> The port of the server. For regular Gopher servers, this
-                                    is most commonly 70,
-                                    and for S/Gopher servers it is typically 105.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.query">
-                                    <code class="descname">query</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.query"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client/Server.</em> Search query for the server to process. Omitted when
-                                    blank.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.tls">
-                                    <code class="descname">tls</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.tls"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client.</em> Whether the request is to be sent to an S/Gopher server over
-                                    TLS.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.tls_verify">
-                                    <code class="descname">tls_verify</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.tls_verify"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client.</em> Whether to verify the certificate sent from the server,
-                                    rejecting self-signed and invalid certificates.
-                                    <strong>*Currently stuck on True in some functions.*</strong></p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Request.type">
-                                    <code class="descname">type</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Request.type"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Client.</em> Item type of the request. Purely for client-side usage.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="method">
-                                <dt id="pituophis.Request.url">
-                                    <code class="descname">url</code><span class="sig-paren">(</span><span
-                                        class="sig-paren">)</span><a class="reference internal"
-                                                                     href="_modules/pituophis.html#Request.url"><span
-                                        class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                                    href="#pituophis.Request.url"
-                                                                                    title="Permalink to this definition">¶</a>
-                                </dt>
-                                <dd><p>Returns a URL equivalent to the Request’s properties.</p>
-                                </dd>
-                            </dl>
-
-                        </dd>
-                    </dl>
-
-                    <dl class="class">
-                        <dt id="pituophis.Response">
-                            <em class="property">class </em><code class="descclassname">pituophis.</code><code
-                                class="descname">Response</code><span class="sig-paren">(</span><em>stream</em><span
-                                class="sig-paren">)</span><a class="reference internal"
-                                                             href="_modules/pituophis.html#Response"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                            href="#pituophis.Response"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>
-                        </p>
-                            <p><em>Client.</em> Returned by Request.get() and get(). Represents a received binary object
-                                from a Gopher server.</p>
-                            <dl class="attribute">
-                                <dt id="pituophis.Response.binary">
-                                    <code class="descname">binary</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Response.binary"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>The data received from the server as a Bytes binary object.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="method">
-                                <dt id="pituophis.Response.menu">
-                                    <code class="descname">menu</code><span class="sig-paren">(</span><span
-                                        class="sig-paren">)</span><a class="reference internal"
-                                                                     href="_modules/pituophis.html#Response.menu"><span
-                                        class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                                    href="#pituophis.Response.menu"
-                                                                                    title="Permalink to this definition">¶</a>
-                                </dt>
-                                <dd><p>Decodes the binary as text and parses it as a Gopher menu. Returns a List of
-                                    Gopher menu items parsed as the Selector type.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="method">
-                                <dt id="pituophis.Response.text">
-                                    <code class="descname">text</code><span class="sig-paren">(</span><span
-                                        class="sig-paren">)</span><a class="reference internal"
-                                                                     href="_modules/pituophis.html#Response.text"><span
-                                        class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                                    href="#pituophis.Response.text"
-                                                                                    title="Permalink to this definition">¶</a>
-                                </dt>
-                                <dd><p>Returns the binary decoded as a UTF-8 String.</p>
-                                </dd>
-                            </dl>
-
-                        </dd>
-                    </dl>
-
-                    <dl class="class">
-                        <dt id="pituophis.Selector">
-                            <em class="property">class </em><code class="descclassname">pituophis.</code><code
-                                class="descname">Selector</code><span class="sig-paren">(</span><em>itype='i'</em>, <em>text=''</em>,
-                            <em>path='/'</em>, <em>host='error.host'</em>, <em>port=0</em>, <em>tls=False</em><span
-                                class="sig-paren">)</span><a class="reference internal"
-                                                             href="_modules/pituophis.html#Selector"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                            href="#pituophis.Selector"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code>
-                        </p>
-                            <p><em>Server/Client.</em> Represents a selector in a parsed Gopher menu.</p>
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.host">
-                                    <code class="descname">host</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.host"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>The hostname of the target server.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.path">
-                                    <code class="descname">path</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.path"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>Where the item links to on the target server.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.port">
-                                    <code class="descname">port</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.port"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>The port of the target server. For regular Gopher servers, this is most commonly
-                                    70,
-                                    and for S/Gopher servers it is typically 105.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="method">
-                                <dt id="pituophis.Selector.source">
-                                    <code class="descname">source</code><span class="sig-paren">(</span><span
-                                        class="sig-paren">)</span><a class="reference internal"
-                                                                     href="_modules/pituophis.html#Selector.source"><span
-                                        class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                                    href="#pituophis.Selector.source"
-                                                                                    title="Permalink to this definition">¶</a>
-                                </dt>
-                                <dd><p>Returns a representation of what the selector looks like in a Gopher menu.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.text">
-                                    <code class="descname">text</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.text"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>The name, or text that is displayed when the item is in a menu.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.tls">
-                                    <code class="descname">tls</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.tls"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>True if the selector leads to an S/Gopher server with TLS enabled.</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="attribute">
-                                <dt id="pituophis.Selector.type">
-                                    <code class="descname">type</code><em class="property"> = None</em><a
-                                        class="headerlink" href="#pituophis.Selector.type"
-                                        title="Permalink to this definition">¶</a></dt>
-                                <dd><p>The type of item.</p>
-                                </dd>
-                            </dl>
-
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.encode">
-                            <code class="descclassname">pituophis.</code><code class="descname">encode</code><span
-                                class="sig-paren">(</span><em>str_or_lines</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#encode"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink" href="#pituophis.encode"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Server.</em> Encode a List of lines or Selector objects, or a String, as bytes to be
-                            sent by serve().</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.get">
-                            <code class="descclassname">pituophis.</code><code class="descname">get</code><span
-                                class="sig-paren">(</span><em>host</em>, <em>port=70</em>, <em>path='/'</em>, <em>query=''</em>,
-                            <em>tls=False</em>, <em>tls_verify=True</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#get"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink" href="#pituophis.get"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Client.</em> Quickly creates and sends a Request. Returns a Response object.</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.handle">
-                            <code class="descclassname">pituophis.</code><code class="descname">handle</code><span
-                                class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#handle"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink" href="#pituophis.handle"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Server.</em> Default handler function for Gopher requests while hosting a server.
-                            Currently a stub.</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.parse_gophermap">
-                            <code class="descclassname">pituophis.</code><code
-                                class="descname">parse_gophermap</code><span class="sig-paren">(</span><em>source</em>,
-                            <em>defHost='127.0.0.1'</em>, <em>defPort='70'</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#parse_gophermap"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                            href="#pituophis.parse_gophermap"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Server.</em> Converts a Gophermap (as a String or List) into a Gopher menu. Returns a
-                            List of lines to send.
-                            This is <em>not</em> as feature-complete as the actual Bucktooth implementation; one example
-                            being how paths
-                            are not resolved. It does, however, fill in missing selector, host, and port fields,
-                            given that the correct host and port values are passed to it.</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.parse_menu">
-                            <code class="descclassname">pituophis.</code><code class="descname">parse_menu</code><span
-                                class="sig-paren">(</span><em>source</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#parse_menu"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                            href="#pituophis.parse_menu"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Client.</em> Parses a String as a Gopher menu. Returns a List of Selectors.</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.parse_url">
-                            <code class="descclassname">pituophis.</code><code class="descname">parse_url</code><span
-                                class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a
-                                class="reference internal" href="_modules/pituophis.html#parse_url"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink"
-                                                                            href="#pituophis.parse_url"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Client.</em> Parses a Gopher URL and returns an equivalent Request.</p>
-                        </dd>
-                    </dl>
-
-                    <dl class="function">
-                        <dt id="pituophis.serve">
-                            <code class="descclassname">pituophis.</code><code class="descname">serve</code><span
-                                class="sig-paren">(</span><em>host='127.0.0.1'</em>, <em>port=70</em>, <em>handler=&lt;function
-                            handle&gt;</em>, <em>tls=False</em>, <em>tlscertchainpath='cacert.pem'</em>, <em>tlsprivatekeypath='privkey.pem'</em>,
-                            <em>debug=True</em><span class="sig-paren">)</span><a class="reference internal"
-                                                                                  href="_modules/pituophis.html#serve"><span
-                                class="viewcode-link">[source]</span></a><a class="headerlink" href="#pituophis.serve"
-                                                                            title="Permalink to this definition">¶</a>
-                        </dt>
-                        <dd><p><em>Server.</em> Listens for Gopher requests. Allows for using a custom handler that will
-                            return a binary (Bytes) object
-                            to send to the client. After sending them, the finishing “.” is sent and the connection is
-                            closed.</p>
-                        </dd>
-                    </dl>
-
-                </div>
+    <nav class="wy-nav-side" data-toggle="wy-nav-shift">
+        <div class="wy-side-scroll">
+            <div class="wy-side-nav-search">
 
 
-            </div>
-
-        </div>
-    </div>
-    <div aria-label="main navigation" class="sphinxsidebar" role="navigation">
-        <div class="sphinxsidebarwrapper">
-            <h1 class="logo"><a href="#">Pituophis</a></h1>
+                <a class="icon icon-home" href="#"> Pituophis
 
 
-            <h3>Navigation</h3>
+                </a>
 
-            <div class="relations">
-                <h3>Related Topics</h3>
-                <ul>
-                    <li><a href="#">Documentation overview</a>
-                        <ul>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-            <div id="searchbox" role="search" style="display: none">
-                <h3>Quick search</h3>
-                <div class="searchformwrapper">
-                    <form action="search.html" class="search" method="get">
-                        <input name="q" type="text"/>
-                        <input type="submit" value="Go"/>
+
+                <div role="search">
+                    <form action="search.html" class="wy-form" id="rtd-search-form" method="get">
+                        <input name="q" placeholder="Search docs" type="text"/>
                         <input name="check_keywords" type="hidden" value="yes"/>
                         <input name="area" type="hidden" value="default"/>
                     </form>
                 </div>
+
+
             </div>
-            <script type="text/javascript">$('#searchbox').show(0);</script>
+
+            <div aria-label="main navigation" class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation">
 
 
+                <!-- Local TOC -->
+                <div class="local-toc">
+                    <ul>
+                        <li><a class="reference internal" href="#">Pituophis API</a></li>
+                    </ul>
+                </div>
+
+
+            </div>
         </div>
-    </div>
-    <div class="clearer"></div>
+    </nav>
+
+    <section class="wy-nav-content-wrap" data-toggle="wy-nav-shift">
+
+
+        <nav aria-label="top navigation" class="wy-nav-top">
+
+            <i class="fa fa-bars" data-toggle="wy-nav-top"></i>
+            <a href="#">Pituophis</a>
+
+        </nav>
+
+
+        <div class="wy-nav-content">
+
+            <div class="rst-content">
+
+
+                <div aria-label="breadcrumbs navigation" role="navigation">
+
+                    <ul class="wy-breadcrumbs">
+
+                        <li><a href="#">Docs</a> &raquo;</li>
+
+                        <li>Pituophis API</li>
+
+
+                        <li class="wy-breadcrumbs-aside">
+
+
+                            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+
+
+                        </li>
+
+                    </ul>
+
+
+                    <hr/>
+                </div>
+                <div class="document" itemscope="itemscope" itemtype="http://schema.org/Article" role="main">
+                    <div itemprop="articleBody">
+
+                        <div class="section" id="pituophis-api">
+                            <h1>Pituophis API<a class="headerlink" href="#pituophis-api"
+                                                title="Permalink to this headline">¶</a></h1>
+                            <div class="toctree-wrapper compound">
+                            </div>
+                            <span class="target" id="module-pituophis"></span>
+                            <dl class="class">
+                                <dt id="pituophis.Request">
+                                    <em class="property">class </em><code class="descclassname">pituophis.</code><code
+                                        class="descname">Request</code><span class="sig-paren">(</span><em>host='127.0.0.1'</em>,
+                                    <em>port=70</em>, <em>path='/'</em>, <em>query=''</em>, <em>itype='9'</em>, <em>tls=False</em>,
+                                    <em>tls_verify=True</em>, <em>client=''</em><span class="sig-paren">)</span><a
+                                        class="reference internal" href="_modules/pituophis.html#Request"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.Request"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span
+                                        class="pre">object</span></code></p>
+                                    <p><em>Client/Server.</em> Represents a request to be sent to a Gopher server, or
+                                        received from a client.</p>
+                                    <p>The type property is not used when sending or receiving requests; it’s purely for
+                                        client-side usage.
+                                        The tls_verify property determines if the client will trust a self-signed
+                                        certificate when using TLS.</p>
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.client">
+                                            <code class="descname">client</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.client"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Server.</em> The IP address of the connected client.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="method">
+                                        <dt id="pituophis.Request.get">
+                                            <code class="descname">get</code><span class="sig-paren">(</span><span
+                                                class="sig-paren">)</span><a class="reference internal"
+                                                                             href="_modules/pituophis.html#Request.get"><span
+                                                class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                            href="#pituophis.Request.get"
+                                                                                            title="Permalink to this definition">¶</a>
+                                        </dt>
+                                        <dd><p>Sends the Request and returns a Response object.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.host">
+                                            <code class="descname">host</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.host"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client/Server.</em> The hostname of the server.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.path">
+                                            <code class="descname">path</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.path"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client/Server.</em> Path on the target server to request, or being
+                                            requested.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.port">
+                                            <code class="descname">port</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.port"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client/Server.</em> The port of the server. For regular Gopher
+                                            servers, this is most commonly 70,
+                                            and for S/Gopher servers it is typically 105.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.query">
+                                            <code class="descname">query</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.query"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client/Server.</em> Search query for the server to process. Omitted
+                                            when blank.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.tls">
+                                            <code class="descname">tls</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.tls"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client.</em> Whether the request is to be sent to an S/Gopher server
+                                            over TLS.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.tls_verify">
+                                            <code class="descname">tls_verify</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.tls_verify"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client.</em> Whether to verify the certificate sent from the server,
+                                            rejecting self-signed and invalid certificates.
+                                            <strong>*Currently stuck on True in some functions.*</strong></p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Request.type">
+                                            <code class="descname">type</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Request.type"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p><em>Client.</em> Item type of the request. Purely for client-side usage.
+                                        </p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="method">
+                                        <dt id="pituophis.Request.url">
+                                            <code class="descname">url</code><span class="sig-paren">(</span><span
+                                                class="sig-paren">)</span><a class="reference internal"
+                                                                             href="_modules/pituophis.html#Request.url"><span
+                                                class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                            href="#pituophis.Request.url"
+                                                                                            title="Permalink to this definition">¶</a>
+                                        </dt>
+                                        <dd><p>Returns a URL equivalent to the Request’s properties.</p>
+                                        </dd>
+                                    </dl>
+
+                                </dd>
+                            </dl>
+
+                            <dl class="class">
+                                <dt id="pituophis.Response">
+                                    <em class="property">class </em><code class="descclassname">pituophis.</code><code
+                                        class="descname">Response</code><span
+                                        class="sig-paren">(</span><em>stream</em><span class="sig-paren">)</span><a
+                                        class="reference internal" href="_modules/pituophis.html#Response"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.Response"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span
+                                        class="pre">object</span></code></p>
+                                    <p><em>Client.</em> Returned by Request.get() and get(). Represents a received
+                                        binary object from a Gopher server.</p>
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Response.binary">
+                                            <code class="descname">binary</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Response.binary"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>The data received from the server as a Bytes binary object.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="method">
+                                        <dt id="pituophis.Response.menu">
+                                            <code class="descname">menu</code><span class="sig-paren">(</span><span
+                                                class="sig-paren">)</span><a class="reference internal"
+                                                                             href="_modules/pituophis.html#Response.menu"><span
+                                                class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                            href="#pituophis.Response.menu"
+                                                                                            title="Permalink to this definition">¶</a>
+                                        </dt>
+                                        <dd><p>Decodes the binary as text and parses it as a Gopher menu. Returns a List
+                                            of Gopher menu items parsed as the Selector type.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="method">
+                                        <dt id="pituophis.Response.text">
+                                            <code class="descname">text</code><span class="sig-paren">(</span><span
+                                                class="sig-paren">)</span><a class="reference internal"
+                                                                             href="_modules/pituophis.html#Response.text"><span
+                                                class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                            href="#pituophis.Response.text"
+                                                                                            title="Permalink to this definition">¶</a>
+                                        </dt>
+                                        <dd><p>Returns the binary decoded as a UTF-8 String.</p>
+                                        </dd>
+                                    </dl>
+
+                                </dd>
+                            </dl>
+
+                            <dl class="class">
+                                <dt id="pituophis.Selector">
+                                    <em class="property">class </em><code class="descclassname">pituophis.</code><code
+                                        class="descname">Selector</code><span
+                                        class="sig-paren">(</span><em>itype='i'</em>, <em>text=''</em>,
+                                    <em>path='/'</em>, <em>host='error.host'</em>, <em>port=0</em>,
+                                    <em>tls=False</em><span class="sig-paren">)</span><a class="reference internal"
+                                                                                         href="_modules/pituophis.html#Selector"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.Selector"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span
+                                        class="pre">object</span></code></p>
+                                    <p><em>Server/Client.</em> Represents a selector in a parsed Gopher menu.</p>
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.host">
+                                            <code class="descname">host</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.host"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>The hostname of the target server.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.path">
+                                            <code class="descname">path</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.path"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>Where the item links to on the target server.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.port">
+                                            <code class="descname">port</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.port"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>The port of the target server. For regular Gopher servers, this is most
+                                            commonly 70,
+                                            and for S/Gopher servers it is typically 105.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="method">
+                                        <dt id="pituophis.Selector.source">
+                                            <code class="descname">source</code><span class="sig-paren">(</span><span
+                                                class="sig-paren">)</span><a class="reference internal"
+                                                                             href="_modules/pituophis.html#Selector.source"><span
+                                                class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                            href="#pituophis.Selector.source"
+                                                                                            title="Permalink to this definition">¶</a>
+                                        </dt>
+                                        <dd><p>Returns a representation of what the selector looks like in a Gopher
+                                            menu.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.text">
+                                            <code class="descname">text</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.text"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>The name, or text that is displayed when the item is in a menu.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.tls">
+                                            <code class="descname">tls</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.tls"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>True if the selector leads to an S/Gopher server with TLS enabled.</p>
+                                        </dd>
+                                    </dl>
+
+                                    <dl class="attribute">
+                                        <dt id="pituophis.Selector.type">
+                                            <code class="descname">type</code><em class="property"> = None</em><a
+                                                class="headerlink" href="#pituophis.Selector.type"
+                                                title="Permalink to this definition">¶</a></dt>
+                                        <dd><p>The type of item.</p>
+                                        </dd>
+                                    </dl>
+
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.encode">
+                                    <code class="descclassname">pituophis.</code><code
+                                        class="descname">encode</code><span
+                                        class="sig-paren">(</span><em>str_or_lines</em><span
+                                        class="sig-paren">)</span><a class="reference internal"
+                                                                     href="_modules/pituophis.html#encode"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.encode"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Server.</em> Encode a List of lines or Selector objects, or a String, as
+                                    bytes to be sent by serve().</p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.get">
+                                    <code class="descclassname">pituophis.</code><code class="descname">get</code><span
+                                        class="sig-paren">(</span><em>host</em>, <em>port=70</em>, <em>path='/'</em>,
+                                    <em>query=''</em>, <em>tls=False</em>, <em>tls_verify=True</em><span
+                                        class="sig-paren">)</span><a class="reference internal"
+                                                                     href="_modules/pituophis.html#get"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.get"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Client.</em> Quickly creates and sends a Request. Returns a Response object.
+                                </p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.handle">
+                                    <code class="descclassname">pituophis.</code><code
+                                        class="descname">handle</code><span
+                                        class="sig-paren">(</span><em>request</em><span class="sig-paren">)</span><a
+                                        class="reference internal" href="_modules/pituophis.html#handle"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.handle"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Server.</em> Default handler function for Gopher requests while hosting a
+                                    server. Currently a stub.</p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.parse_gophermap">
+                                    <code class="descclassname">pituophis.</code><code
+                                        class="descname">parse_gophermap</code><span class="sig-paren">(</span><em>source</em>,
+                                    <em>defHost='127.0.0.1'</em>, <em>defPort='70'</em><span
+                                        class="sig-paren">)</span><a class="reference internal"
+                                                                     href="_modules/pituophis.html#parse_gophermap"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.parse_gophermap"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Server.</em> Converts a Gophermap (as a String or List) into a Gopher menu.
+                                    Returns a List of lines to send.
+                                    This is <em>not</em> as feature-complete as the actual Bucktooth implementation; one
+                                    example being how paths
+                                    are not resolved. It does, however, fill in missing selector, host, and port fields,
+                                    given that the correct host and port values are passed to it.</p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.parse_menu">
+                                    <code class="descclassname">pituophis.</code><code
+                                        class="descname">parse_menu</code><span
+                                        class="sig-paren">(</span><em>source</em><span class="sig-paren">)</span><a
+                                        class="reference internal" href="_modules/pituophis.html#parse_menu"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.parse_menu"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Client.</em> Parses a String as a Gopher menu. Returns a List of Selectors.
+                                </p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.parse_url">
+                                    <code class="descclassname">pituophis.</code><code class="descname">parse_url</code><span
+                                        class="sig-paren">(</span><em>url</em><span class="sig-paren">)</span><a
+                                        class="reference internal" href="_modules/pituophis.html#parse_url"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.parse_url"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Client.</em> Parses a Gopher URL and returns an equivalent Request.</p>
+                                </dd>
+                            </dl>
+
+                            <dl class="function">
+                                <dt id="pituophis.serve">
+                                    <code class="descclassname">pituophis.</code><code
+                                        class="descname">serve</code><span class="sig-paren">(</span><em>host='127.0.0.1'</em>,
+                                    <em>port=70</em>, <em>handler=&lt;function handle&gt;</em>, <em>tls=False</em>, <em>tlscertchainpath='cacert.pem'</em>,
+                                    <em>tlsprivatekeypath='privkey.pem'</em>, <em>debug=True</em><span
+                                        class="sig-paren">)</span><a class="reference internal"
+                                                                     href="_modules/pituophis.html#serve"><span
+                                        class="viewcode-link">[source]</span></a><a class="headerlink"
+                                                                                    href="#pituophis.serve"
+                                                                                    title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd><p><em>Server.</em> Listens for Gopher requests. Allows for using a custom handler
+                                    that will return a binary (Bytes) object
+                                    to send to the client. After sending them, the finishing “.” is sent and the
+                                    connection is closed.</p>
+                                </dd>
+                            </dl>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+                <footer>
+
+
+                    <hr/>
+
+                    <div role="contentinfo">
+                        <p>
+                            &copy; Copyright 2019, dotcomboom
+
+                        </p>
+                    </div>
+                    Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a
+                        href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a
+                        href="https://readthedocs.org">Read the Docs</a>.
+
+                </footer>
+
+            </div>
+        </div>
+
+    </section>
+
 </div>
-<div class="footer">
-    &copy;2019, dotcomboom.
 
-    |
-    Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.4</a>
-    &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
 
-    |
-    <a href="_sources/index.rst.txt"
-       rel="nofollow">Page source</a>
-</div>
+<script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"
+        type="text/javascript"></script>
+<script src="_static/jquery.js" type="text/javascript"></script>
+<script src="_static/underscore.js" type="text/javascript"></script>
+<script src="_static/doctools.js" type="text/javascript"></script>
+<script src="_static/language_data.js" type="text/javascript"></script>
 
+
+<script src="_static/js/theme.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+
+</script>
 
 </body>
 </html>
