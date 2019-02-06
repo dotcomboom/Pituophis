@@ -48,7 +48,7 @@ import pituophis
 req = pituophis.Request()
 req.host = 'gopher.floodgap.com'  # set to 127.0.0.1 by default
 req.port = 70  # set to 70 as default, as per tradition
-req.itype = '7'  # set to 9 by default, purely for client usage
+req.type = '7'  # set to 9 by default, purely for client usage
 req.path = '/v2/vs'  # set to '/' by default
 req.query = 'food'  # set to '' (nothing) by default
 req.tls = False  # set to False by default
