@@ -362,18 +362,6 @@
                             </dl>
 
                             <dl class="function">
-                                <dt id="pituophis.encode">
-                                    <code class="descclassname">pituophis.</code><code
-                                        class="descname">encode</code><span
-                                        class="sig-paren">(</span><em>str_or_lines</em><span
-                                        class="sig-paren">)</span><a class="headerlink" href="#pituophis.encode"
-                                                                     title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Server.</em> Encode a List of lines or Selector objects, or a String, as
-                                    bytes to be sent by serve().</p>
-                                </dd>
-                            </dl>
-
-                            <dl class="function">
                                 <dt id="pituophis.get">
                                     <code class="descclassname">pituophis.</code><code class="descname">get</code><span
                                         class="sig-paren">(</span><em>host</em>, <em>port=70</em>, <em>path='/'</em>,
@@ -440,14 +428,22 @@
                                 <dt id="pituophis.serve">
                                     <code class="descclassname">pituophis.</code><code
                                         class="descname">serve</code><span class="sig-paren">(</span><em>host='127.0.0.1'</em>,
-                                    <em>port=70</em>, <em>handler=&lt;function handle&gt;</em>, <em>tls=False</em>, <em>tls_cert_chain='cacert.pem'</em>,
-                                    <em>tls_private_key='privkey.pem'</em>, <em>debug=True</em><span
-                                        class="sig-paren">)</span><a class="headerlink" href="#pituophis.serve"
-                                                                     title="Permalink to this definition">¶</a></dt>
-                                <dd><p><em>Server.</em> Listens for Gopher requests. Allows for using a custom handler
-                                    that will return a binary (Bytes) object
-                                    to send to the client. After sending them, the finishing “.” is sent and the
-                                    connection is closed.</p>
+                                    <em>port=70</em>, <em>handler=&lt;function handle&gt;</em>, <em>add_period=True</em>,
+                                    <em>tls=False</em>, <em>tls_cert_chain='cacert.pem'</em>, <em>tls_private_key='privkey.pem'</em>,
+                                    <em>debug=True</em><span class="sig-paren">)</span><a class="headerlink"
+                                                                                          href="#pituophis.serve"
+                                                                                          title="Permalink to this definition">¶</a>
+                                </dt>
+                                <dd>
+                                    <dl class="docutils">
+                                        <dt><em>Server.</em> Listens for Gopher requests. Allows for using a custom
+                                            handler that will return a Bytes, String, or List
+                                        </dt>
+                                        <dd>object (which can contain either Strings or Selectors) to send to the
+                                            client.
+                                            After sending them, the finishing “.” is sent and the connection is closed.
+                                        </dd>
+                                    </dl>
                                 </dd>
                             </dl>
 

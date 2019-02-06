@@ -1044,7 +1044,6 @@ table {
     <li class="set"><h3><a href="#header-functions">Functions</a></h3>
       
   <ul>
-      <li class="mono"><a href="#pituophis.encode">encode</a></li>
     <li class="mono"><a href="#pituophis.get">get</a></li>
     <li class="mono"><a href="#pituophis.handle">handle</a></li>
     <li class="mono"><a href="#pituophis.parse_gophermap">parse_gophermap</a></li>
@@ -1335,7 +1334,7 @@ table {
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                 class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">port</span> <span class="o">&lt;</span> <span
+        <span class="k">if</span> <span class="n">port</span> <span class="o">&gt;</span> <span
                 class="mi">65535</span><span class="p">:</span>
             <span class="c1"># Add digits to display that this is a TLS selector</span>
             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span
@@ -1566,60 +1565,6 @@ table {
     <span class="k">return</span> <span class="n">newMenu</span>
 
 
-<span class="k">def</span> <span class="nf">encode</span><span class="p">(</span><span
-                class="n">str_or_lines</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
-                class="n">str_or_lines</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
-                class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                class="nb">list</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
-                class="n">str_or_lines</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
-                class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
-                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
-                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
-                class="o">.</span><span class="n">endswith</span><span class="p">(</span><span
-                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
-                class="p">):</span>
-                    <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
-                class="s1">&#39;</span>
-                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span
-                class="n">Selector</span><span class="p">:</span>
-                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span
-                class="n">source</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
-                class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
-                class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                class="nb">bytes</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">str_or_lines</span>
-
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String, List, or Bytes.&quot;</span><span
-                class="p">)</span>
-
-
 <span class="k">def</span> <span class="nf">handle</span><span class="p">(</span><span class="n">request</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.</span>
@@ -1645,23 +1590,24 @@ table {
         <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
                 class="s2">&quot;This is the default Pituophis handler.&quot;</span><span class="p">)</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">menu</span><span
-                class="p">)</span>
+    <span class="k">return</span> <span class="n">menu</span>
 
 
 <span class="k">def</span> <span class="nf">serve</span><span class="p">(</span><span class="n">host</span><span
                 class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span class="n">port</span><span
                 class="o">=</span><span class="mi">70</span><span class="p">,</span> <span class="n">handler</span><span
-                class="o">=</span><span class="n">handle</span><span class="p">,</span> <span class="n">tls</span><span
-                class="o">=</span><span class="bp">False</span><span class="p">,</span> <span
+                class="o">=</span><span class="n">handle</span><span class="p">,</span> <span
+                class="n">add_period</span><span class="o">=</span><span class="bp">True</span><span class="p">,</span> <span
+                class="n">tls</span><span class="o">=</span><span class="bp">False</span><span class="p">,</span> <span
                 class="n">tls_cert_chain</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
                 class="p">,</span>
           <span class="n">tls_private_key</span><span class="o">=</span><span
                 class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
                 class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object</span>
-<span class="sd">    to send to the client. After sending them, the finishing &quot;.&quot; is sent and the connection is closed.</span>
+<span class="sd">    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List</span>
+<span class="sd">     object (which can contain either Strings or Selectors) to send to the client.</span>
+<span class="sd">     After sending them, the finishing &quot;.&quot; is sent and the connection is closed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span
                 class="n">socket</span><span class="p">(</span><span class="n">socket</span><span
@@ -1759,8 +1705,53 @@ table {
                 class="o">=</span><span class="n">port</span><span class="p">,</span> <span class="n">client</span><span
                 class="o">=</span><span class="n">addr</span><span class="p">[</span><span class="mi">0</span><span
                 class="p">]))</span>
+
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
+                class="p">:</span>
+                        <span class="n">resp</span> <span class="o">=</span> <span class="nb">bytes</span><span
+                class="p">(</span><span class="n">resp</span><span class="p">,</span> <span
+                class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span
+                class="nb">list</span><span class="p">:</span>
+                        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
+                class="n">resp</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
+                class="p">:</span>
+                                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">)</span>
+                                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
+                class="p">,</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
+                class="s1">&#39;</span><span class="p">)</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">endswith</span><span class="p">(</span><span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
+                class="p">):</span>
+                                    <span class="n">line</span> <span class="o">+=</span> <span
+                class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+                                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                class="n">line</span><span class="p">)</span> <span class="o">==</span> <span
+                class="n">Selector</span><span class="p">:</span>
+                                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span
+                class="o">.</span><span class="n">source</span><span class="p">()</span>
+                        <span class="n">resp</span> <span class="o">=</span> <span class="nb">bytes</span><span
+                class="p">(</span><span class="n">out</span><span class="p">,</span> <span
+                class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
                     <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
                 class="p">(</span><span class="n">resp</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">add_period</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
+                class="p">(</span><span class="sa">b</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
                     <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span
                 class="p">()</span>
                     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
@@ -1780,82 +1771,6 @@ table {
   <section id="section-items">
 
     <h2 class="section-title" id="header-functions">Functions</h2>
-
-      <div class="item">
-          <div class="name def" id="pituophis.encode">
-              <p>def <span class="ident">encode</span>(</p>
-              <p>str_or_lines)</p>
-          </div>
-
-
-          <div class="desc"><p><em>Server.</em> Encode a List of lines or Selector objects, or a String, as bytes to be
-              sent by serve().</p></div>
-          <div class="source_cont">
-              <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.encode', this);">Show
-                  source &equiv;</a></p>
-              <div id="source-pituophis.encode" class="source">
-                  <div class="codehilite"><pre><span></span><span class="k">def</span> <span
-                          class="nf">encode</span><span class="p">(</span><span class="n">str_or_lines</span><span
-                          class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.* Encode a List of lines or Selector objects, or a String, as bytes to be sent by serve().</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                              class="nb">str</span><span class="p">:</span>
-        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
-                              class="n">str_or_lines</span><span class="p">,</span> <span
-                              class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                              class="nb">list</span><span class="p">:</span>
-        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
-                              class="n">str_or_lines</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                              class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="nb">str</span><span
-                              class="p">:</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                              class="se">\r\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
-                              class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span
-                              class="p">)</span>
-                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">replace</span><span class="p">(</span><span class="s1">&#39;</span><span
-                              class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
-                              class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
-                              class="p">)</span>
-                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
-                              class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
-                              class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
-                    <span class="n">line</span> <span class="o">+=</span> <span class="s1">&#39;</span><span class="se">\r\n</span><span
-                              class="s1">&#39;</span>
-                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
-            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                              class="n">line</span><span class="p">)</span> <span class="o">==</span> <span class="n">Selector</span><span
-                              class="p">:</span>
-                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span class="o">.</span><span
-                              class="n">source</span><span class="p">()</span>
-        <span class="k">return</span> <span class="nb">bytes</span><span class="p">(</span><span
-                              class="n">out</span><span class="p">,</span> <span class="s1">&#39;utf-8&#39;</span><span
-                              class="p">)</span>
-
-    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
-                              class="n">str_or_lines</span><span class="p">)</span> <span class="o">==</span> <span
-                              class="nb">bytes</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">str_or_lines</span>
-
-    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;encode() accepts items of type String, List, or Bytes.&quot;</span><span
-                              class="p">)</span>
-</pre>
-                  </div>
-
-              </div>
-          </div>
-
-      </div>
-
 
       <div class="item">
     <div class="name def" id="pituophis.get">
@@ -1936,8 +1851,7 @@ table {
         <span class="n">Selector</span><span class="p">(</span><span class="n">text</span><span class="o">=</span><span
                 class="s2">&quot;This is the default Pituophis handler.&quot;</span><span class="p">)</span>
     <span class="p">]</span>
-    <span class="k">return</span> <span class="n">encode</span><span class="p">(</span><span class="n">menu</span><span
-                class="p">)</span>
+    <span class="k">return</span> <span class="n">menu</span>
 </pre></div>
 
   </div>
@@ -2185,14 +2099,15 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
   <div class="item">
     <div class="name def" id="pituophis.serve">
         <p>def <span class="ident">serve</span>(</p>
-        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x1104b4840&gt;, tls=False, tls_cert_chain=&#39;cacert.pem&#39;,
-            tls_private_key=&#39;privkey.pem&#39;, debug=True)</p>
+        <p>host=&#39;127.0.0.1&#39;, port=70, handler=&lt;function handle at 0x102e65730&gt;, add_period=True,
+            tls=False, tls_cert_chain=&#39;cacert.pem&#39;, tls_private_key=&#39;privkey.pem&#39;, debug=True)</p>
     </div>
 
 
       <div class="desc"><p><em>Server.</em> Listens for Gopher requests. Allows for using a custom handler that will
-          return a binary (Bytes) object
-          to send to the client. After sending them, the finishing "." is sent and the connection is closed.</p></div>
+          return a Bytes, String, or List
+          object (which can contain either Strings or Selectors) to send to the client.
+          After sending them, the finishing "." is sent and the connection is closed.</p></div>
   <div class="source_cont">
   <p class="source_link"><a href="javascript:void(0);" onclick="toggle('source-pituophis.serve', this);">Show source &equiv;</a></p>
   <div id="source-pituophis.serve" class="source">
@@ -2200,15 +2115,17 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
               class="n">host</span><span class="o">=</span><span class="s2">&quot;127.0.0.1&quot;</span><span class="p">,</span> <span
               class="n">port</span><span class="o">=</span><span class="mi">70</span><span class="p">,</span> <span
               class="n">handler</span><span class="o">=</span><span class="n">handle</span><span
-              class="p">,</span> <span class="n">tls</span><span class="o">=</span><span class="bp">False</span><span
-              class="p">,</span> <span class="n">tls_cert_chain</span><span class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span
-              class="p">,</span>
+              class="p">,</span> <span class="n">add_period</span><span class="o">=</span><span
+              class="bp">True</span><span class="p">,</span> <span class="n">tls</span><span class="o">=</span><span
+              class="bp">False</span><span class="p">,</span> <span class="n">tls_cert_chain</span><span
+              class="o">=</span><span class="s1">&#39;cacert.pem&#39;</span><span class="p">,</span>
           <span class="n">tls_private_key</span><span class="o">=</span><span
                   class="s1">&#39;privkey.pem&#39;</span><span class="p">,</span> <span class="n">debug</span><span
                   class="o">=</span><span class="bp">True</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a binary (Bytes) object</span>
-<span class="sd">    to send to the client. After sending them, the finishing &quot;.&quot; is sent and the connection is closed.</span>
+<span class="sd">    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List</span>
+<span class="sd">     object (which can contain either Strings or Selectors) to send to the client.</span>
+<span class="sd">     After sending them, the finishing &quot;.&quot; is sent and the connection is closed.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span
                   class="n">socket</span><span class="p">(</span><span class="n">socket</span><span
@@ -2303,8 +2220,53 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
                   class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">port</span><span
                   class="p">,</span> <span class="n">client</span><span class="o">=</span><span
                   class="n">addr</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+                    <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                  class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span
+                  class="nb">str</span><span class="p">:</span>
+                        <span class="n">resp</span> <span class="o">=</span> <span class="nb">bytes</span><span
+                  class="p">(</span><span class="n">resp</span><span class="p">,</span> <span
+                  class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="nb">type</span><span class="p">(</span><span
+                  class="n">resp</span><span class="p">)</span> <span class="o">==</span> <span
+                  class="nb">list</span><span class="p">:</span>
+                        <span class="n">out</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+                        <span class="k">for</span> <span class="n">line</span> <span class="ow">in</span> <span
+                  class="n">resp</span><span class="p">:</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                  class="n">line</span><span class="p">)</span> <span class="o">==</span> <span
+                  class="nb">str</span><span class="p">:</span>
+                                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                  class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                  class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
+                  class="p">,</span> <span class="s1">&#39;</span><span class="se">\n</span><span
+                  class="s1">&#39;</span><span class="p">)</span>
+                                <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span
+                  class="o">.</span><span class="n">replace</span><span class="p">(</span><span
+                  class="s1">&#39;</span><span class="se">\n</span><span class="s1">&#39;</span><span class="p">,</span> <span
+                  class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span
+                  class="p">)</span>
+                                <span class="k">if</span> <span class="ow">not</span> <span class="n">line</span><span
+                  class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s1">&#39;</span><span
+                  class="se">\r\n</span><span class="s1">&#39;</span><span class="p">):</span>
+                                    <span class="n">line</span> <span class="o">+=</span> <span
+                  class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span>
+                                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span>
+                            <span class="k">if</span> <span class="nb">type</span><span class="p">(</span><span
+                  class="n">line</span><span class="p">)</span> <span class="o">==</span> <span
+                  class="n">Selector</span><span class="p">:</span>
+                                <span class="n">out</span> <span class="o">+=</span> <span class="n">line</span><span
+                  class="o">.</span><span class="n">source</span><span class="p">()</span>
+                        <span class="n">resp</span> <span class="o">=</span> <span class="nb">bytes</span><span
+                  class="p">(</span><span class="n">out</span><span class="p">,</span> <span
+                  class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+
                     <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
                   class="p">(</span><span class="n">resp</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">add_period</span><span class="p">:</span>
+                        <span class="n">conn</span><span class="o">.</span><span class="n">send</span><span
+                  class="p">(</span><span class="sa">b</span><span class="s1">&#39;.&#39;</span><span class="p">)</span>
+
                     <span class="n">conn</span><span class="o">.</span><span class="n">close</span><span
                   class="p">()</span>
                     <span class="k">if</span> <span class="n">debug</span><span class="p">:</span>
@@ -2894,7 +2856,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                 class="bp">self</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">port</span> <span class="o">&lt;</span> <span
+        <span class="k">if</span> <span class="n">port</span> <span class="o">&gt;</span> <span
                 class="mi">65535</span><span class="p">:</span>
             <span class="c1"># Add digits to display that this is a TLS selector</span>
             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span
@@ -3021,7 +2983,7 @@ This is <em>not</em> as feature-complete as the actual Bucktooth implementation;
     <span class="n">port</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span
                                   class="bp">self</span><span class="o">.</span><span class="n">port</span><span
                                   class="p">)</span>
-    <span class="k">if</span> <span class="n">port</span> <span class="o">&lt;</span> <span class="mi">65535</span><span
+    <span class="k">if</span> <span class="n">port</span> <span class="o">&gt;</span> <span class="mi">65535</span><span
                                   class="p">:</span>
         <span class="c1"># Add digits to display that this is a TLS selector</span>
         <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="nb">str</span><span
