@@ -20,7 +20,10 @@ Nothing fancy.
             Selector(text="Query: " + request.query),
             Selector(text="Host: " + request.host),
             Selector(text="Port: " + str(request.port)),
-            Selector(text="Client: " + request.client)
+            Selector(text="Client: " + request.client),
+            Selector(),
+            Selector(itype="I", text="View server.png", path="/server.png", host=request.host, port=request.port),
+            Selector(itype="0", text="View some text", path="/txt", host=request.host, port=request.port)
         ]
         return menu
 
