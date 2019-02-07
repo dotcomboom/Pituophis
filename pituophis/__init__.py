@@ -28,7 +28,7 @@
 
 import os
 import re
-import sockets
+import socket
 import asyncio
 import ssl
 
