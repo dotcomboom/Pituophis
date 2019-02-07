@@ -40,8 +40,9 @@ def tls():
                     tls_cert_chain='cacert.pem', tls_private_key='privkey.pem')  # typical S/Gopher port is 105
 
 
-r = Process(target=reg)
-r.start()
+if __name__ == '__main__':
+    r = Process(target=reg)
+    r.start()
 
-t = Process(target=tls)
-t.start()
+    t = Process(target=tls)
+    t.start()
