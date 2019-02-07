@@ -26,9 +26,9 @@
 #
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
+import asyncio
 import os
 import re
-import socket
 import ssl
 
 
@@ -355,13 +355,11 @@ def serve(host="127.0.0.1", port=70, handler=handle, send_period=False, tls=Fals
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
      object (which can contain either Strings or Selectors) to send to the client.
     """
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     if tls:
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 
         if os.path.exists(tls_cert_chain) and os.path.exists(tls_private_key):
             context.load_cert_chain(tls_cert_chain, tls_private_key)
-            s = context.wrap_socket(s, server_side=True)
         else:
             print('TLS certificate and/or private key is missing. TLS has been disabled for this session.')
             print('Run this command to generate a self-signed certificate and private key:')
@@ -371,51 +369,60 @@ def serve(host="127.0.0.1", port=70, handler=handle, send_period=False, tls=Fals
             print()
             tls = False
 
-    with s:
-        s.bind((host, port))
-        s.listen(1)
-        if tls:
-            print('S/Gopher server is now running on', host + ':' + str(port) + '.')
-        else:
-            print('Gopher server is now running on', host + ':' + str(port) + '.')
-        while True:
+    if tls:
+        print('S/Gopher server is now running on', host + ':' + str(port) + '.')
+    else:
+        print('Gopher server is now running on', host + ':' + str(port) + '.')
+
+    class GopherProtocol(asyncio.Protocol):
+        def connection_made(self, transport):
+            self.transport = transport
+            print('Connected by', transport.get_extra_info('peername'))
+
+        def data_received(self, data):
+            # self.transport.write(data)
             try:
-                conn, addr = s.accept()
-                with conn:
-                    if debug:
-                        print('Connected by', addr)
-                    data = conn.recv(1024)
-                    request = data.decode('utf-8').split('\t')
-                    path = request[0].replace('\r\n', '')
-                    query = ''
-                    if len(request) > 1:
-                        query = request[1].replace('\r\n', '')
-                    if debug:
-                        print('Client requests:', path, query)
-                    resp = handler(Request(path=path, query=query, host=host, port=port, client=addr[0]))
-
-                    if type(resp) == str:
-                        resp = bytes(resp, 'utf-8')
-                    elif type(resp) == list:
-                        out = ""
-                        for line in resp:
-                            if type(line) == str:
-                                line = line.replace('\r\n', '\n')
-                                line = line.replace('\n', '\r\n')
-                                if not line.endswith('\r\n'):
-                                    line += '\r\n'
-                                out += line
-                            if type(line) == Selector:
-                                out += line.source()
-                        resp = bytes(out, 'utf-8')
-
-                    conn.send(resp)
-                    if send_period:
-                        conn.send(b'.')
-
-                    conn.close()
-                    if debug:
-                        print('Connection closed')
-            except Exception as e:
+                request = data.decode('utf-8').split('\t')
+                path = request[0].replace('\r\n', '')
+                query = ''
+                if len(request) > 1:
+                    query = request[1].replace('\r\n', '')
                 if debug:
-                    print('Error:', e)
+                    print('Client requests:', path, query)
+                resp = handler(Request(path=path, query=query, host=host, port=port,
+                                       client=self.transport.get_extra_info('peername')[0]))
+
+                if type(resp) == str:
+                    resp = bytes(resp, 'utf-8')
+                elif type(resp) == list:
+                    out = ""
+                    for line in resp:
+                        if type(line) == str:
+                            line = line.replace('\r\n', '\n')
+                            line = line.replace('\n', '\r\n')
+                            if not line.endswith('\r\n'):
+                                line += '\r\n'
+                            out += line
+                        if type(line) == Selector:
+                            out += line.source()
+                    resp = bytes(out, 'utf-8')
+
+                self.transport.write(resp)
+                if send_period:
+                    self.transport.write(b'.')
+
+                self.transport.close()
+                if debug:
+                    print('Connection closed')
+            except Exception as e:
+                print('Error:', e)
+
+    async def main(h, p):
+        loop = asyncio.get_running_loop()
+        if tls:
+            server = await loop.create_server(GopherProtocol, h, p, ssl=context)
+        else:
+            server = await loop.create_server(GopherProtocol, h, p)
+        await server.serve_forever()
+
+    asyncio.run(main(host, port))
