@@ -1,3 +1,5 @@
+from multiprocessing import Process
+
 import pituophis
 from pituophis import Selector
 
@@ -22,9 +24,24 @@ Nothing fancy.
             Selector(text="Port: " + str(request.port)),
             Selector(text="Client: " + request.client)
         ]
+        if request.tls:
+            menu.append(Selector())
+            menu.append(Selector(text="Your connection is secure!"))
+
         return menu
 
 
-# serve with custom handler
-pituophis.serve("127.0.0.1", 50400, handler=handle, tls=True,
-                tls_cert_chain='cacert.pem', tls_private_key='privkey.pem')  # typical S/Gopher port is 105
+def reg():
+    pituophis.serve("127.0.0.1", 50400, handler=handle, tls=False)  # typical Gopher port is 70
+
+
+def tls():
+    pituophis.serve("127.0.0.1", 50500, handler=handle, tls=True,
+                    tls_cert_chain='cacert.pem', tls_private_key='privkey.pem')  # typical S/Gopher port is 105
+
+
+r = Process(target=reg)
+r.start()
+
+t = Process(target=tls)
+t.start()

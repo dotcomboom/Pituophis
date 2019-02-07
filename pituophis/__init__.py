@@ -95,7 +95,7 @@ class Request:
         """
         self.tls = tls
         """
-        *Client.* Whether the request is to be sent to an S/Gopher server over TLS.
+        *Client/Server.* Whether the request is to be, or was sent to an S/Gopher server over TLS.
         """
         self.tls_verify = tls_verify
         """
@@ -389,8 +389,13 @@ def serve(host="127.0.0.1", port=70, handler=handle, send_period=False, tls=Fals
                     query = request[1].replace('\r\n', '')
                 if debug:
                     print('Client requests:', path, query)
+                is_tls = False
+
+                if self.transport.get_extra_info('sslcontext'):
+                    is_tls = True
+
                 resp = handler(Request(path=path, query=query, host=host, port=port,
-                                       client=self.transport.get_extra_info('peername')[0]))
+                                       client=self.transport.get_extra_info('peername')[0], tls=is_tls))
 
                 if type(resp) == str:
                     resp = bytes(resp, 'utf-8')
