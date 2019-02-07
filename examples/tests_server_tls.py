@@ -41,8 +41,6 @@ def tls():
 
 
 if __name__ == '__main__':
-    r = Process(target=reg)
-    r.start()
-
-    t = Process(target=tls)
-    t.start()
+    processes = [Process(target=reg), Process(target=tls)]
+    for process in processes:
+        process.start()
