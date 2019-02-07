@@ -26,9 +26,10 @@
 #
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
-import asyncio
 import os
 import re
+import sockets
+import asyncio
 import ssl
 
 
