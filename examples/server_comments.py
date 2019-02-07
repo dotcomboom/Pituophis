@@ -11,7 +11,7 @@ def handle(request):
         menu = [Selector(text="Comment added."),
                 Selector(itype='1', text="View comments", path="/", host=request.host, port=request.port)]
         comments.append(request.query)
-        return pituophis.encode(menu)
+        return menu
 
     menu = [Selector(text='Welcome!'),
             Selector(),
