@@ -190,6 +190,18 @@ class Selector:
         return str(self.type) + str(self.text) + '\t' + str(self.path) + '\t' + str(self.host) + '\t' + str(
             port) + '\r\n'
 
+    def request(self):
+        """
+        Returns a Request equivalent to where the selector leads.
+        """
+        req = Request()
+        req.type = self.type
+        req.host = self.host
+        req.port = self.port
+        req.path = self.path
+        req.tls = self.tls
+        return req
+
 
 def parse_menu(source):
     """
