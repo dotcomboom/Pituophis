@@ -72,7 +72,6 @@ Pituophis can be used with a custom handler to serve Gopher requests. Primitive 
 ## Planned features/Wishlist
 Server:
 - Server default handler with proper gophermap and directory/file serving
-- Asynchronous connections? Right now everything is on one thread, one request at a time
 
 Both:
 - Less bugs
