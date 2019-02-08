@@ -3,7 +3,7 @@ Python 3 library for building Gopher clients and servers
 
 **NOTICE:** This is under active, *active* development and basically nothing is finalized. This whole thing can be turned on its head in the matter of two days, so I wouldn't use it for anything quite yet.
 
-Pituophis, at the moment, requires five modules: os, re, sockets, asyncio and ssl; all of which are standard in most Python 3 installations. Pituophis can simply be loaded as a module like this:
+Pituophis, at the moment, requires six modules: os, re, sockets, asyncio, ssl, and mimetypes; all of which are standard in most Python 3 installations. Pituophis can simply be loaded as a module like this:
 ```python
 import pituophis
 ```

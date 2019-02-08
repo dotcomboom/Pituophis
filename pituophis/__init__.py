@@ -26,10 +26,11 @@
 #
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
+import asyncio
+import mimetypes
 import os
 import re
 import socket
-import asyncio
 import ssl
 
 
@@ -69,7 +70,8 @@ class Request:
     *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.
     """
 
-    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client=''):
+    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client='',
+                 pub_dir='pub/'):
         """
         Initializes a new Request object.
         """
@@ -105,6 +107,10 @@ class Request:
         self.client = str(client)  # only used in server
         """
         *Server.* The IP address of the connected client.
+        """
+        self.pub_dir = str(pub_dir)  # only used in server
+        """
+        *Server.* The default handler uses this as which directory to serve. Default is 'pub/'.
         """
 
     def get(self):
@@ -278,6 +284,10 @@ def parse_url(url):
         req.path = url[0]
         url.pop(0)
         req.query = '?'.join(url)
+    # if it's a directory, append / to path if it isn't there
+    if not req.path.endswith('/'):
+        if req.type == '1':
+            req.path += '/'
     return req
 
 
@@ -292,20 +302,13 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
 
 
 # Server stuff
-def parse_gophermap(source, def_host='127.0.0.1', def_port='70'):
+def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='/'):
     """
-    *Server.* Converts a Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
-    This is *not* as feature-complete as the actual Bucktooth implementation; one example being how paths
-    are not resolved. It does, however, fill in missing selector, host, and port fields,
-    given that the correct host and port values are passed to it.
+    *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
     """
-    # NOTICE:
-    # Relative links are *not* fixed with this function!
-    # The path isn't ever touched, so this is more for convenience of making menus
-    # (filling in the blank fields, information selectors...)
     if type(source) == str:
         source = source.replace('\r\n', '\n').split('\n')
-    newMenu = []
+    new_menu = []
     for selector in source:
         if '\t' in selector:
             # this is not information
@@ -314,7 +317,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70'):
             #  ^           ^           ^           ^
             itype = selector[0][0]
             text = selector[0][1:]
-            path = '/' + selector[1] + '/'
+            path = gophermap_dir + selector[1] + '/'
             host = def_host
             port = def_port
 
@@ -325,36 +328,94 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70'):
             if len(selector) > 3:
                 port = selector[3]
 
-            selector = [itype + text, path, host, port]
-            newMenu.append('\t'.join(selector))
+            # fix relative path
+            if not path.startswith('/'):
+                path = gophermap_dir + path
+
+            selector = [str(itype) + str(text), str(path), str(host), str(port)]
+            new_menu.append('\t'.join(selector))
         else:
             selector = 'i' + selector
-            newMenu.append(selector)
-    # return '\r\n'.join(newMenu)
-    return newMenu
+            new_menu.append(selector)
+    return new_menu
 
 
 def handle(request):
     """
-    *Server.* Default handler function for Gopher requests while hosting a server. Currently a stub.
+    *Server.* Default handler function for Gopher requests while hosting a server.
+    Serves files and directories from the pub/ directory. If you need to customize,
+    or change the directory to serve, you can copy/paste the function.
     """
-    menu = [
-        Selector(text="Path: " + request.path),
-        Selector(text="Query: " + request.query),
-        Selector(text="Host: " + request.host),
-        Selector(text="Port: " + str(request.port)),
-        Selector(text="Client: " + request.client),
-        Selector(),
-        Selector(text="This is the default Pituophis handler.")
-    ]
+    #####
+    pub_dir = request.pub_dir
+    errors = {
+        '404': Selector(itype='3', text='404: ' + request.path + ' does not exist'),
+        '403': Selector(itype='3', text='403: Resource outside of publish directory'),
+        'no_pub_dir': Selector(itype='3', text='500: Publish directory does not exist')
+    }
+    mime_starts_with = {
+        'image': 'I',
+        'text': '0',
+        'audio/x-wav': 's',
+        'image/gif': 'g',
+        'text/html': 'h'
+    }
+    #####
+    if not os.path.exists(pub_dir):
+        return [errors['no_pub_dir']]
+
+    menu = []
+    if request.path == '':
+        request.path = '/'
+    res_path = os.path.abspath((pub_dir + request.path).replace('//', '/'))
+    if not res_path.startswith(os.path.abspath(pub_dir)):
+        # Reject connections that try to break out of the publish directory
+        return [errors['403']]
+    if request.path.endswith('/'):
+        # is directory
+        if os.path.exists(res_path):
+            if os.path.isfile(res_path + '/gophermap'):
+                in_file = open(res_path + '/gophermap', "r+")
+                gmap = in_file.read()
+                in_file.close()
+                menu = parse_gophermap(source=gmap, def_host=request.host, def_port=request.port,
+                                       gophermap_dir=request.path)
+            else:
+                for file in os.listdir(res_path):
+                    if not file.startswith('.'):
+                        itype = '9'
+                        if os.path.isdir(pub_dir + '/' + file + '/'):
+                            itype = '1'
+                            file = file + '/'
+                        else:
+                            mime = mimetypes.guess_type(pub_dir + '/' + file)[0]
+                            for sw in mime_starts_with.keys():
+                                if mime.startswith(sw):
+                                    itype = mime_starts_with[sw]
+                        menu.append(Selector(itype=itype, text=file,
+                                             path=(request.path + '/' + file).replace('//', '/'),
+                                             host=request.host, port=request.port))
+        else:
+            return [errors['404']]
+    else:
+        # serving files
+        if os.path.isfile(res_path):
+            in_file = open(res_path, "rb")
+            data = in_file.read()
+            in_file.close()
+            return data
+        else:
+            return [errors['404']]
+
     return menu
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, send_period=False, tls=False, tls_cert_chain='cacert.pem',
+def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', send_period=False, tls=False,
+          tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
-     object (which can contain either Strings or Selectors) to send to the client.
+    object (which can contain either Strings or Selectors) to send to the client.
     """
     if tls:
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -382,46 +443,43 @@ def serve(host="127.0.0.1", port=70, handler=handle, send_period=False, tls=Fals
 
         def data_received(self, data):
             # self.transport.write(data)
-            try:
-                request = data.decode('utf-8').split('\t')
-                path = request[0].replace('\r\n', '')
-                query = ''
-                if len(request) > 1:
-                    query = request[1].replace('\r\n', '')
-                if debug:
-                    print('Client requests:', path, query)
-                is_tls = False
+            request = data.decode('utf-8').split('\t')
+            path = request[0].replace('\r\n', '')
+            query = ''
+            if len(request) > 1:
+                query = request[1].replace('\r\n', '')
+            if debug:
+                print('Client requests:', path, query)
+            is_tls = False
 
-                if self.transport.get_extra_info('sslcontext'):
-                    is_tls = True
+            if self.transport.get_extra_info('sslcontext'):
+                is_tls = True
 
-                resp = handler(Request(path=path, query=query, host=host, port=port,
-                                       client=self.transport.get_extra_info('peername')[0], tls=is_tls))
+            resp = handler(Request(path=path, query=query, host=host, port=port, pub_dir=pub_dir,
+                                   client=self.transport.get_extra_info('peername')[0], tls=is_tls))
 
-                if type(resp) == str:
-                    resp = bytes(resp, 'utf-8')
-                elif type(resp) == list:
-                    out = ""
-                    for line in resp:
-                        if type(line) == str:
-                            line = line.replace('\r\n', '\n')
-                            line = line.replace('\n', '\r\n')
-                            if not line.endswith('\r\n'):
-                                line += '\r\n'
-                            out += line
-                        if type(line) == Selector:
-                            out += line.source()
-                    resp = bytes(out, 'utf-8')
+            if type(resp) == str:
+                resp = bytes(resp, 'utf-8')
+            elif type(resp) == list:
+                out = ""
+                for line in resp:
+                    if type(line) == str:
+                        line = line.replace('\r\n', '\n')
+                        line = line.replace('\n', '\r\n')
+                        if not line.endswith('\r\n'):
+                            line += '\r\n'
+                        out += line
+                    if type(line) == Selector:
+                        out += line.source()
+                resp = bytes(out, 'utf-8')
 
-                self.transport.write(resp)
-                if send_period:
-                    self.transport.write(b'.')
+            self.transport.write(resp)
+            if send_period:
+                self.transport.write(b'.')
 
-                self.transport.close()
-                if debug:
-                    print('Connection closed')
-            except Exception as e:
-                print('Error:', e)
+            self.transport.close()
+            if debug:
+                print('Connection closed')
 
     async def main(h, p):
         loop = asyncio.get_running_loop()
