@@ -74,11 +74,5 @@ Pituophis also lets you write a custom handler for Gopher requests.
 
 ![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
 ## Planned features/Wishlist
-Server:
-- Server default handler with proper gophermap and directory/file serving
-
-Both:
-- Less bugs
-- Documentation, oh, documentation...
-- Probably other stuff I haven't written down yet
+- More documentation
 - ~~Prego~~
