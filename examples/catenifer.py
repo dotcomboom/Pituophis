@@ -1,13 +1,4 @@
-import os
-
 import pituophis
-
-splash = """
- __       ___  ___         ___  ___  __  
-/  `  /\   |  |__  |\ | | |__  |__  |__) 
-\__, /--\  |  |___ | \| | |    |___ |  \ 
-https://github.com/dotcomboom/pituophis
-"""
 
 home = 'gopher://gopher.floodgap.com/1/'
 typeIcons = {
@@ -38,9 +29,6 @@ def go(url, itype=''):
         req.type = '1'
     if itype == '7':
         req.type = itype
-    if req.type in menuTypes:
-        os.system('clear')
-        print(splash)
     print(bold('URL: ' + req.url()))
     if req.type == '7':
         if req.query == '':
