@@ -71,7 +71,7 @@ class Request:
     """
 
     def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client='',
-                 pub_dir='pub/'):
+                 pub_dir='pub/', alt_handler=False):
         """
         Initializes a new Request object.
         """
@@ -112,6 +112,7 @@ class Request:
         """
         *Server.* The default handler uses this as which directory to serve. Default is 'pub/'.
         """
+        self.alt_handler = alt_handler
 
     def get(self):
         """
@@ -396,7 +397,14 @@ def handle(request):
                                              path=(request.path + '/' + file).replace('//', '/'),
                                              host=request.host, port=request.port))
         else:
-            return [errors['404']]
+            if request.alt_handler:
+                alt = request.alt_handler(request)
+                if alt:
+                    return alt
+                else:
+                    return [errors['404']]
+            else:
+                return [errors['404']]
     else:
         # serving files
         if os.path.isfile(res_path):
@@ -405,17 +413,26 @@ def handle(request):
             in_file.close()
             return data
         else:
-            return [errors['404']]
+            if request.alt_handler:
+                alt = request.alt_handler(request)
+                if alt:
+                    return alt
+                else:
+                    return [errors['404']]
+            else:
+                return [errors['404']]
 
     return menu
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', send_period=False, tls=False,
+def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', alt_handler=False, send_period=False, tls=False,
           tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
-    object (which can contain either Strings or Selectors) to send to the client.
+    object (which can contain either Strings or Selectors) to send to the client, or the default handler which can serve
+    a directory. Along with the default handler, you can set an alternate handler to use if a 404 error is generated for
+    dynamic applications.
     """
     if tls:
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
@@ -455,8 +472,9 @@ def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', send_period
             if self.transport.get_extra_info('sslcontext'):
                 is_tls = True
 
-            resp = handler(Request(path=path, query=query, host=host, port=port, pub_dir=pub_dir,
-                                   client=self.transport.get_extra_info('peername')[0], tls=is_tls))
+            resp = handler(Request(path=path, query=query, host=host, port=port,
+                                   client=self.transport.get_extra_info('peername')[0], pub_dir=pub_dir,
+                                   alt_handler=alt_handler, tls=is_tls))
 
             if type(resp) == str:
                 resp = bytes(resp, 'utf-8')
