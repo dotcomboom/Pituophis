@@ -343,8 +343,8 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='
 def handle(request):
     """
     *Server.* Default handler function for Gopher requests while hosting a server.
-    Serves files and directories from the pub/ directory. If you need to customize,
-    or change the directory to serve, you can copy/paste the function.
+    Serves files and directories from the pub/ directory by default, but the path can
+    be changed in serve's pub_dir argument or changing the Request's pub_dir directory.
     """
     #####
     pub_dir = request.pub_dir
