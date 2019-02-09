@@ -330,8 +330,9 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='
                 port = selector[3]
 
             # fix relative path
-            if not path.startswith('/'):
-                path = gophermap_dir + path
+            if not path.startswith('URL:'):
+                if not path.startswith('/'):
+                    path = gophermap_dir + path
 
             selector = [str(itype) + str(text), str(path), str(host), str(port)]
             new_menu.append('\t'.join(selector))
