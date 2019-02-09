@@ -305,7 +305,7 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
 # Server stuff
 def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='/'):
     """
-    *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu. Returns a List of lines to send.
+    *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Selectors to send.
     """
     if type(source) == str:
         source = source.replace('\r\n', '\n').split('\n')
