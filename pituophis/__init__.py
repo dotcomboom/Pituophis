@@ -373,6 +373,20 @@ def handle(request):
         'text/html': 'h'
     }
     #####
+    if request.path.startswith('URL:'):
+        html = """
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <meta http-equiv="refresh" content="0; url=[#url#]" />
+        </head>
+        <body>
+            <h1>Gopher Redirect</h1>
+            <p>You will be redirected to <a href="[#url#]">[#url#]</a> shortly.</p>
+        </body>
+        """
+        return html.replace('[#url#]', request.path.split('URL:')[1])
+
     if not os.path.exists(pub_dir):
         return [errors['no_pub_dir']]
 
