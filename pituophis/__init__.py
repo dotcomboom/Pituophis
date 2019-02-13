@@ -32,6 +32,7 @@ import os
 import re
 import socket
 import ssl
+from os.path import realpath
 
 
 # Quick note:
@@ -333,7 +334,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
             # fix relative path
             if not path.startswith('URL:'):
                 if not path.startswith('/'):
-                    path = gophermap_dir + path
+                    path = realpath(gophermap_dir + '/' + path)
 
             selector = Selector()
             selector.type = itype
@@ -397,7 +398,7 @@ def handle(request):
     if not res_path.startswith(os.path.abspath(pub_dir)):
         # Reject connections that try to break out of the publish directory
         return [errors['403']]
-    if request.path.endswith('/'):
+    if os.path.isdir(res_path):
         # is directory
         if os.path.exists(res_path):
             if os.path.isfile(res_path + '/gophermap'):
