@@ -6,3 +6,4 @@ pdoc --html pituophis --html-dir docs/ --overwrite
 # sphinx
 cd sphinx
 make html
+make text

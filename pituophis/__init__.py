@@ -189,7 +189,7 @@ class Selector:
         Returns a representation of what the selector looks like in a Gopher menu.
         """
         port = int(self.port)
-        if port > 65535:
+        if self.tls:
             # Add digits to display that this is a TLS selector
             while len(str(port)) < 5:
                 port = '0' + str(port)
@@ -303,7 +303,8 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
 
 
 # Server stuff
-def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='/'):
+def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
+                    gophermap_dir='/', tls=False):
     """
     *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Selectors to send.
     """
@@ -334,8 +335,17 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70', gophermap_dir='
                 if not path.startswith('/'):
                     path = gophermap_dir + path
 
-            selector = [str(itype) + str(text), str(path), str(host), str(port)]
-            new_menu.append('\t'.join(selector))
+            selector = Selector()
+            selector.type = itype
+            selector.text = text
+            selector.path = path
+            selector.host = host
+            selector.port = port
+
+            if selector.host == def_host and selector.port == def_port:
+                selector.tls = tls
+
+            new_menu.append(selector.source())
         else:
             selector = 'i' + selector
             new_menu.append(selector)
@@ -381,7 +391,8 @@ def handle(request):
                 gmap = in_file.read()
                 in_file.close()
                 menu = parse_gophermap(source=gmap, def_host=request.host, def_port=request.port,
-                                       gophermap_dir=request.path)
+                                       gophermap_dir=request.path,
+                                       tls=request.tls)
             else:
                 for file in os.listdir(res_path):
                     if not file.startswith('.'):
@@ -396,7 +407,9 @@ def handle(request):
                                     itype = mime_starts_with[sw]
                         menu.append(Selector(itype=itype, text=file,
                                              path=(request.path + '/' + file).replace('//', '/'),
-                                             host=request.host, port=request.port))
+                                             host=request.host,
+                                             port=request.port,
+                                             tls=request.tls))
         else:
             if request.alt_handler:
                 alt = request.alt_handler(request)
