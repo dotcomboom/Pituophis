@@ -15,7 +15,7 @@ def handle(request):
 
     menu = [Selector(text='Welcome!'),
             Selector(),
-            Selector(itype='7', text="Add a comment.", path="/sign", host=request.host, port=request.port),
+            Selector(itype='7', text="Add a comment.", path="/add", host=request.host, port=request.port),
             Selector()]
     if len(comments) == 0:
         menu.append(Selector(text="There are no messages yet.. be the first!"))
