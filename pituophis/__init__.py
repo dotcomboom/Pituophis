@@ -411,34 +411,43 @@ def handle(request):
                                        tls=request.tls)
             else:
                 for file in os.listdir(res_path):
-                    if not file.startswith('.'):
-                        itype = '9'
-                        text = ''
-                        mime = \
-                            mimetypes.guess_type(
-                                res_path + '/' + file)[0]
-                        if mime is None:  # is directory
-                            itype = '1'
-                            file = file + '/'
-                            text = file
-                        else:
-                            for sw in mime_starts_with.keys():
-                                if mime.startswith(sw):
-                                    itype = mime_starts_with[sw]
-                                atts = str(os.path.getsize(
-                                    res_path + '/' + file)) + '     ' + time.strftime(
-                                    '%m/%d/%Y', time.gmtime(
-                                        os.path.getmtime(
-                                            res_path + '/' + file)))
+                    try:
+                        if not file.startswith('.'):
+                            itype = '9'
+                            text = ''
+                            mime = \
+                                mimetypes.guess_type(
+                                    res_path + '/' + file)[0]
+                            if mime is None:  # is directory
+                                itype = '1'
+                                file = file + '/'
                                 text = file
-                                while len(text) < (67 - len(atts)):
-                                    text = text + ' '
-                                text = text + str(atts)
-                        menu.append(Selector(itype=itype, text=text,
-                                             path=(request.path + '/' + file).replace('//', '/'),
-                                             host=request.host,
-                                             port=request.port,
-                                             tls=request.tls))
+                            else:
+                                for sw in mime_starts_with.keys():
+                                    if mime.startswith(sw):
+                                        itype = mime_starts_with[
+                                            sw]
+                                    atts = str(os.path.getsize(
+                                        res_path + '/' + file)) + '     ' + time.strftime(
+                                        '%m/%d/%Y', time.gmtime(
+                                            os.path.getmtime(
+                                                res_path + '/' + file)))
+                                    text = file
+                                    while len(text) < (
+                                            67 - len(atts)):
+                                        text = text + ' '
+                                    text = text + str(atts)
+                            menu.append(
+                                Selector(itype=itype, text=text,
+                                         path=(
+                                                     request.path + '/' + file).replace(
+                                             '//', '/'),
+                                         host=request.host,
+                                         port=request.port,
+                                         tls=request.tls))
+                    except Exception as e:
+                        print(
+                            'Failed to display item ' + file + ': ' + e)
         else:
             if request.alt_handler:
                 alt = request.alt_handler(request)
