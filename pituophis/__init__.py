@@ -431,7 +431,7 @@ def handle(request):
                                         os.path.getmtime(
                                             res_path + '/' + file)))
                                 text = file
-                                while len(text) < (70 - len(atts)):
+                                while len(text) < (67 - len(atts)):
                                     text = text + ' '
                                 text = text + str(atts)
                         menu.append(Selector(itype=itype, text=text,
