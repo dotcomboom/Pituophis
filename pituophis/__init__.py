@@ -32,6 +32,7 @@ import os
 import re
 import socket
 import ssl
+import time
 from os.path import realpath
 
 
@@ -412,17 +413,28 @@ def handle(request):
                 for file in os.listdir(res_path):
                     if not file.startswith('.'):
                         itype = '9'
-                        print(pub_dir + '/' + file)
+                        text = ''
                         mime = \
-                        mimetypes.guess_type(pub_dir + '/' + file)[0]
-                        if mime == None:  # is directory
+                            mimetypes.guess_type(
+                                res_path + '/' + file)[0]
+                        if mime is None:  # is directory
                             itype = '1'
                             file = file + '/'
+                            text = file
                         else:
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
                                     itype = mime_starts_with[sw]
-                        menu.append(Selector(itype=itype, text=file,
+                                atts = str(os.path.getsize(
+                                    res_path + '/' + file)) + '     ' + time.strftime(
+                                    '%m/%d/%Y', time.gmtime(
+                                        os.path.getmtime(
+                                            res_path + '/' + file)))
+                                text = file
+                                while len(text) < (70 - len(atts)):
+                                    text = text + ' '
+                                text = text + str(atts)
+                        menu.append(Selector(itype=itype, text=text,
                                              path=(request.path + '/' + file).replace('//', '/'),
                                              host=request.host,
                                              port=request.port,
