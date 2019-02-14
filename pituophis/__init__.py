@@ -412,11 +412,13 @@ def handle(request):
                 for file in os.listdir(res_path):
                     if not file.startswith('.'):
                         itype = '9'
-                        if os.path.isdir(pub_dir + '/' + file + '/'):
+                        print(pub_dir + '/' + file)
+                        mime = \
+                        mimetypes.guess_type(pub_dir + '/' + file)[0]
+                        if mime == None:  # is directory
                             itype = '1'
                             file = file + '/'
                         else:
-                            mime = mimetypes.guess_type(pub_dir + '/' + file)[0]
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
                                     itype = mime_starts_with[sw]
