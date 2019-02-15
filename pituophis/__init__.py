@@ -380,6 +380,7 @@ def handle(request):
         <!DOCTYPE html>
         <html>
         <head>
+            <title>Gopher Redirect</title>
             <meta http-equiv="refresh" content="0; url=[#url#]" />
         </head>
         <body>
