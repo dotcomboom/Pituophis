@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='Pituophis',
-    version='0.93',
+    version='0.94',
     packages=['pituophis'],
     url='https://github.com/dotcomboom/Pituophis',
     license='BSD 2-Clause License',
