@@ -228,6 +228,11 @@ def parse_menu(source):
             selector.host = 'error.host'
             selector.port = 0
         else:
+            line = line.split('\t')
+            while len(
+                    line) > 4:  # discard Gopher+ and other naughty stuff
+                line = line[:-1]
+            line = '\t'.join(line)
             matches = re.match(r'^(.)(.*)\t(.*)\t(.*)\t(.*)', line)
             if matches:
                 selector.type = matches[1]
@@ -235,8 +240,12 @@ def parse_menu(source):
                 selector.path = matches[3]
                 selector.host = matches[4]
                 selector.port = matches[5]
+                try:
+                    selector.port = int(selector.port)
+                except:
+                    selector.port = 70
                 # detect TLS
-                if int(selector.port) > 65535:
+                if selector.port > 65535:
                     selector.tls = True
                     # typically the port is sent as 100105
                     # remove first number to get at 5 digits
