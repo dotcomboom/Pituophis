@@ -27,6 +27,7 @@
 # Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
 import asyncio
+import glob
 import mimetypes
 import os
 import re
@@ -314,11 +315,25 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
 
 
 # Server stuff
+mime_starts_with = {
+    'image': 'I',
+    'text': '0',
+    'audio/x-wav': 's',
+    'image/gif': 'g',
+    'text/html': 'h'
+}
+
+
 def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
-                    gophermap_dir='/', tls=False):
+                    gophermap_dir='/', pub_dir='pub/', tls=False):
     """
     *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Selectors to send.
     """
+    if not gophermap_dir.endswith('/'):
+        gophermap_dir = + '/'
+    if not pub_dir.endswith('/'):
+        pub_dir = + '/'
+
     if type(source) == str:
         source = source.replace('\r\n', '\n').split('\n')
     new_menu = []
@@ -326,11 +341,14 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
         if '\t' in selector:
             # this is not information
             selector = selector.split('\t')
+            expanded = False
             # 1Text    pictures/    host.host    port
             #  ^           ^           ^           ^
             itype = selector[0][0]
             text = selector[0][1:]
-            path = gophermap_dir + selector[1] + '/'
+            path = gophermap_dir + text
+            if itype == '1':
+                path += '/'
             host = def_host
             port = def_port
 
@@ -341,22 +359,81 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
             if len(selector) > 3:
                 port = selector[3]
 
+            if path == '':
+                path = gophermap_dir + text
+                if itype == '1':
+                    path += '/'
+
             # fix relative path
             if not path.startswith('URL:'):
                 if not path.startswith('/'):
                     path = realpath(gophermap_dir + '/' + path)
 
-            selector = Selector()
-            selector.type = itype
-            selector.text = text
-            selector.path = path
-            selector.host = host
-            selector.port = port
+                # globbing
+                if '*' in path:
+                    expanded = True
+                    g = glob.glob(
+                        pub_dir + gophermap_dir + '/' + path)
+                    for file in g:
+                        file = re.sub(r'/{2}', r'/', file)
+                        s = Selector()
+                        s.type = itype
+                        if s.type == '?':
+                            s.type = '9'
+                            if path.startswith('URL:'):
+                                s.type = 'h'
+                            elif os.path.exists(
+                                    file):
+                                mime = mimetypes.guess_type(
+                                    file)[
+                                    0]
+                                if mime is None:  # is directory
+                                    s.type = '1'
+                                else:
+                                    for sw in mime_starts_with.keys():
+                                        if mime.startswith(sw):
+                                            s.type = \
+                                            mime_starts_with[sw]
+                        s.text = file.split('/')[-1]
+                        s.path = file.replace(pub_dir, '/', 1)
+                        s.path = re.sub(r'/{2}', r'/', s.path)
+                        s.host = host
+                        s.port = port
+                        if s.type == 'i':
+                            s.path = ''
+                            s.host = 'error.host'
+                            s.port = '0'
+                        if not s.path.endswith('gophermap'):
+                            new_menu.append(s)
 
-            if selector.host == def_host and selector.port == def_port:
-                selector.tls = tls
+            if not expanded:
+                selector = Selector()
+                selector.type = itype
+                selector.text = text
+                selector.path = path
+                selector.host = host
+                selector.port = port
 
-            new_menu.append(selector.source())
+                if selector.type == '?':
+                    selector.type = '9'
+                    if path.startswith('URL:'):
+                        selector.type = 'h'
+                    elif os.path.exists(
+                            pub_dir + gophermap_dir + path):
+                        mime = mimetypes.guess_type(
+                            pub_dir + gophermap_dir + path)[0]
+                        if mime is None:  # is directory
+                            selector.type = '1'
+                        else:
+                            for sw in mime_starts_with.keys():
+                                if mime.startswith(sw):
+                                    selector.type = \
+                                    mime_starts_with[sw]
+
+                if selector.host == def_host and selector.port == def_port:
+                    selector.tls = tls
+
+                new_menu.append(selector.source())
         else:
             selector = 'i' + selector + '\t\terror.host\t0'
             new_menu.append(selector)
@@ -375,13 +452,6 @@ def handle(request):
         '404': Selector(itype='3', text='404: ' + request.path + ' does not exist'),
         '403': Selector(itype='3', text='403: Resource outside of publish directory'),
         'no_pub_dir': Selector(itype='3', text='500: Publish directory does not exist')
-    }
-    mime_starts_with = {
-        'image': 'I',
-        'text': '0',
-        'audio/x-wav': 's',
-        'image/gif': 'g',
-        'text/html': 'h'
     }
     #####
     if request.path.startswith('URL:'):
@@ -418,6 +488,7 @@ def handle(request):
                 in_file.close()
                 menu = parse_gophermap(source=gmap, def_host=request.host, def_port=request.port,
                                        gophermap_dir=request.path,
+                                       pub_dir=pub_dir,
                                        tls=request.tls)
             else:
                 for file in os.listdir(res_path):
