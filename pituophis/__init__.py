@@ -358,7 +358,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
 
             new_menu.append(selector.source())
         else:
-            selector = 'i' + selector
+            selector = 'i' + selector + '\t\terror.host\t0'
             new_menu.append(selector)
     return new_menu
 
