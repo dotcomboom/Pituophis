@@ -33,7 +33,6 @@ import os
 import re
 import socket
 import ssl
-import time
 from os.path import realpath
 
 
@@ -330,9 +329,9 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
     *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Selectors to send.
     """
     if not gophermap_dir.endswith('/'):
-        gophermap_dir = + '/'
+        gophermap_dir += '/'
     if not pub_dir.endswith('/'):
-        pub_dir = + '/'
+        pub_dir += '/'
 
     if type(source) == str:
         source = source.replace('\r\n', '\n').split('\n')
@@ -373,7 +372,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                 if '*' in path:
                     expanded = True
                     g = glob.glob(
-                        pub_dir + gophermap_dir + '/' + path)
+                        pub_dir + path)
                     for file in g:
                         file = re.sub(r'/{2}', r'/', file)
                         s = Selector()
@@ -395,6 +394,10 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                                             s.type = \
                                             mime_starts_with[sw]
                         s.text = file.split('/')[-1]
+                        if os.path.exists(file + '/gophertag'):
+                            s.text = ''.join(list(open(
+                                file + '/gophertag'))).replace(
+                                '\r\n', '').replace('\n', '')
                         s.path = file.replace(pub_dir, '/', 1)
                         s.path = re.sub(r'/{2}', r'/', s.path)
                         s.host = host
@@ -404,7 +407,8 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             s.host = 'error.host'
                             s.port = '0'
                         if not s.path.endswith('gophermap'):
-                            new_menu.append(s)
+                            if not s.path.endswith('gophertag'):
+                                new_menu.append(s)
 
             if not expanded:
                 selector = Selector()
@@ -419,9 +423,9 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                     if path.startswith('URL:'):
                         selector.type = 'h'
                     elif os.path.exists(
-                            pub_dir + gophermap_dir + path):
+                            pub_dir + path):
                         mime = mimetypes.guess_type(
-                            pub_dir + gophermap_dir + path)[0]
+                            pub_dir + path)[0]
                         if mime is None:  # is directory
                             selector.type = '1'
                         else:
@@ -486,49 +490,58 @@ def handle(request):
                 in_file = open(res_path + '/gophermap', "r+")
                 gmap = in_file.read()
                 in_file.close()
-                menu = parse_gophermap(source=gmap, def_host=request.host, def_port=request.port,
+                menu = parse_gophermap(source=gmap,
+                                       def_host=request.host,
+                                       def_port=request.port,
                                        gophermap_dir=request.path,
                                        pub_dir=pub_dir,
                                        tls=request.tls)
             else:
-                for file in os.listdir(res_path):
-                    try:
-                        if not file.startswith('.'):
-                            itype = '9'
-                            text = ''
-                            mime = \
-                                mimetypes.guess_type(
-                                    res_path + '/' + file)[0]
-                            if mime is None:  # is directory
-                                itype = '1'
-                                file = file + '/'
-                                text = file
-                            else:
-                                for sw in mime_starts_with.keys():
-                                    if mime.startswith(sw):
-                                        itype = mime_starts_with[
-                                            sw]
-                                    atts = str(os.path.getsize(
-                                        res_path + '/' + file)) + '     ' + time.strftime(
-                                        '%m/%d/%Y', time.gmtime(
-                                            os.path.getmtime(
-                                                res_path + '/' + file)))
-                                    text = file
-                                    while len(text) < (
-                                            67 - len(atts)):
-                                        text = text + ' '
-                                    text = text + str(atts)
-                            menu.append(
-                                Selector(itype=itype, text=text,
-                                         path=(
-                                                     request.path + '/' + file).replace(
-                                             '//', '/'),
-                                         host=request.host,
-                                         port=request.port,
-                                         tls=request.tls))
-                    except Exception as e:
-                        print(
-                            'Failed to display item ' + file + ': ' + e)
+                gmap = '?*\t\r\n'
+                menu = parse_gophermap(source=gmap,
+                                       def_host=request.host,
+                                       def_port=request.port,
+                                       gophermap_dir=request.path,
+                                       pub_dir=pub_dir,
+                                       tls=request.tls)
+                # for file in os.listdir(res_path):
+                #     try:
+                #         if not file.startswith('.'):
+                #             itype = '9'
+                #             text = ''
+                #             mime = \
+                #                 mimetypes.guess_type(
+                #                     res_path + '/' + file)[0]
+                #             if mime is None:  # is directory
+                #                 itype = '1'
+                #                 file = file + '/'
+                #                 text = file
+                #             else:
+                #                 for sw in mime_starts_with.keys():
+                #                     if mime.startswith(sw):
+                #                         itype = mime_starts_with[
+                #                             sw]
+                #                     atts = str(os.path.getsize(
+                #                         res_path + '/' + file)) + '     ' + time.strftime(
+                #                         '%m/%d/%Y', time.gmtime(
+                #                             os.path.getmtime(
+                #                                 res_path + '/' + file)))
+                #                     text = file
+                #                     while len(text) < (
+                #                             67 - len(atts)):
+                #                         text = text + ' '
+                #                     text = text + str(atts)
+                #             menu.append(
+                #                 Selector(itype=itype, text=text,
+                #                          path=(
+                #                                      request.path + '/' + file).replace(
+                #                              '//', '/'),
+                #                          host=request.host,
+                #                          port=request.port,
+                #                          tls=request.tls))
+                #     except Exception as e:
+                #         print(
+                #             'Failed to display item ' + file + ': ' + e)
         else:
             if request.alt_handler:
                 alt = request.alt_handler(request)
