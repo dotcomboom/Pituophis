@@ -209,6 +209,9 @@ class Selector:
         req.host = self.host
         req.port = self.port
         req.path = self.path
+        if '?' in req.path:
+            req.query = '%3F'.join(req.path.split('?')[-1:])
+            req.path = req.path.split('?')[0]
         req.tls = self.tls
         return req
 
