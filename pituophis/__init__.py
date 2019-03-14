@@ -266,22 +266,38 @@ def parse_url(url):
 
     up = urlparse(url)
 
+    if up.scheme == '':
+        up = urlparse('gopher://' + url)
+
     if up.scheme == 'gophers':
         req.tls = True
 
-    req.host = up.netloc
+    req.query = up.query
+
+    if up.netloc == '':
+        if '/' in up.path:
+            req.host = up.path.split('/')[0]
+            try:
+                req.path = '/'.join(up.path.split('/')[:-1])
+            except Exception:
+                req.path = '/'
+        else:
+            req.host = up.path
+            req.path = '/'
+    else:
+        req.host = up.netloc
+        req.path = up.path
+
     if ':' in re.sub(r'\[.*\]', '', req.host):
         req.port = req.host.split(':')[-1]
         req.host = ':'.join(req.host.split(':')[:-1])
 
-    req.query = up.query
-    req.path = up.path
-
     # remove selector if it is there
     ps = req.path.split('/')
-    if len(ps[1]) == 1:
-        req.type = ps.pop(1)
-        req.path = '/'.join(ps)
+    if len(ps) > 1:
+        if len(ps[1]) == 1:
+            req.type = ps.pop(1)
+            req.path = '/'.join(ps)
 
     return req
 
