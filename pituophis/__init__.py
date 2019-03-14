@@ -34,6 +34,7 @@ import re
 import socket
 import ssl
 from os.path import realpath
+from urllib.parse import urlparse
 
 
 # Quick note:
@@ -263,46 +264,25 @@ def parse_url(url):
     """
     req = Request(host='', port=70, path='/', query='', tls=False)
 
-    # condense multiple slashes to one
-    url = re.sub(r'/+', '/', url)
-    # add protocol if not there
-    if ':/' not in url:
-        url = 'gopher:/' + url
-    url = url.split('/')
-    # split into protocol, host & port, and then the following items for the selector/path
-    # gopher:
-    # gopher.floodgap.com:70
-    # gopher/
-    # detect tls and remove protocol
-    if url[0].endswith(':'):
-        if url[0] == 'gophers:':
-            req.tls = True
-        url.pop(0)
-    # set and remove host/port
-    if len(url[0].split(':')) > 1:
-        req.host = url[0].split(':')[0]
-        req.port = int(url[0].split(':')[1])
-    else:
-        req.host = url[0]
-    url.pop(0)
+    up = urlparse(url)
+
+    if up.scheme == 'gophers':
+        req.tls = True
+
+    req.host = up.netloc
+    if ':' in re.sub(r'\[.*\]', '', req.host):
+        req.port = req.host.split(':')[-1]
+        req.host = ':'.join(req.host.split(':')[:-1])
+
+    req.query = up.query
+    req.path = up.path
+
     # remove selector if it is there
-    if len(url) > 0:
-        if len(url[0]) == 1:
-            req.type = url[0]
-            url.pop(0)
-    # set url to path?query
-    url = '/' + '/'.join(url)
-    req.path = url
-    # split query if it is there
-    if '?' in url:
-        url = url.split('?')
-        req.path = url[0]
-        url.pop(0)
-        req.query = '?'.join(url)
-    # if it's a directory, append / to path if it isn't there
-    if not req.path.endswith('/'):
-        if req.type == '1':
-            req.path += '/'
+    ps = req.path.split('/')
+    if len(ps[1]) == 1:
+        req.type = ps.pop(1)
+        req.path = '/'.join(ps)
+
     return req
 
 
