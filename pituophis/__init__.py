@@ -122,6 +122,9 @@ class Request:
         *Client.* Sends the Request and returns a Response object.
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        if self.host.count(':') > 1:
+            # ipv6
+            s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
         if self.tls:
             context = ssl._create_unverified_context()
             if self.tls_verify:  # TODO: for some reason this is always true when using the get() shorthand
@@ -129,7 +132,8 @@ class Request:
             s = context.wrap_socket(s, server_hostname=self.host)
         else:
             s.settimeout(10.0)
-        s.connect((self.host, int(self.port)))
+        s.connect((self.host.replace('[', '').replace(']', ''),
+                   int(self.port)))
         if self.query == '':
             msg = self.path + '\r\n'
         else:
