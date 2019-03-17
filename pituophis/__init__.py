@@ -656,4 +656,4 @@ def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', alt_handler
             server = await loop.create_server(GopherProtocol, h, p)
         await server.serve_forever()
 
-    asyncio.run(main('127.0.0.1', port))
+    asyncio.run(main('0.0.0.0', port))
