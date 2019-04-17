@@ -36,6 +36,8 @@ import ssl
 from os.path import realpath
 from urllib.parse import urlparse
 
+from natsort import natsorted
+
 
 # Quick note:
 # selectors and item types are actually *not* sent to the server, just the path of the resource
@@ -73,7 +75,9 @@ class Request:
     *Client/Server.* Represents a request to be sent to a Gopher server, or received from a client.
     """
 
-    def __init__(self, host='127.0.0.1', port=70, path='/', query='', itype='9', tls=False, tls_verify=True, client='',
+    def __init__(self, host='127.0.0.1', port=70,
+                 advertised_port=None, path='/', query='',
+                 itype='9', tls=False, tls_verify=True, client='',
                  pub_dir='pub/', alt_handler=False):
         """
         Initializes a new Request object.
@@ -86,6 +90,15 @@ class Request:
         """
         *Client/Server.* The port of the server. For regular Gopher servers, this is most commonly 70, 
         and for S/Gopher servers it is typically 105.
+        """
+        if advertised_port is None:
+            advertised_port = self.port
+
+        self.advertised_port = int(advertised_port)
+        """
+        *Server.* Used by the default handler. Set this if the server itself
+        is being hosted on another port than the advertised port (like port 70), with
+        a firewall or some other software rerouting that port to the server's real port. 
         """
         self.path = str(path)
         """
@@ -366,17 +379,33 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                 if itype == '1':
                     path += '/'
 
-            # fix relative path
             if not path.startswith('URL:'):
+                # fix relative path
                 if not path.startswith('/'):
                     path = realpath(gophermap_dir + '/' + path)
 
                 # globbing
                 if '*' in path:
                     expanded = True
-                    g = glob.glob(
-                        pub_dir + path)
+                    g = natsorted(glob.glob(pub_dir + path))
+
+                    dirs = []
+                    files = []
+
                     for file in g:
+                        mime = None
+                        if os.path.exists(file):
+                            mime = mimetypes.guess_type(
+                                file)[
+                                0]
+                        if mime is None:  # is directory or something else
+                            dirs.append(file)
+                        else:
+                            files.append(file)
+
+                    listing = dirs + files
+
+                    for file in listing:
                         file = re.sub(r'/{2}', r'/', file)
                         s = Selector()
                         s.type = itype
@@ -461,6 +490,9 @@ def handle(request):
         'no_pub_dir': Selector(itype='3', text='500: Publish directory does not exist')
     }
     #####
+
+    if request.advertised_port is None:
+        request.advertised_port = request.port
     if request.path.startswith('URL:'):
         html = """
         <!DOCTYPE html>
@@ -495,7 +527,7 @@ def handle(request):
                 in_file.close()
                 menu = parse_gophermap(source=gmap,
                                        def_host=request.host,
-                                       def_port=request.port,
+                                       def_port=request.advertised_port,
                                        gophermap_dir=request.path,
                                        pub_dir=pub_dir,
                                        tls=request.tls)
@@ -503,48 +535,10 @@ def handle(request):
                 gmap = '?*\t\r\n'
                 menu = parse_gophermap(source=gmap,
                                        def_host=request.host,
-                                       def_port=request.port,
+                                       def_port=request.advertised_port,
                                        gophermap_dir=request.path,
                                        pub_dir=pub_dir,
                                        tls=request.tls)
-                # for file in os.listdir(res_path):
-                #     try:
-                #         if not file.startswith('.'):
-                #             itype = '9'
-                #             text = ''
-                #             mime = \
-                #                 mimetypes.guess_type(
-                #                     res_path + '/' + file)[0]
-                #             if mime is None:  # is directory
-                #                 itype = '1'
-                #                 file = file + '/'
-                #                 text = file
-                #             else:
-                #                 for sw in mime_starts_with.keys():
-                #                     if mime.startswith(sw):
-                #                         itype = mime_starts_with[
-                #                             sw]
-                #                     atts = str(os.path.getsize(
-                #                         res_path + '/' + file)) + '     ' + time.strftime(
-                #                         '%m/%d/%Y', time.gmtime(
-                #                             os.path.getmtime(
-                #                                 res_path + '/' + file)))
-                #                     text = file
-                #                     while len(text) < (
-                #                             67 - len(atts)):
-                #                         text = text + ' '
-                #                     text = text + str(atts)
-                #             menu.append(
-                #                 Selector(itype=itype, text=text,
-                #                          path=(
-                #                                      request.path + '/' + file).replace(
-                #                              '//', '/'),
-                #                          host=request.host,
-                #                          port=request.port,
-                #                          tls=request.tls))
-                #     except Exception as e:
-                #         print(
-                #             'Failed to display item ' + file + ': ' + e)
         else:
             if request.alt_handler:
                 alt = request.alt_handler(request)
@@ -574,7 +568,9 @@ def handle(request):
     return menu
 
 
-def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', alt_handler=False, send_period=False, tls=False,
+def serve(host="127.0.0.1", port=70, advertised_port=None,
+          handler=handle, pub_dir='pub/', alt_handler=False,
+          send_period=False, tls=False,
           tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
@@ -621,9 +617,11 @@ def serve(host="127.0.0.1", port=70, handler=handle, pub_dir='pub/', alt_handler
             if self.transport.get_extra_info('sslcontext'):
                 is_tls = True
 
-            resp = handler(Request(path=path, query=query, host=host, port=port,
-                                   client=self.transport.get_extra_info('peername')[0], pub_dir=pub_dir,
-                                   alt_handler=alt_handler, tls=is_tls))
+            resp = handler(
+                Request(path=path, query=query, host=host,
+                        port=port, advertised_port=advertised_port,
+                        client=self.transport.get_extra_info('peername')[0], pub_dir=pub_dir,
+                        alt_handler=alt_handler, tls=is_tls))
 
             if type(resp) == str:
                 resp = bytes(resp, 'utf-8')
