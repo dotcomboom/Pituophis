@@ -403,8 +403,11 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             elif os.path.exists(file):
                                 mime = mimetypes.guess_type(file)[
                                     0]
-                                if mime is None:  # is directory
-                                    s.type = '1'
+                                if mime is None:  # is directory or binary
+                                    if os.path.isdir(file):
+                                        s.type = '1'
+                                    else:
+                                        s.type = '9'
                                 else:
                                     for sw in mime_starts_with.keys():
                                         if mime.startswith(sw):
@@ -458,8 +461,11 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             pub_dir + path):
                         mime = mimetypes.guess_type(
                             pub_dir + path)[0]
-                        if mime is None:  # is directory
-                            selector.type = '1'
+                        if mime is None:  # is directory or binary
+                            if os.path.isdir(file):
+                                s.type = '1'
+                            else:
+                                s.type = '9'
                         else:
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
