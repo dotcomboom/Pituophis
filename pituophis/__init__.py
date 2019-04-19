@@ -33,6 +33,7 @@ import os
 import re
 import socket
 import ssl
+from operator import itemgetter
 from os.path import realpath
 from urllib.parse import urlparse
 
@@ -389,23 +390,9 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                     expanded = True
                     g = natsorted(glob.glob(pub_dir + path))
 
-                    dirs = []
-                    files = []
+                    listing = []
 
                     for file in g:
-                        mime = None
-                        if os.path.exists(file):
-                            mime = mimetypes.guess_type(
-                                file)[
-                                0]
-                        if mime is None:  # is directory or something else
-                            dirs.append(file)
-                        else:
-                            files.append(file)
-
-                    listing = dirs + files
-
-                    for file in listing:
                         file = re.sub(r'/{2}', r'/', file)
                         s = Selector()
                         s.type = itype
@@ -413,10 +400,8 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             s.type = '9'
                             if path.startswith('URL:'):
                                 s.type = 'h'
-                            elif os.path.exists(
-                                    file):
-                                mime = mimetypes.guess_type(
-                                    file)[
+                            elif os.path.exists(file):
+                                mime = mimetypes.guess_type(file)[
                                     0]
                                 if mime is None:  # is directory
                                     s.type = '1'
@@ -441,9 +426,21 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             s.path = ''
                             s.host = 'error.host'
                             s.port = '0'
+                        if s.type == '1':
+                            d = 0
+                        else:
+                            d = 1
                         if not s.path.endswith('gophermap'):
                             if not s.path.endswith('gophertag'):
-                                new_menu.append(s)
+                                listing.append(
+                                    [file, s, s.text, d])
+
+                    listing = natsorted(listing, key=itemgetter(0))
+                    listing = natsorted(listing, key=itemgetter(2))
+                    listing = natsorted(listing, key=itemgetter(3))
+
+                    for item in listing:
+                        new_menu.append(item[1])
 
             if not expanded:
                 selector = Selector()
