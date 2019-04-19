@@ -425,7 +425,10 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                                         if mime.startswith(sw):
                                             s.type = \
                                             mime_starts_with[sw]
-                        s.text = file.split('/')[-1]
+                        splt = file.split('/')
+                        while '' in splt:
+                            splt.remove('')
+                        s.text = splt[len(splt) - 1]
                         if os.path.exists(file + '/gophertag'):
                             s.text = ''.join(list(open(
                                 file + '/gophertag'))).replace(
