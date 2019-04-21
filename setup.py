@@ -3,13 +3,10 @@ from setuptools import setup
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
-with open('requirements.txt') as f:
-    requirements = f.read().splitlines()
-
 setup(
     name='Pituophis',
-    version='0.98',
-    install_requires=requirements,
+    version='0.99',
+    install_requires=['natsort'],
     packages=['pituophis'],
     url='https://github.com/dotcomboom/Pituophis',
     license='BSD 2-Clause License',
