@@ -404,13 +404,14 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                                     s.type = 'h'
                                 elif os.path.exists(file):
                                     mime = \
-                                    mimetypes.guess_type(file)[
-                                        0]
+                                        mimetypes.guess_type(file)[0]
                                     if mime is None:  # is directory or binary
                                         if os.path.isdir(file):
                                             s.type = '1'
                                         else:
                                             s.type = '9'
+                                            if file.endswith('.md'):
+                                                s.type = 1
                                     else:
                                         for sw in mime_starts_with.keys():
                                             if mime.startswith(sw):
