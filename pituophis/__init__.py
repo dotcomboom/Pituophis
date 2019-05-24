@@ -317,6 +317,10 @@ def parse_url(url):
             req.type = ps.pop(1)
             req.path = '/'.join(ps)
 
+    # check if path ends with a '/' to signify a menu/directory
+    if req.path.endswith('/'):
+        req.type = '1'
+
     return req
 
 

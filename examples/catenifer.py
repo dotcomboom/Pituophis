@@ -25,8 +25,8 @@ requests = {}
 
 def go(url, itype=''):
     req = pituophis.parse_url(url)
-    if req.url().endswith('/'):
-        req.type = '1'
+    # if req.url().endswith('/'):
+    #    req.type = '1'  parse_url() now does this in Pituophis 1.0
     if itype == '7':
         req.type = itype
     print(bold('URL: ' + req.url()))
