@@ -388,62 +388,73 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                 # globbing
                 if '*' in path:
                     expanded = True
-                    g = natsorted(glob.glob(pub_dir + path))
+                    if os.path.abspath(pub_dir) in os.path.abspath(
+                            pub_dir + path):
+                        g = natsorted(glob.glob(pub_dir + path))
 
-                    listing = []
+                        listing = []
 
-                    for file in g:
-                        file = re.sub(r'/{2}', r'/', file)
-                        s = Selector()
-                        s.type = itype
-                        if s.type == '?':
-                            s.type = '9'
-                            if path.startswith('URL:'):
-                                s.type = 'h'
-                            elif os.path.exists(file):
-                                mime = mimetypes.guess_type(file)[
-                                    0]
-                                if mime is None:  # is directory or binary
-                                    if os.path.isdir(file):
-                                        s.type = '1'
+                        for file in g:
+                            file = re.sub(r'/{2}', r'/', file)
+                            s = Selector()
+                            s.type = itype
+                            if s.type == '?':
+                                s.type = '9'
+                                if path.startswith('URL:'):
+                                    s.type = 'h'
+                                elif os.path.exists(file):
+                                    mime = \
+                                    mimetypes.guess_type(file)[
+                                        0]
+                                    if mime is None:  # is directory or binary
+                                        if os.path.isdir(file):
+                                            s.type = '1'
+                                        else:
+                                            s.type = '9'
                                     else:
-                                        s.type = '9'
-                                else:
-                                    for sw in mime_starts_with.keys():
-                                        if mime.startswith(sw):
-                                            s.type = \
-                                            mime_starts_with[sw]
-                        splt = file.split('/')
-                        while '' in splt:
-                            splt.remove('')
-                        s.text = splt[len(splt) - 1]
-                        if os.path.exists(file + '/gophertag'):
-                            s.text = ''.join(list(open(
-                                file + '/gophertag'))).replace(
-                                '\r\n', '').replace('\n', '')
-                        s.path = file.replace(pub_dir, '/', 1)
-                        s.path = re.sub(r'/{2}', r'/', s.path)
-                        s.host = host
-                        s.port = port
-                        if s.type == 'i':
-                            s.path = ''
-                            s.host = 'error.host'
-                            s.port = '0'
-                        if s.type == '1':
-                            d = 0
-                        else:
-                            d = 1
-                        if not s.path.endswith('gophermap'):
-                            if not s.path.endswith('gophertag'):
-                                listing.append(
-                                    [file, s, s.text, d])
+                                        for sw in mime_starts_with.keys():
+                                            if mime.startswith(sw):
+                                                s.type = \
+                                                    mime_starts_with[
+                                                        sw]
+                            splt = file.split('/')
+                            while '' in splt:
+                                splt.remove('')
+                            s.text = splt[len(splt) - 1]
+                            if os.path.exists(file + '/gophertag'):
+                                s.text = ''.join(list(open(
+                                    file + '/gophertag'))).replace(
+                                    '\r\n', '').replace('\n', '')
+                            s.path = file.replace(pub_dir, '/', 1)
+                            s.path = re.sub(r'/{2}', r'/', s.path)
+                            s.host = host
+                            s.port = port
+                            if s.type == 'i':
+                                s.path = ''
+                                s.host = 'error.host'
+                                s.port = '0'
+                            if s.type == '1':
+                                d = 0
+                            else:
+                                d = 1
+                            if not s.path.endswith('gophermap'):
+                                if not s.path.endswith(
+                                        'gophertag'):
+                                    listing.append(
+                                        [file, s, s.text, d])
 
-                    listing = natsorted(listing, key=itemgetter(0))
-                    listing = natsorted(listing, key=itemgetter(2))
-                    listing = natsorted(listing, key=itemgetter(3))
+                        listing = natsorted(listing,
+                                            key=itemgetter(0))
+                        listing = natsorted(listing,
+                                            key=itemgetter(2))
+                        listing = natsorted(listing,
+                                            key=itemgetter(3))
 
-                    for item in listing:
-                        new_menu.append(item[1])
+                        for item in listing:
+                            new_menu.append(item[1])
+                    else:
+                        new_menu.append(Selector(itype='3',
+                                                 text='403: Gopher glob out of scope.'))
 
             if not expanded:
                 selector = Selector()
