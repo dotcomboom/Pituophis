@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name='Pituophis',
-    version='0.99',
+    version='1.0',
     install_requires=['natsort'],
     packages=['pituophis'],
     url='https://github.com/dotcomboom/Pituophis',
@@ -16,7 +16,7 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     classifiers=[
-        "Development Status :: 4 - Beta",
+        "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
         "Intended Audience :: Information Technology",
         "Natural Language :: English",
