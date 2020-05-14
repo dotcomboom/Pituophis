@@ -292,34 +292,15 @@ def parse_url(url):
 
     req.query = up.query
 
-    if up.netloc == '':
-        if '/' in up.path:
-            req.host = up.path.split('/')[0]
-            try:
-                req.path = '/'.join(up.path.split('/')[:-1])
-            except Exception:
-                req.path = '/'
-        else:
-            req.host = up.path
-            req.path = '/'
+    if ':' in up.netloc:
+        req.host = up.netloc.split(':')[0]
+        req.port = up.netloc.split(':')[1]
     else:
         req.host = up.netloc
-        req.path = up.path
+        req.port = 70
 
-    if ':' in re.sub(r'\[.*\]', '', req.host):
-        req.port = req.host.split(':')[-1]
-        req.host = ':'.join(req.host.split(':')[:-1])
-
-    # remove selector if it is there
-    ps = req.path.split('/')
-    if len(ps) > 1:
-        if len(ps[1]) == 1:
-            req.type = ps.pop(1)
-            req.path = '/'.join(ps)
-
-    # check if path ends with a '/' to signify a menu/directory
-    if req.path.endswith('/'):
-        req.type = '1'
+    req.type = up.path[1]
+    req.path = up.path[2:]
 
     return req
 
