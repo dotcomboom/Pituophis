@@ -39,9 +39,8 @@ from urllib.parse import urlparse
 
 from natsort import natsorted
 
-
 # Quick note:
-# selectors and item types are actually *not* sent to the server, just the path of the resource
+# item types are not sent to the server, just the selector/path of the resource
 
 
 class Response:
@@ -493,19 +492,18 @@ def handle(request):
     if request.advertised_port is None:
         request.advertised_port = request.port
     if request.path.startswith('URL:'):
-        html = """
+        return """
         <!DOCTYPE html>
         <html>
         <head>
             <title>Gopher Redirect</title>
-            <meta http-equiv="refresh" content="0; url=[#url#]" />
+            <meta http-equiv="refresh" content="0; url={0}">
         </head>
         <body>
             <h1>Gopher Redirect</h1>
-            <p>You will be redirected to <a href="[#url#]">[#url#]</a> shortly.</p>
+            <p>You will be redirected to <a href="{0}">{0}</a> shortly.</p>
         </body>
-        """
-        return html.replace('[#url#]', request.path.split('URL:')[1])
+        """.format(request.path.split('URL:')[1])
 
     if not os.path.exists(pub_dir):
         return [errors['no_pub_dir']]
@@ -603,7 +601,6 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
             print('Connected by', transport.get_extra_info('peername'))
 
         def data_received(self, data):
-            # self.transport.write(data)
             request = data.decode('utf-8').split('\t')
             path = request[0].replace('\r\n', '')
             query = ''
@@ -627,14 +624,14 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
             elif type(resp) == list:
                 out = ""
                 for line in resp:
-                    if type(line) == str:
+                    if type(line) == Selector:
+                        out += line.source()
+                    elif type(line) == str:
                         line = line.replace('\r\n', '\n')
                         line = line.replace('\n', '\r\n')
                         if not line.endswith('\r\n'):
                             line += '\r\n'
                         out += line
-                    if type(line) == Selector:
-                        out += line.source()
                 resp = bytes(out, 'utf-8')
 
             self.transport.write(resp)
