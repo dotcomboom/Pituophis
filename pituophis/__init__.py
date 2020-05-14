@@ -291,14 +291,10 @@ def parse_url(url):
         req.tls = True
 
     req.query = up.query
-
-    if ':' in up.netloc:
-        req.host = up.netloc.split(':')[0]
-        req.port = up.netloc.split(':')[1]
-    else:
-        req.host = up.netloc
+    req.host = up.hostname
+    req.port = up.port
+    if up.port is None:
         req.port = 70
-
     req.type = up.path[1]
     req.path = up.path[2:]
 
