@@ -294,8 +294,14 @@ def parse_url(url):
     req.port = up.port
     if up.port is None:
         req.port = 70
-    req.type = up.path[1]
-    req.path = up.path[2:]
+    if up.path:
+        if up.path.endswith('/'):
+            req.type = '1'
+        if len(up.path) > 1:
+            req.type = up.path[1]
+        req.path = up.path[2:]
+    else:
+        req.type = '1'
 
     return req
 
