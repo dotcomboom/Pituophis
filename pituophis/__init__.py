@@ -207,6 +207,7 @@ class Item:
         """
         True if the item leads to an S/Gopher server with TLS enabled.
         """
+
     def source(self):
         """
         Returns the item as a line in a Gopher menu.
@@ -313,7 +314,8 @@ def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
     """
     *Client.* Quickly creates and sends a Request. Returns a Response object.
     """
-    req = Request(host=host, port=port, path=path, query=query, tls=tls, tls_verify=tls_verify)
+    req = Request(host=host, port=port, path=path,
+                  query=query, tls=tls, tls_verify=tls_verify)
     if '/' in host or ':' in host:
         req = parse_url(host)
     return req.get()
@@ -329,10 +331,10 @@ mime_starts_with = {
 }
 
 errors = {
-        '404': Item(itype='3', text='404: {} does not exist.'),
-        '403': Item(itype='3', text='403: Resource outside of publish directory.'),
-        '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.'),
-        'no_pub_dir': Item(itype='3', text='500: Publish directory does not exist')
+    '404': Item(itype='3', text='404: {} does not exist.'),
+    '403': Item(itype='3', text='403: Resource outside of publish directory.'),
+    '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.'),
+    'no_pub_dir': Item(itype='3', text='404: Publish directory does not exist.')
 }
 
 
@@ -391,7 +393,8 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         listing = []
 
                         for file in g:
-                            file = re.sub(r'/{2}', r'/', file).replace('\\', '/')
+                            file = re.sub(
+                                r'/{2}', r'/', file).replace('\\', '/')
                             s = Item()
                             s.type = itype
                             if s.type == '?':
@@ -477,7 +480,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
                                     item.type = \
-                                    mime_starts_with[sw]
+                                        mime_starts_with[sw]
 
                 if item.host == def_host and item.port == def_port:
                     item.tls = tls
@@ -521,7 +524,8 @@ def handle(request):
     menu = []
     if request.path == '':
         request.path = '/'
-    res_path = os.path.abspath((pub_dir + request.path).replace('\\', '/').replace('//', '/'))
+    res_path = os.path.abspath(
+        (pub_dir + request.path).replace('\\', '/').replace('//', '/'))
     if not res_path.startswith(os.path.abspath(pub_dir)):
         # Reject connections that try to break out of the publish directory
         return [errors['403']]
@@ -548,11 +552,11 @@ def handle(request):
                                        tls=request.tls)
             return menu
     elif os.path.isfile(res_path):
-            in_file = open(res_path, "rb")
-            data = in_file.read()
-            in_file.close()
-            return data
-    
+        in_file = open(res_path, "rb")
+        data = in_file.read()
+        in_file.close()
+        return data
+
     if request.alt_handler:
         alt = request.alt_handler(request)
         if alt:
@@ -590,7 +594,8 @@ Note that clients may refuse to connect to a self-signed certificate.
             tls = False
 
     if tls:
-        print('S/Gopher server is now running on', host + ':' + str(port) + '.')
+        print('S/Gopher server is now running on',
+              host + ':' + str(port) + '.')
     else:
         print('Gopher server is now running on', host + ':' + str(port) + '.')
 
@@ -615,7 +620,8 @@ Note that clients may refuse to connect to a self-signed certificate.
             resp = handler(
                 Request(path=path, query=query, host=host,
                         port=port, advertised_port=advertised_port,
-                        client=self.transport.get_extra_info('peername')[0], pub_dir=pub_dir,
+                        client=self.transport.get_extra_info(
+                            'peername')[0], pub_dir=pub_dir,
                         alt_handler=alt_handler, tls=is_tls))
 
             if type(resp) == str:
