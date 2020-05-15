@@ -167,7 +167,10 @@ class Request:
         query = ''
         if not (self.query == ''):
             query = '?' + self.query
-        return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
+        hst = self.host
+        if not self.port == 70:
+            hst += ':{}'.format(self.port)
+        return '{}://{}/{}{}{}'.format(protocol, hst, self.type, path, query)
 
 
 class Item:
