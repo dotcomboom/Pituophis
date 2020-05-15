@@ -37,16 +37,16 @@ def go(url, itype=''):
         resp = req.get()
         if req.type in menuTypes:
             menu = resp.menu()
-            selectors = 0
+            items = 0
             for selector in menu:
                 text = typeIcons['9']
                 if selector.type in typeIcons:
                     text = typeIcons[selector.type]
                 text = text + '  ' + selector.text
                 if selector.type not in noLinkTypes:
-                    selectors += 1
-                    requests[selectors] = selector.request()
-                    text = text + ' (' + requests[selectors].url() + ') ' + bold('[#' + str(selectors) + ']')
+                    items += 1
+                    requests[items] = selector.request()
+                    text = text + ' (' + requests[items].url() + ') ' + bold('[#' + str(items) + ']')
                 if selector.path.startswith('URL:'):
                     text = text + ' (' + selector.path.split('URL:')[1] + ')'
                 print(text)

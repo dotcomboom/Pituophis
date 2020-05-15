@@ -25,13 +25,13 @@ resp = req.get()
 
 menu = resp.menu()
 
-for selector in menu:
+for item in menu:
     print('--')
-    print(selector.type)
-    print(selector.text)
-    print(selector.path)
-    print(selector.host)
-    print(selector.port)
-    print(selector.tls)
+    print(item.type)
+    print(item.text)
+    print(item.path)
+    print(item.host)
+    print(item.port)
+    print(item.tls)
 
 print('--')

@@ -5,7 +5,7 @@ import pituophis
 
 def alt(request):
     if request.path == '/test':
-        return [pituophis.Selector(text='test!')]
+        return [pituophis.Item(text='test!')]
 
 
 def reg():

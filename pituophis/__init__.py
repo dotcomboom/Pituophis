@@ -65,7 +65,7 @@ class Response:
 
     def menu(self):
         """
-        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Selector type.
+        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Item type.
         """
         return parse_menu(self.binary.decode('utf-8'))
 
@@ -102,7 +102,7 @@ class Request:
         """
         self.path = str(path)
         """
-        *Client/Server.* Path on the target server to request, or being requested.
+        *Client/Server.* The selector string to request, or being requested.
         """
         self.query = str(query)
         """
@@ -170,14 +170,14 @@ class Request:
         return protocol + '://' + str(self.host) + ':' + str(self.port) + '/' + str(self.type) + str(path) + str(query)
 
 
-class Selector:
+class Item:
     """
-    *Server/Client.* Represents a selector in a parsed Gopher menu.
+    *Server/Client.* Represents an item in a Gopher menu.
     """
 
     def __init__(self, itype='i', text='', path='/', host='error.host', port=0, tls=False):
         """
-        Initializes a new Selector object.
+        Initializes a new Item object.
         """
         self.type = itype
         """
@@ -202,15 +202,15 @@ class Selector:
         """
         self.tls = tls
         """
-        True if the selector leads to an S/Gopher server with TLS enabled.
+        True if the item leads to an S/Gopher server with TLS enabled.
         """
     def source(self):
         """
-        Returns a representation of what the selector looks like in a Gopher menu.
+        Returns the item as a line in a Gopher menu.
         """
         port = int(self.port)
         if self.tls:
-            # Add digits to display that this is a TLS selector
+            # Add digits to display that this is a TLS item
             while len(str(port)) < 5:
                 port = '0' + str(port)
             port = '1' + str(port)
@@ -220,7 +220,7 @@ class Selector:
 
     def request(self):
         """
-        Returns a Request equivalent to where the selector leads.
+        Returns a Request to where the item leads.
         """
         req = Request()
         req.type = self.type
@@ -236,18 +236,18 @@ class Selector:
 
 def parse_menu(source):
     """
-    *Client.* Parses a String as a Gopher menu. Returns a List of Selectors.
+    *Client.* Parses a String as a Gopher menu. Returns a List of Items.
     """
     parsed_menu = []
     menu = source.replace('\r\n', '\n').replace('\n', '\r\n').split('\r\n')
     for line in menu:
-        selector = Selector()
+        item = Item()
         if line.startswith('i'):
-            selector.type = 'i'
-            selector.text = line[1:].split('\t')[0]
-            selector.path = '/'
-            selector.host = 'error.host'
-            selector.port = 0
+            item.type = 'i'
+            item.text = line[1:].split('\t')[0]
+            item.path = '/'
+            item.host = 'error.host'
+            item.port = 0
         else:
             line = line.split('\t')
             while len(
@@ -256,22 +256,22 @@ def parse_menu(source):
             line = '\t'.join(line)
             matches = re.match(r'^(.)(.*)\t(.*)\t(.*)\t(.*)', line)
             if matches:
-                selector.type = matches[1]
-                selector.text = matches[2]
-                selector.path = matches[3]
-                selector.host = matches[4]
-                selector.port = matches[5]
+                item.type = matches[1]
+                item.text = matches[2]
+                item.path = matches[3]
+                item.host = matches[4]
+                item.port = matches[5]
                 try:
-                    selector.port = int(selector.port)
+                    item.port = int(item.port)
                 except:
-                    selector.port = 70
+                    item.port = 70
                 # detect TLS
-                if selector.port > 65535:
-                    selector.tls = True
+                if item.port > 65535:
+                    item.tls = True
                     # typically the port is sent as 100105
                     # remove first number to get at 5 digits
-                    selector.port = int(str(selector.port)[1:])
-        parsed_menu.append(selector)
+                    item.port = int(str(item.port)[1:])
+        parsed_menu.append(item)
     return parsed_menu
 
 
@@ -319,11 +319,18 @@ mime_starts_with = {
     'text/html': 'h'
 }
 
+errors = {
+        '404': Item(itype='3', text='404: {} does not exist.'),
+        '403': Item(itype='3', text='403: Resource outside of publish directory.'),
+        '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.'),
+        'no_pub_dir': Item(itype='3', text='500: Publish directory does not exist')
+}
+
 
 def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                     gophermap_dir='/', pub_dir='pub/', tls=False):
     """
-    *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Selectors to send.
+    *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Items to send.
     """
     if not gophermap_dir.endswith('/'):
         gophermap_dir += '/'
@@ -333,27 +340,27 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
     if type(source) == str:
         source = source.replace('\r\n', '\n').split('\n')
     new_menu = []
-    for selector in source:
-        if '\t' in selector:
+    for item in source:
+        if '\t' in item:
             # this is not information
-            selector = selector.split('\t')
+            item = item.split('\t')
             expanded = False
             # 1Text    pictures/    host.host    port
             #  ^           ^           ^           ^
-            itype = selector[0][0]
-            text = selector[0][1:]
+            itype = item[0][0]
+            text = item[0][1:]
             path = gophermap_dir + text
             if itype == '1':
                 path += '/'
             host = def_host
             port = def_port
 
-            if len(selector) > 1:
-                path = selector[1]
-            if len(selector) > 2:
-                host = selector[2]
-            if len(selector) > 3:
-                port = selector[3]
+            if len(item) > 1:
+                path = item[1]
+            if len(item) > 2:
+                host = item[2]
+            if len(item) > 3:
+                port = item[3]
 
             if path == '':
                 path = gophermap_dir + text
@@ -375,8 +382,8 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         listing = []
 
                         for file in g:
-                            file = re.sub(r'/{2}', r'/', file)
-                            s = Selector()
+                            file = re.sub(r'/{2}', r'/', file).replace('\\', '/')
+                            s = Item()
                             s.type = itype
                             if s.type == '?':
                                 s.type = '9'
@@ -434,21 +441,20 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         for item in listing:
                             new_menu.append(item[1])
                     else:
-                        new_menu.append(Selector(itype='3',
-                                                 text='403: Gopher glob out of scope.'))
+                        new_menu.append(errors['403_glob'])
 
             if not expanded:
-                selector = Selector()
-                selector.type = itype
-                selector.text = text
-                selector.path = path
-                selector.host = host
-                selector.port = port
+                item = Item()
+                item.type = itype
+                item.text = text
+                item.path = path
+                item.host = host
+                item.port = port
 
-                if selector.type == '?':
-                    selector.type = '9'
+                if item.type == '?':
+                    item.type = '9'
                     if path.startswith('URL:'):
-                        selector.type = 'h'
+                        item.type = 'h'
                     elif os.path.exists(
                             pub_dir + path):
                         mime = mimetypes.guess_type(
@@ -461,16 +467,16 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         else:
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
-                                    selector.type = \
+                                    item.type = \
                                     mime_starts_with[sw]
 
-                if selector.host == def_host and selector.port == def_port:
-                    selector.tls = tls
+                if item.host == def_host and item.port == def_port:
+                    item.tls = tls
 
-                new_menu.append(selector.source())
+                new_menu.append(item.source())
         else:
-            selector = 'i' + selector + '\t\terror.host\t0'
-            new_menu.append(selector)
+            item = 'i' + item + '\t\terror.host\t0'
+            new_menu.append(item)
     return new_menu
 
 
@@ -482,11 +488,6 @@ def handle(request):
     """
     #####
     pub_dir = request.pub_dir
-    errors = {
-        '404': Selector(itype='3', text='404: ' + request.path + ' does not exist'),
-        '403': Selector(itype='3', text='403: Resource outside of publish directory'),
-        'no_pub_dir': Selector(itype='3', text='500: Publish directory does not exist')
-    }
     #####
 
     if request.advertised_port is None:
@@ -511,7 +512,7 @@ def handle(request):
     menu = []
     if request.path == '':
         request.path = '/'
-    res_path = os.path.abspath((pub_dir + request.path).replace('//', '/'))
+    res_path = os.path.abspath((pub_dir + request.path).replace('\\', '/').replace('//', '/'))
     if not res_path.startswith(os.path.abspath(pub_dir)):
         # Reject connections that try to break out of the publish directory
         return [errors['403']]
@@ -536,33 +537,21 @@ def handle(request):
                                        gophermap_dir=request.path,
                                        pub_dir=pub_dir,
                                        tls=request.tls)
-        else:
-            if request.alt_handler:
-                alt = request.alt_handler(request)
-                if alt:
-                    return alt
-                else:
-                    return [errors['404']]
-            else:
-                return [errors['404']]
-    else:
-        # serving files
-        if os.path.isfile(res_path):
+            return menu
+    elif os.path.isfile(res_path):
             in_file = open(res_path, "rb")
             data = in_file.read()
             in_file.close()
             return data
-        else:
-            if request.alt_handler:
-                alt = request.alt_handler(request)
-                if alt:
-                    return alt
-                else:
-                    return [errors['404']]
-            else:
-                return [errors['404']]
+    
+    if request.alt_handler:
+        alt = request.alt_handler(request)
+        if alt:
+            return alt
 
-    return menu
+    e = errors['404']
+    e.text = e.text.format(request.path)
+    return [e]
 
 
 def serve(host="127.0.0.1", port=70, advertised_port=None,
@@ -572,7 +561,7 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
           tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
-    object (which can contain either Strings or Selectors) to send to the client, or the default handler which can serve
+    object (which can contain either Strings or Items) to send to the client, or the default handler which can serve
     a directory. Along with the default handler, you can set an alternate handler to use if a 404 error is generated for
     dynamic applications.
     """
@@ -624,7 +613,7 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
             elif type(resp) == list:
                 out = ""
                 for line in resp:
-                    if type(line) == Selector:
+                    if type(line) == Item:
                         out += line.source()
                     elif type(line) == str:
                         line = line.replace('\r\n', '\n')
