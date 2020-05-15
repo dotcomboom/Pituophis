@@ -18,31 +18,26 @@ Getting menus and files as plain text:
 pituophis.get('gopher.floodgap.com').text()
 pituophis.get('gopher://gopher.floodgap.com/1/').text()
 pituophis.get('gopher://gopher.floodgap.com:70/0/gopher/proxy').text()
-pituophis.get(host='gopher.floodgap.com', port=70, path='/').text()
-pituophis.get(host='gopher.floodgap.com', port=70, path='/gopher/proxy').text()
-pituophis.get(host='khzae.net', port=105, path='/', tls=True).text() # TLS!
-pituophis.get('gophers://khzae.net:105/1/').text() # gophers:// URLs!
+pituophis.get('gophers://khzae.net:105/1/').text() # gophers:// URL support
 
 ```
 Getting a menu, parsed:
 ```python
 menu = pituophis.get('gopher.floodgap.com').menu()
-for selector in menu:
-    print(selector.type)
-    print(selector.text)
-    print(selector.path)
-    print(selector.host)
-    print(selector.port)
+for item in menu:
+    print(item.type)
+    print(item.text)
+    print(item.path)
+    print(item.host)
+    print(item.port)
 ```
 Using search services:
 ```python
 pituophis.get('gopher://gopher.floodgap.com:70/7/v2/vs?toast').text()
-pituophis.get(host='gopher.floodgap.com', port=70, path='/v2/vs', query='toast').text()
 ```
 Downloading a binary:
 ```python
 pituophis.get('gopher://gopher.floodgap.com:70/9/gopher/clients/win/hgopher2_3.zip').binary
-pituophis.get(host='gopher.floodgap.com', port=70, path='/gopher/clients/win/hgopher2_3.zip').binary
 ```
 Requests can also be created and worked with directly:
 ```python
@@ -67,13 +62,10 @@ rsp = req.get()
 print(rsp.text())
 ```
 ## Server
-### Default Handler
-Pituophis now lets you serve a directory. Serving gophermaps, directories, and files is supported out of the box.
+
+Pituophis can also act as a powerful Gopher server, with full Bucktooth-style gophermap and globbing support. Scripting, which entirely optional is also supported through alt handlers (used in the event of a 404) or fully custom handlers (replaces Pituophis' handler entirely).
+
+The simplest method of getting a server up and running is with the `pituophis.serve()` function. See the [examples](https://github.com/dotcomboom/Pituophis/tree/master/examples) and [docs](https://pituophis.readthedocs.io/en/latest/#pituophis.serve) for more information.
 
 ![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
-### Custom Handler
-Pituophis also lets you write a custom handler for Gopher requests.
-
-![server](https://github.com/dotcomboom/Pituophis/blob/master/server.png?raw=true)
-
 
