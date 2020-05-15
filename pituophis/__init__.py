@@ -175,7 +175,7 @@ class Item:
     *Server/Client.* Represents an item in a Gopher menu.
     """
 
-    def __init__(self, itype='i', text='', path='/', host='error.host', port=0, tls=False):
+    def __init__(self, itype='i', text='', path='/', host='', port=0, tls=False):
         """
         Initializes a new Item object.
         """
@@ -246,7 +246,7 @@ def parse_menu(source):
             item.type = 'i'
             item.text = line[1:].split('\t')[0]
             item.path = '/'
-            item.host = 'error.host'
+            item.host = ''
             item.port = 0
         else:
             line = line.split('\t')
@@ -425,7 +425,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             s.port = port
                             if s.type == 'i':
                                 s.path = ''
-                                s.host = 'error.host'
+                                s.host = ''
                                 s.port = '0'
                             if s.type == '1':
                                 d = 0
@@ -481,7 +481,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
 
                 new_menu.append(item.source())
         else:
-            item = 'i' + item + '\t\terror.host\t0'
+            item = 'i' + item + '\t\t\t0'
             new_menu.append(item)
     return new_menu
 
@@ -597,13 +597,13 @@ Note that clients may refuse to connect to a self-signed certificate.
             print('Connected by', transport.get_extra_info('peername'))
 
         def data_received(self, data):
-            request = data.decode('utf-8').split('\t')
-            path = request[0].replace('\r\n', '')
+            request = data.decode('utf-8').replace('\r\n', '').split('\t')
+            path = request[0]
             query = ''
             if len(request) > 1:
-                query = request[1].replace('\r\n', '')
+                query = request[1]
             if debug:
-                print('Client requests:', path, query)
+                print('Client requests: {}'.format(request))
             is_tls = False
 
             if self.transport.get_extra_info('sslcontext'):
@@ -629,6 +629,8 @@ Note that clients may refuse to connect to a self-signed certificate.
                             line += '\r\n'
                         out += line
                 resp = bytes(out, 'utf-8')
+            elif type(resp) == Item:
+                resp = bytes(resp.source(), 'utf-8')
 
             self.transport.write(resp)
             if send_period:
