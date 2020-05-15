@@ -560,23 +560,24 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
           tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
-    *Server.*  Listens for Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
+    *Server.*  Starts serving Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
     object (which can contain either Strings or Items) to send to the client, or the default handler which can serve
     a directory. Along with the default handler, you can set an alternate handler to use if a 404 error is generated for
     dynamic applications.
     """
+    if pub_dir is None or pub_dir == '':
+        pub_dir = '.'
     if tls:
         context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
 
         if os.path.exists(tls_cert_chain) and os.path.exists(tls_private_key):
             context.load_cert_chain(tls_cert_chain, tls_private_key)
         else:
-            print('TLS certificate and/or private key is missing. TLS has been disabled for this session.')
-            print('Run this command to generate a self-signed certificate and private key:')
-            print(
-                '  openssl req -x509 -newkey rsa:4096 -keyout "' + tls_private_key + '" -out "' + tls_cert_chain + '" -days 365')
-            print('Note that clients might refuse to connect to a self-signed certificate.')
-            print()
+            print("""TLS certificate and/or private key is missing. TLS has been disabled for this session.
+Run this command to generate a self-signed certificate and private key:
+    openssl req -x509 -newkey rsa:4096 -keyout {} -out {} -days 365
+Note that clients may refuse to connect to a self-signed certificate.
+            """.format(tls_private_key, tls_cert_chain))
             tls = False
 
     if tls:
