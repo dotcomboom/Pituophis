@@ -162,8 +162,6 @@ class Request:
         if self.tls:
             protocol = 'gophers'
         path = self.path
-        if not (path.startswith('/')):
-            path = '/' + path
         query = ''
         if not (self.query == ''):
             query = '?' + self.query
