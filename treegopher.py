@@ -193,10 +193,8 @@ while True:     # The Event Loop
         message = gui_queue.get_nowait()
     except queue.Empty:             # get_nowait() will get exception when Queue is empty
         message = None              # break from the loop if no more messages are queued up
-
     # if message received from queue, display the message in the Window
     if message:
         window.FindElement('-DOWNLOADS-').update(value='')
         sg.popup('Finished downloading {}'.format(message))
-
 window.close()
