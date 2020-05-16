@@ -12,7 +12,7 @@ import pituophis
 
 ## Server
 
-Pituophis can act as a powerful Gopher server, with full Bucktooth-style gophermap and globbing support. Scripting, which entirely optional is also supported through alt handlers (used in the event of a 404) or fully custom handlers (replaces Pituophis' handler entirely).
+Pituophis can act as a powerful Gopher server, with full Bucktooth-style gophermap and globbing support. Scripting is also supported through alt handlers (used in the event of a 404) or fully custom handlers (replaces Pituophis' handler entirely).
 
 The simplest method of getting a server up and running is with the `pituophis.serve()` function. See the [examples](https://github.com/dotcomboom/Pituophis/tree/master/examples) and [docs](https://pituophis.readthedocs.io/en/latest/#pituophis.serve) for more information. If you'd like to see a server built with Pituophis that can search an index, try [Gophew](https://github.com/dotcomboom/Gophew).
 
