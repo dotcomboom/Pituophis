@@ -130,9 +130,9 @@ class Request:
         """
         self.alt_handler = alt_handler
 
-    def get(self):
+    def stream(self):
         """
-        *Client.* Sends the Request and returns a Response object.
+        *Client.* Lower-level fetching. Sends the request and returns a BufferedReader.
         """
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         if self.host.count(':') > 1:
@@ -152,7 +152,13 @@ class Request:
         else:
             msg = self.path + '\t' + self.query + '\r\n'
         s.sendall(msg.encode('utf-8'))
-        return Response(s.makefile('rb'))
+        return s
+
+    def get(self):
+        """
+        *Client.* Sends the request and returns a Response object.
+        """
+        return Response(self.stream().makefile('rb'))
 
     def url(self):
         """
