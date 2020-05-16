@@ -19,7 +19,7 @@ The simplest method of getting a server up and running is with the `pituophis.se
 ![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
 
 ## Client
-Pituophis can also grab files and parse menus from Gopher servers. Simple fetching is done with `Request().get()` and `get()`, and `Request().stream()` can be used for lower-level access as a BufferedReader. The `get` functions return a Response type which contains `.binary`, `.text()` (which decodes text as UTF-8), and `.menu()` objects. `.menu()` returns a list of Item objects; [see the docs](https://pituophis.readthedocs.io/en/latest/index.html?highlight=item#pituophis.Item) for more information.
+Pituophis can also grab files and parse menus from Gopher servers. Simple fetching is done with `Request().get()` and `get()`, and `Request().stream()` can be used for lower-level access as a BufferedReader.  The `get` functions return a Response type. [See the docs](https://pituophis.readthedocs.io/en/latest/index.html) for more information.
 
 ### TreeGopher
 An interactive demo of Pituophis' client features is provided in the form of [TreeGopher](https://github.com/dotcomboom/Pituophis/blob/master/TreeGopher.py), a graphical Gopher client in ~200 lines of code. It uses Pituophis, [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI), and [Pyperclip](https://pypi.org/project/pyperclip). It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
