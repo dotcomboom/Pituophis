@@ -298,7 +298,6 @@ def parse_url(url):
     if up.query:
         req.path += '?{}'.format(up.query)  # NOT to be confused with actual gopher queries, which use %09
                                             # this just combines them back into one string
-    print(req.path)
     req.host = up.hostname
     req.port = up.port
     if up.port is None:

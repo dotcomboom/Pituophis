@@ -118,7 +118,6 @@ def go(url):
                               values=[req.url()], icon=icons[req.type])
             parentNode = req.url()
             history.append(req.url())
-            sg.EasyPrint(history)
             openNodes = []
             populate(parentNode, req)
         else:
@@ -187,7 +186,6 @@ while True:     # The Event Loop
             h = history[-2]
             history.remove(h)
             history.remove(history[-1])
-            sg.EasyPrint(history)
             go(h)
     elif event == 'Copy URL':
         pyperclip.copy(value['_TREE_'][0])
