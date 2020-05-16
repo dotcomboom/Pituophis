@@ -19,7 +19,13 @@ The simplest method of getting a server up and running is with the `pituophis.se
 ![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
 
 ## Client
-Pituophis can also grab files and text from Gopher servers (both S/Gopher TLS and regular Gopher) through the `Request.get()` and `get()` functions.
+Pituophis can also grab files and parse menus from Gopher servers. Simple fetching is done with `Request().get()` and `get()`, and `Request().stream()` can be used for lower-level access as a BufferedReader. The `get` functions return a Response type which contains `.binary`, `.text()` (which decodes text as UTF-8), and `.menu()` objects. `.menu()` returns a list of Item objects; [see the docs](https://pituophis.readthedocs.io/en/latest/index.html?highlight=item#pituophis.Item) for more information.
+
+### TreeGopher
+An interactive demo of Pituophis' client features is provided in the form of [TreeGopher](https://github.com/dotcomboom/Pituophis/blob/master/TreeGopher.py), a graphical Gopher client in ~200 lines of code. It uses Pituophis, [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI), and [Pyperclip](https://pypi.org/project/pyperclip). It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
+
+![](https://github.com/dotcomboom/Pituophis/blob/master/treegopher.png?raw=true)
+
 ### Examples
 Getting menus and files as plain text:
 ```python
@@ -47,21 +53,7 @@ Downloading a binary:
 ```python
 pituophis.get('gopher://gopher.floodgap.com:70/9/gopher/clients/win/hgopher2_3.zip').binary
 ```
-Requests can also be created and worked with directly:
-```python
-import pituophis
-req = pituophis.Request()
-req.host = 'gopher.floodgap.com'  # set to 127.0.0.1 by default
-req.port = 70  # set to 70 as default, as per tradition
-req.type = '7'  # set to 9 by default, purely for client usage
-req.path = '/v2/vs'  # set to '/' by default
-req.query = 'food'  # set to '' (nothing) by default
-req.tls = False  # set to False by default
-print('Getting', req.url())
-rsp = req.get()
-print(rsp.text())
-```
-They can also be created from a URL:
+Requests can also be created from a URL:
 ```python
 import pituophis
 req = pituophis.parse_url('gopher://gopher.floodgap.com/7/v2/vs%09food')
@@ -69,7 +61,3 @@ print('Getting', req.url())
 rsp = req.get()
 print(rsp.text())
 ```
-### TreeGopher
-An interactive demo of Pituophis' client features is provided in the form of [TreeGopher](https://github.com/dotcomboom/Pituophis/blob/master/TreeGopher.py), a graphical Gopher client in ~200 lines of code. It uses Pituophis, [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI), and [Pyperclip](https://pypi.org/project/pyperclip). It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
-
-![](https://github.com/dotcomboom/Pituophis/blob/master/treegopher.png?raw=true)
