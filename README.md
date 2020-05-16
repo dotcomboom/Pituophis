@@ -10,8 +10,16 @@ Pituophis, at the moment, requires nine modules: os, re, sockets, asyncio, ssl, 
 import pituophis
 ```
 
+## Server
+
+Pituophis can act as a powerful Gopher server, with full Bucktooth-style gophermap and globbing support. Scripting, which entirely optional is also supported through alt handlers (used in the event of a 404) or fully custom handlers (replaces Pituophis' handler entirely).
+
+The simplest method of getting a server up and running is with the `pituophis.serve()` function. See the [examples](https://github.com/dotcomboom/Pituophis/tree/master/examples) and [docs](https://pituophis.readthedocs.io/en/latest/#pituophis.serve) for more information. If you'd like to see a server built with Pituophis that can search an index, try [Gophew](https://github.com/dotcomboom/Gophew).
+
+![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
+
 ## Client
-Pituophis can grab files and text from Gopher servers (both S/Gopher TLS and regular Gopher) through the `Request.get()` and `get()` functions.
+Pituophis can also grab files and text from Gopher servers (both S/Gopher TLS and regular Gopher) through the `Request.get()` and `get()` functions.
 ### Examples
 Getting menus and files as plain text:
 ```python
@@ -33,7 +41,7 @@ for item in menu:
 ```
 Using search services:
 ```python
-pituophis.get('gopher://gopher.floodgap.com:70/7/v2/vs?toast').text()
+pituophis.get('gopher://gopher.floodgap.com:70/7/v2/vs%09toast').text()
 ```
 Downloading a binary:
 ```python
@@ -56,16 +64,12 @@ print(rsp.text())
 They can also be created from a URL:
 ```python
 import pituophis
-req = pituophis.parse_url('gopher://gopher.floodgap.com/7/v2/vs?food')
+req = pituophis.parse_url('gopher://gopher.floodgap.com/7/v2/vs%09food')
 print('Getting', req.url())
 rsp = req.get()
 print(rsp.text())
 ```
-## Server
+### TreeGopher
+An interactive demo of Pituophis' client features is provided in the form of TreeGopher, a graphical Gopher client in ~200 lines of code. It uses Pituophis, PySimpleGUI, and Pyperclip. It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
 
-Pituophis can also act as a powerful Gopher server, with full Bucktooth-style gophermap and globbing support. Scripting, which entirely optional is also supported through alt handlers (used in the event of a 404) or fully custom handlers (replaces Pituophis' handler entirely).
-
-The simplest method of getting a server up and running is with the `pituophis.serve()` function. See the [examples](https://github.com/dotcomboom/Pituophis/tree/master/examples) and [docs](https://pituophis.readthedocs.io/en/latest/#pituophis.serve) for more information.
-
-![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
-
+![](https://github.com/dotcomboom/Pituophis/blob/master/treegopher.png?raw=true)
