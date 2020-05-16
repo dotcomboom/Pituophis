@@ -70,6 +70,6 @@ rsp = req.get()
 print(rsp.text())
 ```
 ### TreeGopher
-An interactive demo of Pituophis' client features is provided in the form of [TreeGopher](https://github.com/dotcomboom/Pituophis/blob/master/TreeGopher.py), a graphical Gopher client in ~200 lines of code. It uses Pituophis, PySimpleGUI, and Pyperclip. It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
+An interactive demo of Pituophis' client features is provided in the form of [TreeGopher](https://github.com/dotcomboom/Pituophis/blob/master/TreeGopher.py), a graphical Gopher client in ~200 lines of code. It uses Pituophis, [PySimpleGUI](https://github.com/PySimpleGUI/PySimpleGUI), and [Pyperclip](https://pypi.org/project/pyperclip). It can browse Gopher in a hierarchical structure (much like WSGopher32, Cyberdog, and Little Gopher Client), read text files, download and save binary files (writing in chunks using `Request().stream()`, and running on another thread), recognize URL: links and use search services.
 
 ![](https://github.com/dotcomboom/Pituophis/blob/master/treegopher.png?raw=true)
