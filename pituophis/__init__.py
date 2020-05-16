@@ -1,6 +1,6 @@
 # BSD 2-Clause License
 #
-# Copyright (c) 2019, dotcomboom <dotcomboom@protonmail.com> and contributors
+# Copyright (c) 2020, dotcomboom <dotcomboom@somnolescent.net> and contributors
 # All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
