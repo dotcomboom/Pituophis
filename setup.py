@@ -5,13 +5,13 @@ with open("README.md", "r") as fh:
 
 setup(
     name='Pituophis',
-    version='1.0',
+    version='1.1',
     install_requires=['natsort'],
     packages=['pituophis'],
     url='https://github.com/dotcomboom/Pituophis',
     license='BSD 2-Clause License',
     author='dotcomboom',
-    author_email='dotcomboom@protonmail.com',
+    author_email='dotcomboom@somnolescent.net',
     description='Python 3 library for building Gopher clients and servers',
     long_description=long_description,
     long_description_content_type="text/markdown",
