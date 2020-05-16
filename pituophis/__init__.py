@@ -65,7 +65,7 @@ class Response:
 
     def menu(self):
         """
-        Decodes the binary as text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Item type.
+        Decodes the binary as UTF-8 text and parses it as a Gopher menu. Returns a List of Gopher menu items parsed as the Item type.
         """
         return parse_menu(self.binary.decode('utf-8'))
 
@@ -164,7 +164,7 @@ class Request:
         path = self.path
         query = ''
         if not (self.query == ''):
-            query = '?' + self.query
+            query = '%09' + self.query
         hst = self.host
         if not self.port == 70:
             hst += ':{}'.format(self.port)
@@ -229,9 +229,6 @@ class Item:
         req.host = self.host
         req.port = self.port
         req.path = self.path
-        if '?' in req.path:
-            req.query = '%3F'.join(req.path.split('?')[-1:])
-            req.path = req.path.split('?')[0]
         req.tls = self.tls
         return req
 
@@ -291,19 +288,27 @@ def parse_url(url):
     if up.scheme == 'gophers':
         req.tls = True
 
-    req.query = up.query
+    req.path = up.path
+    if up.query:
+        req.path += '?{}'.format(up.query)  # NOT to be confused with actual gopher queries, which use %09
+                                            # this just combines them back into one string
+    print(req.path)
     req.host = up.hostname
     req.port = up.port
     if up.port is None:
         req.port = 70
-    if up.path:
-        if up.path.endswith('/'):
+    if req.path:
+        if req.path.endswith('/'):
             req.type = '1'
-        if len(up.path) > 1:
-            req.type = up.path[1]
-        req.path = up.path[2:]
+        if len(req.path) > 1:
+            req.type = req.path[1]
+        req.path = req.path[2:]
     else:
         req.type = '1'
+
+    if '%09' in req.path:       # handle gopher queries
+        req.query = ''.join(req.path.split('%09')[1:])
+        req.path = req.path.split('%09')[0]
 
     return req
 
