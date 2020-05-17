@@ -18,7 +18,7 @@ gophertree = sg.TreeData()
 
 sg.theme('DarkTeal1')  # Add a touch of color
 
-plaintext_layout = sg.Output(key="-OUTPUT-", size=(80, 35), font=('Consolas 10'))
+plaintext_layout = sg.Multiline(key='-OUTPUT-', size=(80, 35), font=('Consolas 10'), background_color='#fff', autoscroll=False, disabled=True)
 
 context_menu = ['', '&Copy URL']
 
@@ -61,7 +61,6 @@ def populate(parentNode, request):
         good = False
         try:
             resp = request.get()
-            window.FindElement('-OUTPUT-').update('')
             menu = trim_menu(resp.menu())
             good = True
         except:
@@ -125,8 +124,7 @@ def go(url):
                 resp = req.get()
             except:
                 next
-            window.FindElement('-OUTPUT-').update('')
-            print(resp.text())
+            window.FindElement('-OUTPUT-').update(resp.text())
     else:
         dlpath = sg.popup_get_file('Where to save this file?', 'Download {}'.format(
             req.url()), default_path=req.url().split('/')[-1], save_as=True)
@@ -168,8 +166,7 @@ while True:     # The Event Loop
                 elif req.type in texttypes:
                     try:
                         resp = req.get()
-                        window.FindElement('-OUTPUT-').update('')
-                        print(resp.text())
+                        window.FindElement('-OUTPUT-').update(resp.text())
                     except:
                         next
                 elif req.type != 'i':
