@@ -214,7 +214,10 @@ while True:     # The Event Loop
             history.remove(history[-1])
             go(h)
     elif event == 'Copy URL':
-        pyperclip.copy(value['_TREE_'][0])
+        url = value['_TREE_'][0]
+        if url.endswith(' <cached>'):
+                url = url[:-9]
+        pyperclip.copy(url)
     elif event == 'Copy File URL':
         pyperclip.copy(loadedTextURL)
     elif event == 'Save...':
