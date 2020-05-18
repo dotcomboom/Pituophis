@@ -21,8 +21,9 @@ icons = {'1': b'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAAL
          'cache': b'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACu0lEQVQ4ja2SSUwTUBCGB8FYQZTEAydMuHjRi8STB2PEcJIWJAgCgikURYJsrUrYqoSKLJaWrexBgQIa6EJBoC0CLWCAllpaKIiRRRRZIxe98HuwGIV68yVfXl4y/5d5mSH6n4d/6xIjh+vnvUcB1/8XGXsEexels7z+KdDJC6MmxgaxYFFj0aqBuTcP4+0pmOhIhUHGg1HOg7Ez60cB18/NoWBcxW+wdD2Atfshpl+nYaY3Hba+DMyqMzGnycZ7LR8fBnKgV+b7ORTM64VLX8afYXWiGGsGEdaNYmyYSrH5rgxb5nJsT0mwbZFgfrRccCBcJYg8/WnyOVZM9Vgx1eOz/T7AZD2sg2XDBwSvJMnne6vCoCoJRKc4AEoRC8piJhTF/lAI/SEXXv1NpyTS/GfWiYgYubxrPrqmO9DWhkNTHQZ11Q28LGShNZ8JuSgQ3WVB6CoJhEocgK5K9l8dHCIiL78L3hcNMh5GpLEYbuJA3xiNtqJgyMQhUJSG4k19JPprI6CtCYe6IU67/wdePmc8L1t6sjEpT4axIwmG9ntQVkRBUR6BwRexeNsah1HpbQw3x0LXltq5X3DylOeJK7P9Atj6MjDTk46umlioqmPQXRMDZSUbQ83xMClSYJQlY6Q9TbpfcMiN4eI7P1S4u6h/goUhAab7sqFtTICuJRED0kTMabIxq86ErTcDYyp+naM1OPtxVLS7ZhTjq0GE1XEhrOrHGGjhYnk0H8sjT7E0nIdFnQBT6vxSRwKPZUPl9x1bHXZmavFtugbblipsmSXYNFdgw1SG9ckSrBnEsPYL8+zTIyIiFyJyJSKPR/dDfbOSw1i8u8EhiTGsyIRoJjuBw+QkcgI5KfFB7PSksJu5mezrCdHMc0R0jIgO7+2Bs/1xhIiOEpEbEbkT0XE77vaAKxEx7LXOROT0E4+/rF25GHCBAAAAAElFTkSuQmCC'
         }
 icons['p'] = icons['I'] # pngs
+icons['M'] = icons['0'] # M filetype, example here: gopher://rawtext.club/M/~cmccabe/pubnixhist/nixpub/1991-01-11
 
-texttypes = ['0', '1', '7', 'h']
+texttypes = ['0', '1', '7', 'h', 'M']
 
 gophertree = sg.TreeData()
 
