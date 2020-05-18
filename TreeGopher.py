@@ -149,10 +149,10 @@ def go(url):
         else:
             try:
                 resp = req.get()
+                loadedTextURL = req.url()
+                window.FindElement('-OUTPUT-').update(resp.text())
             except:
-                next
-            loadedTextURL = req.url()
-            window.FindElement('-OUTPUT-').update(resp.text())
+                sg.popup("We're sorry!", req.url() + ' could not be fetched. Try again later.')
     else:
         dlpath = dlPopup(req.url())
         if not dlpath is None:
