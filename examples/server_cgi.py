@@ -1,6 +1,8 @@
 import pituophis
 
 def alt(request):
+    if request.path == '/':
+        return [pituophis.Item(text='root')]
     if request.path == '/test':
         return [pituophis.Item(text='test!')]
 

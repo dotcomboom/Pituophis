@@ -196,7 +196,7 @@ class Item:
         Returns the item as a line in a Gopher menu.
         """
         return str(self.type) + str(self.text) + '\t' + str(self.path) + '\t' + str(self.host) + '\t' + str(
-            port) + '\r\n'
+            self.port) + '\r\n'
 
     def request(self):
         """
