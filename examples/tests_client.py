@@ -7,16 +7,15 @@ yes = ['y', 'yes', 'yeah', 'yep', 'yup', 'ye', 'sure']
 print("""
 pituophis testing grounds
 would you like to...
-1. view a gopher menu over TLS, unparsed (not working right now)
-2. view a gopher menu, parsed
-3. view a gopher menu, unparsed
-4. run a search for "test" with veronica 2
-5. download a file
-6. try it yourself
-7. enter a host or URL
+1. view a gopher menu, parsed
+2. view a gopher menu, unparsed
+3. run a search for "test" with veronica 2
+4. download a file
+5. try it yourself
+6. enter a host or URL
 """)
 
-choices = ['1', '2', '3', '4', '5', '6', '7']
+choices = ['1', '2', '3', '4', '5', '6']
 
 choice = ''
 while not choice in choices:
@@ -28,29 +27,21 @@ path = '/'
 query = ''
 binary = False
 menu = False
-tls = False
 
 if choice == '1':
-    host = 'khaze.net'
-    port = 105
-    tls = True
-if choice == '2':
     menu = True
-if choice == '3':
+if choice == '2':
     pass
-if choice == '4':
+if choice == '3':
     path = '/v2/vs'
     query = 'test'
-if choice == '5':
+if choice == '4':
     binary = True
     #path = '/archive/info-mac/edu/yng/kid-pix.hqx'
     path = '/gopher/clients/win/hgopher2_3.zip'
-if choice == '6':
+if choice == '5':
     host = input('host: ')
     port = int(input('port: '))
-    tls = False
-    if input('tls? (y/n): ') in yes:
-        tls = True
     path = input('path: ')
     query = input('query: ')
     binary = False
@@ -60,12 +51,12 @@ if choice == '6':
     if not binary:
         if input('menu? (y/n): ') in yes:
             menu = True
-if choice == '7':
+if choice == '6':
     if input('binary? (y/n): ') in yes:
         binary = True
     host = input('host/url: ')
 
-response = pituophis.get(host, port=port, path=path, query=query, tls=tls)
+response = pituophis.get(host, port=port, path=path, query=query)
 if binary:
     print("""
     what to do with this binary?

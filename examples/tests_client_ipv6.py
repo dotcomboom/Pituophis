@@ -15,6 +15,5 @@ for item in menu:
     print(item.path)
     print(item.host)
     print(item.port)
-    print(item.tls)
 
 print('--')

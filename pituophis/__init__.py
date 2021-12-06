@@ -77,7 +77,7 @@ class Request:
 
     def __init__(self, host='127.0.0.1', port=70,
                  advertised_port=None, path='/', query='',
-                 itype='9', tls=False, tls_verify=True, client='',
+                 itype='9', client='',
                  pub_dir='pub/', alt_handler=False):
         """
         Initializes a new Request object.
@@ -112,14 +112,6 @@ class Request:
         """
         *Client.* Item type of the request. Purely for client-side usage, not used when sending or receiving requests.
         """
-        self.tls = tls
-        """
-        *Client/Server.* Whether the request is to be, or was sent to an S/Gopher server over TLS.
-        """
-        self.tls_verify = tls_verify
-        """
-        *Client.* Whether to verify the certificate sent from the server, rejecting self-signed and invalid certificates.
-        """
         self.client = str(client)  # only used in server
         """
         *Server.* The IP address of the connected client.
@@ -138,13 +130,7 @@ class Request:
         if self.host.count(':') > 1:
             # ipv6
             s = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
-        if self.tls:
-            context = ssl._create_unverified_context()
-            if self.tls_verify:  # TODO: for some reason this is always true when using the get() shorthand
-                context = ssl.create_default_context()
-            s = context.wrap_socket(s, server_hostname=self.host)
-        else:
-            s.settimeout(10.0)
+        s.settimeout(10.0)
         s.connect((self.host.replace('[', '').replace(']', ''),
                    int(self.port)))
         if self.query == '':
@@ -165,8 +151,6 @@ class Request:
         Returns a URL equivalent to the Request's properties.
         """
         protocol = 'gopher'
-        if self.tls:
-            protocol = 'gophers'
         path = self.path
         query = ''
         if not (self.query == ''):
@@ -182,7 +166,7 @@ class Item:
     *Server/Client.* Represents an item in a Gopher menu.
     """
 
-    def __init__(self, itype='i', text='', path='/', host='', port=0, tls=False):
+    def __init__(self, itype='i', text='', path='/', host='', port=0):
         """
         Initializes a new Item object.
         """
@@ -204,25 +188,13 @@ class Item:
         """
         self.port = port
         """
-        The port of the target server. For regular Gopher servers, this is most commonly 70, 
-        and for S/Gopher servers it is typically 105.
-        """
-        self.tls = tls
-        """
-        True if the item leads to an S/Gopher server with TLS enabled.
+        The port of the target server; most commonly 70.
         """
 
     def source(self):
         """
         Returns the item as a line in a Gopher menu.
         """
-        port = int(self.port)
-        if self.tls:
-            # Add digits to display that this is a TLS item
-            while len(str(port)) < 5:
-                port = '0' + str(port)
-            port = '1' + str(port)
-            port = int(port)
         return str(self.type) + str(self.text) + '\t' + str(self.path) + '\t' + str(self.host) + '\t' + str(
             port) + '\r\n'
 
@@ -235,7 +207,6 @@ class Item:
         req.host = self.host
         req.port = self.port
         req.path = self.path
-        req.tls = self.tls
         return req
 
 
@@ -270,12 +241,6 @@ def parse_menu(source):
                     item.port = int(item.port)
                 except:
                     item.port = 70
-                # detect TLS
-                if item.port > 65535:
-                    item.tls = True
-                    # typically the port is sent as 100105
-                    # remove first number to get at 5 digits
-                    item.port = int(str(item.port)[1:])
         parsed_menu.append(item)
     return parsed_menu
 
@@ -284,15 +249,12 @@ def parse_url(url):
     """
     *Client.* Parses a Gopher URL and returns an equivalent Request.
     """
-    req = Request(host='', port=70, path='/', query='', tls=False)
+    req = Request(host='', port=70, path='/', query='')
 
     up = urlparse(url)
 
     if up.scheme == '':
         up = urlparse('gopher://' + url)
-
-    if up.scheme == 'gophers':
-        req.tls = True
 
     req.path = up.path
     if up.query:
@@ -318,12 +280,12 @@ def parse_url(url):
     return req
 
 
-def get(host, port=70, path='/', query='', tls=False, tls_verify=True):
+def get(host, port=70, path='/', query=''):
     """
     *Client.* Quickly creates and sends a Request. Returns a Response object.
     """
     req = Request(host=host, port=port, path=path,
-                  query=query, tls=tls, tls_verify=tls_verify)
+                  query=query)
     if '/' in host or ':' in host:
         req = parse_url(host)
     return req.get()
@@ -347,7 +309,7 @@ errors = {
 
 
 def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
-                    gophermap_dir='/', pub_dir='pub/', tls=False):
+                    gophermap_dir='/', pub_dir='pub/'):
     """
     *Server.* Converts a Bucktooth-style Gophermap (as a String or List) into a Gopher menu as a List of Items to send.
     """
@@ -490,9 +452,6 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                                     item.type = \
                                         mime_starts_with[sw]
 
-                if item.host == def_host and item.port == def_port:
-                    item.tls = tls
-
                 new_menu.append(item.source())
         else:
             item = 'i' + item + '\t\t\t0'
@@ -548,16 +507,14 @@ def handle(request):
                                        def_host=request.host,
                                        def_port=request.advertised_port,
                                        gophermap_dir=request.path,
-                                       pub_dir=pub_dir,
-                                       tls=request.tls)
+                                       pub_dir=pub_dir)
             else:
                 gmap = '?*\t\r\n'
                 menu = parse_gophermap(source=gmap,
                                        def_host=request.host,
                                        def_port=request.advertised_port,
                                        gophermap_dir=request.path,
-                                       pub_dir=pub_dir,
-                                       tls=request.tls)
+                                       pub_dir=pub_dir)
             return menu
     elif os.path.isfile(res_path):
         in_file = open(res_path, "rb")
@@ -577,9 +534,7 @@ def handle(request):
 
 def serve(host="127.0.0.1", port=70, advertised_port=None,
           handler=handle, pub_dir='pub/', alt_handler=False,
-          send_period=False, tls=False,
-          tls_cert_chain='cacert.pem',
-          tls_private_key='privkey.pem', debug=True):
+          send_period=False, debug=True):
     """
     *Server.*  Starts serving Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
     object (which can contain either Strings or Items) to send to the client, or the default handler which can serve
@@ -588,24 +543,7 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
     """
     if pub_dir is None or pub_dir == '':
         pub_dir = '.'
-    if tls:
-        context = ssl.SSLContext(ssl.PROTOCOL_TLS_SERVER)
-
-        if os.path.exists(tls_cert_chain) and os.path.exists(tls_private_key):
-            context.load_cert_chain(tls_cert_chain, tls_private_key)
-        else:
-            print("""TLS certificate and/or private key is missing. TLS has been disabled for this session.
-Run this command to generate a self-signed certificate and private key:
-    openssl req -x509 -newkey rsa:4096 -keyout {} -out {} -days 365
-Note that clients may refuse to connect to a self-signed certificate.
-            """.format(tls_private_key, tls_cert_chain))
-            tls = False
-
-    if tls:
-        print('S/Gopher server is now running on',
-              host + ':' + str(port) + '.')
-    else:
-        print('Gopher server is now running on', host + ':' + str(port) + '.')
+    print('Gopher server is now running on', host + ':' + str(port) + '.')
 
     class GopherProtocol(asyncio.Protocol):
         def connection_made(self, transport):
@@ -620,17 +558,13 @@ Note that clients may refuse to connect to a self-signed certificate.
                 query = request[1]
             if debug:
                 print('Client requests: {}'.format(request))
-            is_tls = False
-
-            if self.transport.get_extra_info('sslcontext'):
-                is_tls = True
 
             resp = handler(
                 Request(path=path, query=query, host=host,
                         port=port, advertised_port=advertised_port,
                         client=self.transport.get_extra_info(
                             'peername')[0], pub_dir=pub_dir,
-                        alt_handler=alt_handler, tls=is_tls))
+                        alt_handler=alt_handler))
 
             if type(resp) == str:
                 resp = bytes(resp, 'utf-8')
@@ -659,10 +593,7 @@ Note that clients may refuse to connect to a self-signed certificate.
 
     async def main(h, p):
         loop = asyncio.get_running_loop()
-        if tls:
-            server = await loop.create_server(GopherProtocol, h, p, ssl=context)
-        else:
-            server = await loop.create_server(GopherProtocol, h, p)
+        server = await loop.create_server(GopherProtocol, h, p)
         await server.serve_forever()
 
     asyncio.run(main('0.0.0.0', port))
