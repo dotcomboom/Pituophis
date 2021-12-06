@@ -300,8 +300,7 @@ mime_starts_with = {
 errors = {
     '404': Item(itype='3', text='404: {} does not exist.'),
     '403': Item(itype='3', text='403: Resource outside of publish directory.'),
-    '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.'),
-    'no_pub_dir': Item(itype='3', text='500: Publish directory does not exist.')
+    '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.')
 }
 
 
@@ -481,9 +480,6 @@ def handle(request):
             <p>You will be redirected to <a href="{0}">{0}</a> shortly.</p>
         </body>
         """.format(request.path.split('URL:')[1])
-
-    if not os.path.exists(pub_dir):
-        return [errors['no_pub_dir']]
 
     menu = []
     if request.path == '':
