@@ -23,8 +23,6 @@
 # CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-#
-# Portions copyright solderpunk & VF-1 contributors, licensed under the BSD 2-Clause License above.
 
 import asyncio
 import glob
@@ -32,7 +30,6 @@ import mimetypes
 import os
 import re
 import socket
-import ssl
 from operator import itemgetter
 from os.path import realpath
 from urllib.parse import urlparse
@@ -485,12 +482,10 @@ def handle(request):
         """.format(request.path.split('URL:')[1])
 
     menu = []
-    if request.path in ['', '.']:
+    if request.path == '':
         request.path = '/'
     res_path = os.path.abspath(
-        (pub_dir + request.path)
-        .replace('\\', '/').replace('//', '/')) 
-    print(res_path)
+        (pub_dir + request.path).replace('\\', '/').replace('//', '/'))
     if not res_path.startswith(os.path.abspath(pub_dir)):
         # Reject connections that try to break out of the publish directory
         return [errors['403']]
@@ -531,12 +526,13 @@ def handle(request):
 
 
 def serve(host="127.0.0.1", port=70, advertised_port=None,
-          handler=handle, pub_dir='pub/', alt_handler=False, debug=True):
+          handler=handle, pub_dir='pub/', alt_handler=False,
+          send_period=False, debug=True):
     """
     *Server.*  Starts serving Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
     object (which can contain either Strings or Items) to send to the client, or the default handler which can serve
     a directory. Along with the default handler, you can set an alternate handler to use if a 404 error is generated for
-    dynamic applications. send_period is good practice to the RFC and required for some clients to work.
+    dynamic applications.
     """
     if pub_dir is None or pub_dir == '':
         pub_dir = '.'
@@ -548,7 +544,7 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
             print('Connected by', transport.get_extra_info('peername'))
 
         def data_received(self, data):
-            request = data.decode('utf-8').replace('\r\n', '').replace('\n', '').split('\t') # \n is used at the end of Gopher Client (iOS)'s requests
+            request = data.decode('utf-8').replace('\r\n', '').split('\t')
             path = request[0]
             query = ''
             if len(request) > 1:
@@ -576,18 +572,13 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
                         if not line.endswith('\r\n'):
                             line += '\r\n'
                         out += line
-                resp = bytes(out + '.\r\n', 'utf-8') # Menus are sent with the Lastline at the end; see below
+                resp = bytes(out, 'utf-8')
             elif type(resp) == Item:
                 resp = bytes(resp.source(), 'utf-8')
 
             self.transport.write(resp)
-
-            # According to RFC 1436, the Lastline is '.'CR-LF ('.\r\n'), and it is preceded by 'a block' of ASCII text.
-            # Lastline is now put in after menus; this functionality replaces the former send_period option.
-
-            # Lastline is not put in after text file contents at this time, because that's kinda tricky: not all other servers do it, 
-            # most clients seem to show the Lastline when present, and the RFC suggested that clients be prepared for the server to send it without 
-            # for TextFile entities anyways (suggested that the client could then also use fingerd servers).
+            if send_period:
+                self.transport.write(b'.')
 
             self.transport.close()
             if debug:

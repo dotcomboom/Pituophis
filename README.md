@@ -5,7 +5,6 @@
 
 Python 3 library for building Gopher clients and servers
 
-Pituophis, at the moment, requires nine modules: os, re, sockets, asyncio, ssl, mimetypes, glob, and urllib, which are standard in most Python 3.7 installations, and natsort. Pituophis can simply be loaded as a module like this:
 ```python
 import pituophis
 ```
@@ -32,8 +31,6 @@ Getting menus and files as plain text:
 pituophis.get('gopher.floodgap.com').text()
 pituophis.get('gopher://gopher.floodgap.com/1/').text()
 pituophis.get('gopher://gopher.floodgap.com:70/0/gopher/proxy').text()
-pituophis.get('gophers://khzae.net:105/1/').text() # gophers:// URL support
-
 ```
 Getting a menu, parsed:
 ```python
