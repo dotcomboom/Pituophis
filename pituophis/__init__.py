@@ -301,9 +301,9 @@ mime_starts_with = {
 }
 
 errors = {
-    '404': Item(itype='3', text='404: {} does not exist.'),
+    '404': Item(itype='3', text='404: {} cannot be found.'),
     '403': Item(itype='3', text='403: Resource outside of publish directory.'),
-    '403_glob': Item(itype='3', text='403: Gopher glob is out of scope.')
+    '403_glob': Item(itype='3', text='403: Gophermap glob is out of scope.')
 }
 
 
