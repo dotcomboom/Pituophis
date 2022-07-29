@@ -530,10 +530,12 @@ def handle(request):
         return [errors['no_pub_dir']]
 
     menu = []
-    if request.path == '':
+    if request.path in ['', '.']:
         request.path = '/'
     res_path = os.path.abspath(
-        (pub_dir + request.path).replace('\\', '/').replace('//', '/'))
+        (pub_dir + request.path)
+        .replace('\\', '/').replace('//', '/')) 
+    print(res_path)
     if not res_path.startswith(os.path.abspath(pub_dir)):
         # Reject connections that try to break out of the publish directory
         return [errors['403']]
@@ -577,14 +579,14 @@ def handle(request):
 
 def serve(host="127.0.0.1", port=70, advertised_port=None,
           handler=handle, pub_dir='pub/', alt_handler=False,
-          send_period=False, tls=False,
+          send_period=True, tls=False,
           tls_cert_chain='cacert.pem',
           tls_private_key='privkey.pem', debug=True):
     """
     *Server.*  Starts serving Gopher requests. Allows for using a custom handler that will return a Bytes, String, or List
     object (which can contain either Strings or Items) to send to the client, or the default handler which can serve
     a directory. Along with the default handler, you can set an alternate handler to use if a 404 error is generated for
-    dynamic applications.
+    dynamic applications. send_period is required for some clients to work.
     """
     if pub_dir is None or pub_dir == '':
         pub_dir = '.'
@@ -613,7 +615,7 @@ Note that clients may refuse to connect to a self-signed certificate.
             print('Connected by', transport.get_extra_info('peername'))
 
         def data_received(self, data):
-            request = data.decode('utf-8').replace('\r\n', '').split('\t')
+            request = data.decode('utf-8').replace('\r\n', '').replace('\n', '').split('\t') # \n is used at the end of Gopher Client (iOS)'s requests
             path = request[0]
             query = ''
             if len(request) > 1:
