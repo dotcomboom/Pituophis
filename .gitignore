@@ -1,2 +1,5 @@
-
 pituophis/__pycache__/
+dist/
+build/
+examples/pub/
+Pituophis.egg-info/

@@ -15,6 +15,8 @@ Nothing fancy.
         in_file.close()
         return data
     else:
+        # Note that clients may send '.' or '' when they want the root of the server;
+        # the . behavior has been observed in Gophpup (an early Windows client) and may be the case for others.
         menu = [
             Item(text="Path: " + request.path),
             Item(text="Query: " + request.query),
