@@ -18,7 +18,7 @@ would you like to...
 choices = ['1', '2', '3', '4', '5', '6']
 
 choice = ''
-while not choice in choices:
+while choice not in choices:
     choice = input('> ')
 
 host = 'gopher.floodgap.com'
@@ -30,12 +30,10 @@ menu = False
 
 if choice == '1':
     menu = True
-if choice == '2':
-    pass
-if choice == '3':
+elif choice == '3':
     path = '/v2/vs'
     query = 'test'
-if choice == '4':
+elif choice == '4':
     binary = True
     #path = '/archive/info-mac/edu/yng/kid-pix.hqx'
     path = '/gopher/clients/win/hgopher2_3.zip'
@@ -47,10 +45,7 @@ if choice == '5':
     binary = False
     if input('binary? (y/n): ') in yes:
         binary = True
-    menu = False
-    if not binary:
-        if input('menu? (y/n): ') in yes:
-            menu = True
+    menu = not binary and input('menu? (y/n): ') in yes
 if choice == '6':
     if input('binary? (y/n): ') in yes:
         binary = True
@@ -65,20 +60,18 @@ if binary:
     """)
     choices = ['1', '2']
     choice = ''
-    while not choice in choices:
+    while choice not in choices:
         choice = input('> ')
     if choice == '1':
         print(response.text())
-    else:
-        if choice == '2':
-            suggested_filename = path.split('/')[len(path.split('/')) - 1]
-            filename = input('filename (' + suggested_filename + ')? ')
-            if filename == '':
-                filename = suggested_filename
-            with open(filename, "wb") as f:
-                f.write(response.binary)
+    elif choice == '2':
+        suggested_filename = path.split('/')[len(path.split('/')) - 1]
+        filename = input(f'filename ({suggested_filename})? ')
+        if filename == '':
+            filename = suggested_filename
+        with open(filename, "wb") as f:
+            f.write(response.binary)
+elif menu:
+    print(response.menu())
 else:
-    if menu:
-        print(response.menu())
-    else:
-        print(response.text())
+    print(response.text())

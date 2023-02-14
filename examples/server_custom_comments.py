@@ -19,8 +19,7 @@ def handle(request):
             Item()]
     if len(comments) == 0:
         menu.append(Item(text="There are no messages yet.. be the first!"))
-    for entry in comments:
-        menu.append(Item(text=str(entry)))
+    menu.extend(Item(text=str(entry)) for entry in comments)
     return menu
 
 

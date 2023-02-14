@@ -68,7 +68,7 @@ def populate(parentNode, request):
     window.FindElement('-QUERY-').update(request.url())
     window.FindElement('-LOADING-').update(visible=True)
 
-    if not parentNode in openNodes:
+    if parentNode not in openNodes:
         passes = 0
         from_cache = False
         try:
@@ -80,25 +80,34 @@ def populate(parentNode, request):
                 cache[request.url()] = resp
             passes += 1
         except:
-            sg.popup("We're sorry!", request.url() + ' could not be fetched. Try again later.')
+            sg.popup(
+                "We're sorry!",
+                f'{request.url()} could not be fetched. Try again later.',
+            )
         if passes == 1:
             try:
                 menu = trim_menu(resp.menu())
                 passes += 1
             except:
-                sg.popup("We're sorry!", request.url() + ' could not be parsed as a menu for one reason or another.')
+                sg.popup(
+                    "We're sorry!",
+                    f'{request.url()} could not be parsed as a menu for one reason or another.',
+                )
         if passes == 2:
             if from_cache:
-                gophertree.insert(parentNode, request.url() + ' <cached>', text='- This is a cached menu, double click to go to the live version -', values=[], icon=icons['cache'])
+                gophertree.insert(
+                    parentNode,
+                    f'{request.url()} <cached>',
+                    text='- This is a cached menu, double click to go to the live version -',
+                    values=[],
+                    icon=icons['cache'],
+                )
             for item in menu:
-                if not item.request().url() in openNodes:
+                if item.request().url() not in openNodes:
                     sub_url = item.request().url()
                     if item.path.startswith("URL:"):
                         sub_url = item.path[4:]
-                    if item.type in icons:
-                        icon = icons[item.type]
-                    else:
-                        icon = icons['9']
+                    icon = icons[item.type] if item.type in icons else icons['9']
                     if item.type == 'i':
                         gophertree.insert(parentNode, sub_url,
                                           text=item.text, values=[], icon=icon)
@@ -118,17 +127,21 @@ def download_thread(req, dlpath, gui_queue):     # This uses Pituophis' Request(
     with open(dlpath, "wb") as dl:
         remote_file = req.stream().makefile('rb')
         while True:
-            piece = remote_file.read(1024)  
-            if not piece:
+            if piece := remote_file.read(1024):
+                dl.write(piece)
+            else:
                 break
-            dl.write(piece)
     gui_queue.put(dlpath)  # put a message into queue for GUI
 
 history = []
 
 def dlPopup(url):
-    return sg.popup_get_file('Where to save this file?', 'Download {}'.format(
-            url), default_path=url.split('/')[-1], save_as=True)
+    return sg.popup_get_file(
+        'Where to save this file?',
+        f'Download {url}',
+        default_path=url.split('/')[-1],
+        save_as=True,
+    )
 
 def go(url):
     global gophertree, openNodes, loadedTextURL
@@ -152,19 +165,17 @@ def go(url):
                 loadedTextURL = req.url()
                 window.FindElement('-OUTPUT-').update(resp.text())
             except:
-                sg.popup("We're sorry!", req.url() + ' could not be fetched. Try again later.')
+                sg.popup("We're sorry!", f'{req.url()} could not be fetched. Try again later.')
     else:
         dlpath = dlPopup(req.url())
-        if not dlpath is None:
-            window.FindElement('-DOWNLOADS-').update(value='Downloading {}'.format(dlpath))
+        if dlpath is not None:
+            window.FindElement('-DOWNLOADS-').update(value=f'Downloading {dlpath}')
             threading.Thread(target=download_thread, args=(req, dlpath, gui_queue), daemon=True).start()
 
     window.FindElement('-LOADING-').update(visible=False)
 
 def plural(x):
-    if x > 1 or x < 1: 
-        return 's'
-    return ''
+    return 's' if x > 1 or x < 1 else ''
 
 previousvalue = None
 
@@ -185,26 +196,25 @@ while True:     # The Event Loop
                 url = url[:-9]
                 del cache[url]
                 go(url)
-            else:
-                if url.startswith('gopher'):
-                    req = pituophis.parse_url(url)
-                    if req.type == '1':
-                        parentNode = url
-                        if value['-USETREE-']:
-                            populate(parentNode, req)
-                        else:
-                            go(parentNode)
-                    elif req.type == '7':
-                        q = sg.popup_get_text('Search on ' + req.host, '')
-                        if not q is None:
-                            req.query = q
-                            go(req.url())
-                    elif req.type != 'i':
+            elif url.startswith('gopher'):
+                req = pituophis.parse_url(url)
+                if req.type == '1':
+                    parentNode = url
+                    if value['-USETREE-']:
+                        populate(parentNode, req)
+                    else:
+                        go(parentNode)
+                elif req.type == '7':
+                    q = sg.popup_get_text(f'Search on {req.host}', '')
+                    if q is not None:
+                        req.query = q
                         go(req.url())
+                elif req.type != 'i':
+                    go(req.url())
 
-                    window.FindElement('-LOADING-').update(visible=False)
-                else:
-                    os.startfile(url)
+                window.FindElement('-LOADING-').update(visible=False)
+            else:
+                os.startfile(url)
         previousvalue = value
     elif event == 'Go':
         go(value['-QUERY-'].rstrip())
@@ -223,7 +233,7 @@ while True:     # The Event Loop
         pyperclip.copy(loadedTextURL)
     elif event == 'Save...':
         dlpath = dlPopup(loadedTextURL)
-        if not dlpath is None:
+        if dlpath is not None:
             with open(dlpath, 'w') as f:
                 f.write(value['-OUTPUT-'])
 
@@ -236,7 +246,11 @@ while True:     # The Event Loop
     # if message received from queue, display the message in the Window
     if message:
         window.FindElement('-DOWNLOADS-').update(value='')
-        if sg.popup_yes_no('Finished downloading {}. Would you like to open the downloaded file?'.format(message)):
+        if sg.popup_yes_no(
+            f'Finished downloading {message}. Would you like to open the downloaded file?'
+        ):
             os.startfile(message)
-    window.FindElement('-CACHE-').update(value='{} menu{} in cache.'.format(len(cache), plural(len(cache))))
+    window.FindElement('-CACHE-').update(
+        value=f'{len(cache)} menu{plural(len(cache))} in cache.'
+    )
 window.close()

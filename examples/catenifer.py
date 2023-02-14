@@ -29,10 +29,9 @@ def go(url, itype=''):
     #    req.type = '1'  parse_url() now does this in Pituophis 1.0
     if itype == '7':
         req.type = itype
-    print(bold('URL: ' + req.url()))
-    if req.type == '7':
-        if req.query == '':
-            req.query = input(bold('Search term: '))
+    print(bold(f'URL: {req.url()}'))
+    if req.type == '7' and req.query == '':
+        req.query = input(bold('Search term: '))
     if req.type in compatibleTypes:
         resp = req.get()
         if req.type in menuTypes:
@@ -42,13 +41,13 @@ def go(url, itype=''):
                 text = typeIcons['9']
                 if selector.type in typeIcons:
                     text = typeIcons[selector.type]
-                text = text + '  ' + selector.text
+                text = f'{text}  {selector.text}'
                 if selector.type not in noLinkTypes:
                     items += 1
                     requests[items] = selector.request()
-                    text = text + ' (' + requests[items].url() + ') ' + bold('[#' + str(items) + ']')
+                    text = f"{text} ({requests[items].url()}) {bold(f'[#{items}]')}"
                 if selector.path.startswith('URL:'):
-                    text = text + ' (' + selector.path.split('URL:')[1] + ')'
+                    text = f'{text} (' + selector.path.split('URL:')[1] + ')'
                 print(text)
         elif req.type == '0':
             print(resp.text())
