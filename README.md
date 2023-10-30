@@ -5,9 +5,17 @@
 
 Python 3 library for building Gopher clients and servers
 
-```python
-import pituophis
-```
+## Installation
+At a prompt, run `pip3 install pituophis` or `pip install pituophis` depending on your setup. You'll be able to import the package with `import pituophis`.
+
+## Features
+
+- Make and send Gopher requests with the `Request` class
+- URL parsing with `pituophis.parse_url()`
+- Parse and iterate through Gopher menus with `Response.menu()`
+- Host Gopher servers on Python 3.7+, accepting requests asynchronously (using the same `Request` class)
+- Serve directories, files, and gophermaps out of the box from a publish directory ('pub/' by default) with the default handler
+- Use either a custom handler altogether or a handler to use when the default handler encounters a 404 for dynamic functionality
 
 ## Server
 
@@ -16,6 +24,27 @@ Pituophis can act as a powerful Gopher server, with full Bucktooth-style gopherm
 The simplest method of getting a server up and running is with the `pituophis.serve()` function. See the [examples](https://github.com/dotcomboom/Pituophis/tree/master/examples) and [docs](https://pituophis.readthedocs.io/en/latest/#pituophis.serve) for more information. If you'd like to see a server built with Pituophis that can search an index, try [Gophew](https://github.com/dotcomboom/Gophew).
 
 ![server_def](https://github.com/dotcomboom/Pituophis/blob/master/server_def.png?raw=true)
+
+### Quick Start
+A simple quick-start snippet is the following:
+```py
+import pituophis
+pituophis.serve('127.0.0.1', 7070, pub_dir='pub/')  # typical Gopher port is 70
+```
+
+Here's a basic alt handler, if you're familiar with Python scripting and would like to add more interactivity to your server:
+
+```py
+def alt(request):
+    if request.path == '/test':
+        return [pituophis.Item(text='test!')]
+```
+
+You can return a list of Item objects, bytes, or text. To use your alt handler, add the argument `alt_handler=alt` to your serve() like this:
+
+```py
+pituophis.serve("127.0.0.1", 7070, pub_dir='pub/', alt_handler=alt)
+```
 
 ## Client
 Pituophis can also grab files and parse menus from Gopher servers. Simple fetching is done with `Request().get()` and `get()`, and `Request().stream()` can be used for lower-level access as a BufferedReader.  The `get` functions return a Response type. [See the docs](https://pituophis.readthedocs.io/en/latest/index.html) for more information.
