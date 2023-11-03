@@ -4,30 +4,37 @@ from pituophis import Item
 
 def handle(request):
     if request.path == '/txt':
-        text = """
+        return """
 This is plain text.
 Nothing fancy.
         """
-        return text
     elif request.path == '/server.png':
-        in_file = open("server.png", "rb")  # you'd need a file with the name server.png in the working directory, naturally
-        data = in_file.read()
-        in_file.close()
+        with open("server.png", "rb") as in_file:
+            data = in_file.read()
         return data
     else:
-        # Note that clients may send '.' or '' when they want the root of the server;
-        # the . behavior has been observed in Gophpup (an early Windows client) and may be the case for others.
-        menu = [
-            Item(text="Path: " + request.path),
-            Item(text="Query: " + request.query),
-            Item(text="Host: " + request.host),
-            Item(text="Port: " + str(request.port)),
-            Item(text="Client: " + request.client),
+        return [
+            Item(text=f"Path: {request.path}"),
+            Item(text=f"Query: {request.query}"),
+            Item(text=f"Host: {request.host}"),
+            Item(text=f"Port: {str(request.port)}"),
+            Item(text=f"Client: {request.client}"),
             Item(),
-            Item(itype="I", text="View server.png", path="/server.png", host=request.host, port=request.port),
-            Item(itype="0", text="View some text", path="/txt", host=request.host, port=request.port)
+            Item(
+                itype="I",
+                text="View server.png",
+                path="/server.png",
+                host=request.host,
+                port=request.port,
+            ),
+            Item(
+                itype="0",
+                text="View some text",
+                path="/txt",
+                host=request.host,
+                port=request.port,
+            ),
         ]
-        return menu
 
 
 # serve with custom handler

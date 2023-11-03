@@ -149,13 +149,11 @@ class Request:
         """
         protocol = 'gopher'
         path = self.path
-        query = ''
-        if not (self.query == ''):
-            query = '%09' + self.query
+        query = f'%09{self.query}' if self.query != '' else ''
         hst = self.host
-        if not self.port == 70:
-            hst += ':{}'.format(self.port)
-        return '{}://{}/{}{}{}'.format(protocol, hst, self.type, path, query)
+        if self.port != 70:
+            hst += f':{self.port}'
+        return f'{protocol}://{hst}/{self.type}{path}{query}'
 
 
 class Item:
@@ -227,8 +225,7 @@ def parse_menu(source):
                     line) > 4:  # discard Gopher+ and other naughty stuff
                 line = line[:-1]
             line = '\t'.join(line)
-            matches = re.match(r'^(.)(.*)\t(.*)\t(.*)\t(.*)', line)
-            if matches:
+            if matches := re.match(r'^(.)(.*)\t(.*)\t(.*)\t(.*)', line):
                 item.type = matches[1]
                 item.text = matches[2]
                 item.path = matches[3]
@@ -251,12 +248,12 @@ def parse_url(url):
     up = urlparse(url)
 
     if up.scheme == '':
-        up = urlparse('gopher://' + url)
+        up = urlparse(f'gopher://{url}')
 
     req.path = up.path
     if up.query:
-        req.path += '?{}'.format(up.query)  # NOT to be confused with actual gopher queries, which use %09
-                                            # this just combines them back into one string
+        req.path += f'?{up.query}'
+                                                # this just combines them back into one string
     req.host = up.hostname
     req.port = up.port
     if up.port is None:
@@ -347,7 +344,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
             if not path.startswith('URL:'):
                 # fix relative path
                 if not path.startswith('/'):
-                    path = realpath(gophermap_dir + '/' + path)
+                    path = realpath(f'{gophermap_dir}/{path}')
 
                 # globbing
                 if '*' in path:
@@ -387,10 +384,12 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                             while '' in splt:
                                 splt.remove('')
                             s.text = splt[len(splt) - 1]
-                            if os.path.exists(file + '/gophertag'):
-                                s.text = ''.join(list(open(
-                                    file + '/gophertag'))).replace(
-                                    '\r\n', '').replace('\n', '')
+                            if os.path.exists(f'{file}/gophertag'):
+                                s.text = (
+                                    ''.join(list(open(f'{file}/gophertag')))
+                                    .replace('\r\n', '')
+                                    .replace('\n', '')
+                                )
                             s.path = file.replace(pub_dir, '/', 1)
                             s.path = re.sub(r'/{2}', r'/', s.path)
                             s.host = host
@@ -399,15 +398,12 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                                 s.path = ''
                                 s.host = ''
                                 s.port = '0'
-                            if s.type == '1':
-                                d = 0
-                            else:
-                                d = 1
-                            if not s.path.endswith('gophermap'):
-                                if not s.path.endswith(
-                                        'gophertag'):
-                                    listing.append(
-                                        [file, s, s.text, d])
+                            d = 0 if s.type == '1' else 1
+                            if not s.path.endswith(
+                                'gophermap'
+                            ) and not s.path.endswith('gophertag'):
+                                listing.append(
+                                    [file, s, s.text, d])
 
                         listing = natsorted(listing,
                                             key=itemgetter(0))
@@ -416,8 +412,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         listing = natsorted(listing,
                                             key=itemgetter(3))
 
-                        for item in listing:
-                            new_menu.append(item[1])
+                        new_menu.extend(item[1] for item in listing)
                     else:
                         new_menu.append(errors['403_glob'])
 
@@ -438,10 +433,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
                         mime = mimetypes.guess_type(
                             pub_dir + path)[0]
                         if mime is None:  # is directory or binary
-                            if os.path.isdir(file):
-                                s.type = '1'
-                            else:
-                                s.type = '9'
+                            s.type = '1' if os.path.isdir(file) else '9'
                         else:
                             for sw in mime_starts_with.keys():
                                 if mime.startswith(sw):
@@ -450,7 +442,7 @@ def parse_gophermap(source, def_host='127.0.0.1', def_port='70',
 
                 new_menu.append(item.source())
         else:
-            item = 'i' + item + '\t\t\t0'
+            item = f'i{item}' + '\t\t\t0'
             new_menu.append(item)
     return new_menu
 
@@ -492,32 +484,25 @@ def handle(request):
     if os.path.isdir(res_path):
         # is directory
         if os.path.exists(res_path):
-            if os.path.isfile(res_path + '/gophermap'):
-                in_file = open(res_path + '/gophermap', "r+")
-                gmap = in_file.read()
-                in_file.close()
-                menu = parse_gophermap(source=gmap,
-                                       def_host=request.host,
-                                       def_port=request.advertised_port,
-                                       gophermap_dir=request.path,
-                                       pub_dir=pub_dir)
+            if os.path.isfile(f'{res_path}/gophermap'):
+                with open(f'{res_path}/gophermap', "r+") as in_file:
+                    gmap = in_file.read()
             else:
                 gmap = '?*\t\r\n'
-                menu = parse_gophermap(source=gmap,
-                                       def_host=request.host,
-                                       def_port=request.advertised_port,
-                                       gophermap_dir=request.path,
-                                       pub_dir=pub_dir)
-            return menu
+            return parse_gophermap(
+                source=gmap,
+                def_host=request.host,
+                def_port=request.advertised_port,
+                gophermap_dir=request.path,
+                pub_dir=pub_dir,
+            )
     elif os.path.isfile(res_path):
-        in_file = open(res_path, "rb")
-        data = in_file.read()
-        in_file.close()
+        with open(res_path, "rb") as in_file:
+            data = in_file.read()
         return data
 
     if request.alt_handler:
-        alt = request.alt_handler(request)
-        if alt:
+        if alt := request.alt_handler(request):
             return alt
 
     e = errors['404']
@@ -536,7 +521,7 @@ def serve(host="127.0.0.1", port=70, advertised_port=None,
     """
     if pub_dir is None or pub_dir == '':
         pub_dir = '.'
-    print('Gopher server is now running on', host + ':' + str(port) + '.')
+    print('Gopher server is now running on', f'{host}:{str(port)}.')
 
     class GopherProtocol(asyncio.Protocol):
         def connection_made(self, transport):
